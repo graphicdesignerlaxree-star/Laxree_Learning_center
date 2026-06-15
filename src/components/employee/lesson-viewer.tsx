@@ -467,6 +467,7 @@ const PROFESSIONAL_CONTENT_STYLES = `
 function VideoPlayer({ url, title }: { url: string; title: string }) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [videoError, setVideoError] = useState(false)
 
   const togglePlay = () => {
     if (!videoRef.current) return
@@ -477,6 +478,28 @@ function VideoPlayer({ url, title }: { url: string; title: string }) {
       videoRef.current.pause()
       setIsPlaying(false)
     }
+  }
+
+  if (videoError) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-gray-900 to-gray-800 group"
+      >
+        <div className="w-full aspect-video flex flex-col items-center justify-center text-center p-8">
+          <div className="w-20 h-20 rounded-full bg-amber-500/20 flex items-center justify-center mb-4">
+            <Video className="w-10 h-10 text-amber-400" />
+          </div>
+          <h3 className="text-white text-lg font-semibold mb-2">Video Not Available</h3>
+          <p className="text-gray-400 text-sm max-w-md mb-4">The video for this lesson is currently being processed. Please study the text content and PDF materials below.</p>
+          <div className="flex items-center gap-2 text-amber-400 text-xs">
+            <Sparkles className="w-4 h-4" />
+            <span>Text content and PDF are still available for this module</span>
+          </div>
+        </div>
+      </motion.div>
+    )
   }
 
   return (
@@ -510,6 +533,7 @@ function VideoPlayer({ url, title }: { url: string; title: string }) {
         playsInline
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
+        onError={() => setVideoError(true)}
       >
         Your browser does not support the video tag.
       </video>
