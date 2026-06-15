@@ -128,47 +128,82 @@ export async function seedDatabase() {
     data: {
       title: 'Mini Bar Technology Deep Dive',
       description: 'Understanding compressor, absorption, and thermoelectric mini bar technologies',
-      content: `<h3>Mini Bar Technology Types</h3>
-<p>LAXREE offers three core mini bar technologies to suit every hotel room type and budget:</p>
-<h4>1. Compressor Mini Bars</h4>
+      content: `<div style="font-family:system-ui,sans-serif;line-height:1.7;color:#1a1a1a">
+<img src="https://sfile.chatglm.cn/images-ppt/650c00aeb47d.png" alt="LAXREE Mini Bar Product Range" style="width:100%;max-width:600px;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1)" />
+<h2 style="color:#065f46;border-bottom:2px solid #059669;padding-bottom:8px">Mini Bar Technology Deep Dive</h2>
+<p>LAXREE offers three core mini bar technologies to suit every hotel room type and budget. Understanding the differences between these technologies is critical for recommending the right product to each client segment. Whether you are speaking with a budget hotel owner focused on upfront cost, or a 5-star general manager demanding absolute silence, LAXREE has the perfect solution. This module will equip you with the technical knowledge and sales arguments to close deals confidently across all hotel categories.</p>
+
+<h3 style="color:#047857;margin-top:24px">1. Compressor Mini Bars</h3>
+<p>Compressor technology uses a refrigerant cycle similar to a household refrigerator. A motorized compressor circulates refrigerant through evaporator coils, absorbing heat from the interior and expelling it through condenser coils at the back. This produces the most powerful cooling but introduces a low hum from the moving parts.</p>
 <ul>
-<li><strong>Cooling:</strong> High cooling power (0-10°C)</li>
-<li><strong>Noise:</strong> Low hum noise (~40dB)</li>
-<li><strong>Energy:</strong> Lower efficiency</li>
-<li><strong>Cost:</strong> Most affordable</li>
-<li><strong>Maintenance:</strong> Higher (moving parts)</li>
-<li><strong>Ideal For:</strong> Budget rooms, guest houses</li>
+<li><strong>Cooling Power:</strong> High — maintains 0–10°C even in ambient temperatures up to 43°C</li>
+<li><strong>Noise Level:</strong> Low hum (~40dB), audible in quiet rooms</li>
+<li><strong>Energy Consumption:</strong> Lower efficiency due to compressor cycling</li>
+<li><strong>Price Point:</strong> Most affordable entry — ideal for cost-sensitive projects</li>
+<li><strong>Maintenance:</strong> Higher — compressor has moving parts subject to wear</li>
+<li><strong>Best Fit:</strong> Budget hotels, guest houses, serviced apartments where silence is not critical</li>
 </ul>
-<h4>2. Absorption Mini Bars</h4>
+
+<h3 style="color:#047857;margin-top:24px">2. Absorption Mini Bars</h3>
+<p>Absorption technology uses a heat source (electric heater) to drive a refrigeration cycle with ammonia, water, and hydrogen gas. There are no moving parts, resulting in completely silent operation. The trade-off is moderate cooling capacity and higher energy draw, but for premium hotels where guest silence is non-negotiable, absorption is the gold standard.</p>
 <ul>
-<li><strong>Cooling:</strong> Moderate (5-12°C)</li>
-<li><strong>Noise:</strong> Silent operation (0dB)</li>
-<li><strong>Energy:</strong> Medium efficiency</li>
-<li><strong>Cost:</strong> Higher</li>
-<li><strong>Maintenance:</strong> Low (no compressor)</li>
-<li><strong>Ideal For:</strong> Premium rooms, 5-star hotels</li>
+<li><strong>Cooling Power:</strong> Moderate — maintains 5–12°C depending on ambient temperature</li>
+<li><strong>Noise Level:</strong> Truly silent (0dB) — no vibrations, no moving parts</li>
+<li><strong>Energy Consumption:</strong> Medium efficiency — continuous heat-based cycle</li>
+<li><strong>Price Point:</strong> Higher than compressor, justified by silence premium</li>
+<li><strong>Maintenance:</strong> Very low — no compressor means fewer breakdowns and longer lifespan</li>
+<li><strong>Best Fit:</strong> 5-star hotels, luxury suites, premium rooms where guest comfort is paramount</li>
 </ul>
-<h4>3. Thermoelectric Mini Bars</h4>
+
+<h3 style="color:#047857;margin-top:24px">3. Thermoelectric Mini Bars</h3>
+<p>Thermoelectric cooling uses the Peltier effect — when electric current passes through a semiconductor junction, heat is transferred from one side to the other. LAXREE enhances this with a Japanese-grade aluminum heat sink and dual-fan system for superior heat dissipation. This produces near-silent operation with excellent energy efficiency, making it the most popular choice for mid-to-premium hotels.</p>
 <ul>
-<li><strong>Cooling:</strong> Moderate (5-15°C solid, 7-15°C glass)</li>
-<li><strong>Noise:</strong> Silent (≤25dB, vibration-free)</li>
-<li><strong>Energy:</strong> High efficiency (55 Watts)</li>
-<li><strong>Cost:</strong> Medium</li>
-<li><strong>Maintenance:</strong> Low (no moving parts)</li>
-<li><strong>Ideal For:</strong> Premium rooms, 5-star hotels</li>
+<li><strong>Cooling Power:</strong> Moderate — 5–15°C (solid door) / 7–15°C (glass door)</li>
+<li><strong>Noise Level:</strong> Ultra-quiet (≤25dB) — virtually vibration-free</li>
+<li><strong>Energy Consumption:</strong> High efficiency — only 55 Watts, lowest running cost</li>
+<li><strong>Price Point:</strong> Medium — best value for performance</li>
+<li><strong>Maintenance:</strong> Low — no moving parts in cooling system</li>
+<li><strong>Best Fit:</strong> Premium rooms, 4-star and 5-star hotels seeking silence without the absorption price premium</li>
 </ul>
-<h4>Why Hotels Prefer Thermoelectric</h4>
+
+<h3 style="color:#047857;margin-top:24px">Technology Comparison Matrix</h3>
 <table style="width:100%;border-collapse:collapse;margin:10px 0">
-<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Benefit</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Explanation</th></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">Completely Silent</td><td style="padding:8px;border:1px solid #e5e7eb">0 dB noise, no moving parts</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">Energy Efficient</td><td style="padding:8px;border:1px solid #e5e7eb">Lower electricity bills, long-term savings</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">Low Maintenance</td><td style="padding:8px;border:1px solid #e5e7eb">No compressor = fewer breakdowns</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">Compact & Lightweight</td><td style="padding:8px;border:1px solid #e5e7eb">Easy install in tight spaces</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">Eco-Friendly</td><td style="padding:8px;border:1px solid #e5e7eb">CFC free, lower carbon footprint</td></tr>
-</table>`,
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Parameter</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Compressor</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Absorption</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Thermoelectric</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Cooling Range</td><td style="padding:8px;border:1px solid #e5e7eb">0–10°C</td><td style="padding:8px;border:1px solid #e5e7eb">5–12°C</td><td style="padding:8px;border:1px solid #e5e7eb">5–15°C / 7–15°C</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Noise Level</td><td style="padding:8px;border:1px solid #e5e7eb">~40dB</td><td style="padding:8px;border:1px solid #e5e7eb">0dB (silent)</td><td style="padding:8px;border:1px solid #e5e7eb">≤25dB</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Power (Watts)</td><td style="padding:8px;border:1px solid #e5e7eb">80–100W</td><td style="padding:8px;border:1px solid #e5e7eb">65–75W</td><td style="padding:8px;border:1px solid #e5e7eb">55W</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Price Range</td><td style="padding:8px;border:1px solid #e5e7eb">₹6,700</td><td style="padding:8px;border:1px solid #e5e7eb">₹9,200–9,800</td><td style="padding:8px;border:1px solid #e5e7eb">₹8,400–9,200</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Lifespan</td><td style="padding:8px;border:1px solid #e5e7eb">5–7 years</td><td style="padding:8px;border:1px solid #e5e7eb">8–10 years</td><td style="padding:8px;border:1px solid #e5e7eb">7–9 years</td></tr>
+</table>
+
+<h3 style="color:#047857;margin-top:24px">Installation Guide</h3>
+<ol>
+<li>Position the mini bar on a flat, level surface with minimum 10cm clearance from the wall for ventilation</li>
+<li>Ensure the power outlet is accessible and rated for the unit's wattage</li>
+<li>For glass door models, avoid direct sunlight exposure which increases cooling load</li>
+<li>Allow 2–4 hours for initial cooling before stocking beverages</li>
+<li>For lock-option models, test the cam-lock mechanism before guest handover</li>
+</ol>
+
+<h3 style="color:#047857;margin-top:24px">Troubleshooting Quick Reference</h3>
+<table style="width:100%;border-collapse:collapse;margin:10px 0">
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Issue</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Likely Cause</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Solution</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Not cooling</td><td style="padding:8px;border:1px solid #e5e7eb">Power disconnected / thermostat off</td><td style="padding:8px;border:1px solid #e5e7eb">Check power supply, adjust thermostat</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Excessive condensation</td><td style="padding:8px;border:1px solid #e5e7eb">Door seal gap / overloading</td><td style="padding:8px;border:1px solid #e5e7eb">Check gasket alignment, reduce contents</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Unusual noise (compressor)</td><td style="padding:8px;border:1px solid #e5e7eb">Vibrating against surface</td><td style="padding:8px;border:1px solid #e5e7eb">Re-level unit, add rubber pads</td></tr>
+</table>
+
+<h3 style="color:#047857;margin-top:24px">Sales Talking Points</h3>
+<ul>
+<li><strong>For Budget Hotels:</strong> "Our compressor mini bar gives you the most cooling power at the lowest price — perfect for guest houses and budget properties."</li>
+<li><strong>For 4-Star Hotels:</strong> "Thermoelectric models deliver near-silent operation at 55 Watts — your guests sleep peacefully while you save on electricity."</li>
+<li><strong>For 5-Star Hotels:</strong> "Absorption technology means zero noise, zero vibration, and zero guest complaints. It's the choice of leading luxury chains."</li>
+</ul>
+
+<h3 style="color:#047857;margin-top:24px">Cross-Selling Suggestions</h3>
+<p>When selling mini bars, recommend complementary products: <strong>Electric Kettles</strong> (LRWT-145 for budget, LRWT-156 for premium) for the in-room beverage station, <strong>Safe Boxes</strong> (LRSB-211 for standard, LRSB-209 Orbita for premium) as a natural room-security bundle, and <strong>TCM Trays</strong> to complete the hospitality refreshment corner.</p>
+</div>`,
       contentType: 'video',
-      contentUrl: '/upload/Minibar (1).mp4',
-      pdfUrl: '/upload/Mini Bar.pdf',
       order: 2,
       duration: 20,
       courseId: productAcademyCourse.id,
@@ -181,35 +216,65 @@ export async function seedDatabase() {
     data: {
       title: 'Mini Bar Models & Specifications',
       description: 'Complete model lineup with pricing for LAXREE mini bars',
-      content: `<h3>LAXREE Mini Bar Model Lineup</h3>
+      content: `<div style="font-family:system-ui,sans-serif;line-height:1.7;color:#1a1a1a">
+<img src="https://sfile.chatglm.cn/images-ppt/650c00aeb47d.png" alt="LAXREE Mini Bar Model Lineup" style="width:100%;max-width:600px;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1)" />
+<h2 style="color:#065f46;border-bottom:2px solid #059669;padding-bottom:8px">LAXREE Mini Bar Model Lineup & Specifications</h2>
+<p>LAXREE's mini bar portfolio spans seven models across three technologies, covering every hotel segment from budget guest houses to ultra-luxury suites. This module provides the complete model-by-model breakdown with specifications, pricing, and segment recommendations so you can confidently match the right product to each client's needs. Knowing these specs cold is the foundation of credibility in front of procurement managers and hotel owners.</p>
+
+<h3 style="color:#047857;margin-top:24px">Complete Model Specifications</h3>
 <table style="width:100%;border-collapse:collapse;margin:10px 0">
-<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb">Model</th><th style="padding:8px;border:1px solid #e5e7eb">Description</th><th style="padding:8px;border:1px solid #e5e7eb">SSP (₹)</th></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMB-132</td><td style="padding:8px;border:1px solid #e5e7eb">45L Solid Door Compressor (Auto defrost, LED, 0-10°C)</td><td style="padding:8px;border:1px solid #e5e7eb">6,700</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMB-126</td><td style="padding:8px;border:1px solid #e5e7eb">30L Solid Door Thermoelectric (LED, CFC Free, 5-15°C)</td><td style="padding:8px;border:1px solid #e5e7eb">8,400</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMB-127</td><td style="padding:8px;border:1px solid #e5e7eb">30L Glass Door Thermoelectric (LED, CFC Free, 7-15°C)</td><td style="padding:8px;border:1px solid #e5e7eb">8,700</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMB-128</td><td style="padding:8px;border:1px solid #e5e7eb">40L Solid Door Thermoelectric (LED, CFC Free, 5-15°C)</td><td style="padding:8px;border:1px solid #e5e7eb">8,800</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMB-129</td><td style="padding:8px;border:1px solid #e5e7eb">40L Glass Door Thermoelectric (LED, CFC Free, 7-15°C)</td><td style="padding:8px;border:1px solid #e5e7eb">9,200</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMB-130</td><td style="padding:8px;border:1px solid #e5e7eb">30L Solid Door (Mirror Finish) Absorption (Zero noise, 5-12°C)</td><td style="padding:8px;border:1px solid #e5e7eb">9,200</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMB-131</td><td style="padding:8px;border:1px solid #e5e7eb">40L Solid Door (Mirror Finish) Absorption (Zero noise, 5-12°C)</td><td style="padding:8px;border:1px solid #e5e7eb">9,800</td></tr>
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb">Model</th><th style="padding:8px;border:1px solid #e5e7eb">Technology</th><th style="padding:8px;border:1px solid #e5e7eb">Capacity</th><th style="padding:8px;border:1px solid #e5e7eb">Door</th><th style="padding:8px;border:1px solid #e5e7eb">Cooling</th><th style="padding:8px;border:1px solid #e5e7eb">SSP (₹)</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMB-132</td><td style="padding:8px;border:1px solid #e5e7eb">Compressor</td><td style="padding:8px;border:1px solid #e5e7eb">45L</td><td style="padding:8px;border:1px solid #e5e7eb">Solid</td><td style="padding:8px;border:1px solid #e5e7eb">0–10°C</td><td style="padding:8px;border:1px solid #e5e7eb">6,700</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMB-126</td><td style="padding:8px;border:1px solid #e5e7eb">Thermoelectric</td><td style="padding:8px;border:1px solid #e5e7eb">30L</td><td style="padding:8px;border:1px solid #e5e7eb">Solid</td><td style="padding:8px;border:1px solid #e5e7eb">5–15°C</td><td style="padding:8px;border:1px solid #e5e7eb">8,400</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMB-127</td><td style="padding:8px;border:1px solid #e5e7eb">Thermoelectric</td><td style="padding:8px;border:1px solid #e5e7eb">30L</td><td style="padding:8px;border:1px solid #e5e7eb">Glass</td><td style="padding:8px;border:1px solid #e5e7eb">7–15°C</td><td style="padding:8px;border:1px solid #e5e7eb">8,700</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMB-128</td><td style="padding:8px;border:1px solid #e5e7eb">Thermoelectric</td><td style="padding:8px;border:1px solid #e5e7eb">40L</td><td style="padding:8px;border:1px solid #e5e7eb">Solid</td><td style="padding:8px;border:1px solid #e5e7eb">5–15°C</td><td style="padding:8px;border:1px solid #e5e7eb">8,800</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMB-129</td><td style="padding:8px;border:1px solid #e5e7eb">Thermoelectric</td><td style="padding:8px;border:1px solid #e5e7eb">40L</td><td style="padding:8px;border:1px solid #e5e7eb">Glass</td><td style="padding:8px;border:1px solid #e5e7eb">7–15°C</td><td style="padding:8px;border:1px solid #e5e7eb">9,200</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMB-130</td><td style="padding:8px;border:1px solid #e5e7eb">Absorption</td><td style="padding:8px;border:1px solid #e5e7eb">30L</td><td style="padding:8px;border:1px solid #e5e7eb">Solid (Mirror)</td><td style="padding:8px;border:1px solid #e5e7eb">5–12°C</td><td style="padding:8px;border:1px solid #e5e7eb">9,200</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMB-131</td><td style="padding:8px;border:1px solid #e5e7eb">Absorption</td><td style="padding:8px;border:1px solid #e5e7eb">40L</td><td style="padding:8px;border:1px solid #e5e7eb">Solid (Mirror)</td><td style="padding:8px;border:1px solid #e5e7eb">5–12°C</td><td style="padding:8px;border:1px solid #e5e7eb">9,800</td></tr>
 </table>
-<h4>Door Types</h4>
+
+<h3 style="color:#047857;margin-top:24px">Door Types Explained</h3>
+<h4>Glass Door</h4>
+<p>Glass door models provide easy visibility of stocked items, creating a premium, inviting look for guests. The transparent front encourages minibar usage and increases revenue. Trade-offs include slightly lower insulation efficiency and marginally higher energy consumption. Best suited for hotels where minibar revenue is a priority and aesthetics matter.</p>
+<h4>Solid Door</h4>
+<p>Solid door models offer superior insulation, keeping contents cooler with less energy. The hidden-storage aesthetic works well in minimalist room designs. Solid doors are more energy-efficient and typically cost less than glass door equivalents. Best suited for hotels focused on energy savings or with a concealed-storage design philosophy.</p>
+<h4>Mirror Finish (Absorption Only)</h4>
+<p>The mirror-finish solid door is the premium choice, combining silent absorption technology with an elegant reflective surface that doubles as a room mirror. This dual-purpose design saves wall space and adds a luxury touch. Exclusive to the LRMB-130 and LRMB-131 models.</p>
+
+<h3 style="color:#047857;margin-top:24px">Key Features to Highlight in Sales</h3>
 <ul>
-<li><strong>Glass Door</strong> - Easy visibility, premium look, slightly lower insulation, higher energy use</li>
-<li><strong>Solid Door</strong> - Hidden storage look, higher insulation, standard design, more efficient</li>
+<li><strong>Auto Defrost</strong> — Compressor model (LRMB-132) includes auto defrost, preventing ice buildup and reducing maintenance</li>
+<li><strong>Reversible Door</strong> — All models support left or right opening for flexible room layout planning</li>
+<li><strong>Cam-Lock Security</strong> — Lock option available for VIP rooms and suite-level access control</li>
+<li><strong>Interior LED Lighting</strong> — Energy-efficient LED illuminates contents when the door opens</li>
+<li><strong>Removable Shelves & Can Racks</strong> — Flexible interior layout for different beverage sizes</li>
+<li><strong>Japanese-Grade Aluminum Heat Sink</strong> — Superior heat dissipation in thermoelectric models for reliable performance</li>
+<li><strong>Digital Controller with Auto Cut-Off</strong> — Precise temperature management and safety protection</li>
+<li><strong>CFC Free</strong> — All thermoelectric and absorption models are environmentally certified</li>
 </ul>
-<h4>Key Features to Highlight</h4>
+
+<h3 style="color:#047857;margin-top:24px">Segment-Based Recommendations</h3>
+<table style="width:100%;border-collapse:collapse;margin:10px 0">
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Hotel Segment</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Recommended Model</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Why</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Budget / Guest House</td><td style="padding:8px;border:1px solid #e5e7eb">LRMB-132</td><td style="padding:8px;border:1px solid #e5e7eb">Lowest price, strong cooling, 45L capacity</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">3-Star Business</td><td style="padding:8px;border:1px solid #e5e7eb">LRMB-126 / LRMB-128</td><td style="padding:8px;border:1px solid #e5e7eb">Silent operation at mid-range price</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">4-Star Premium</td><td style="padding:8px;border:1px solid #e5e7eb">LRMB-129</td><td style="padding:8px;border:1px solid #e5e7eb">Glass door + silent TE, premium look</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">5-Star Luxury</td><td style="padding:8px;border:1px solid #e5e7eb">LRMB-131</td><td style="padding:8px;border:1px solid #e5e7eb">Absorption, mirror finish, 40L, zero noise</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Boutique / Heritage</td><td style="padding:8px;border:1px solid #e5e7eb">LRMB-130</td><td style="padding:8px;border:1px solid #e5e7eb">Mirror finish adds design elegance, 30L compact</td></tr>
+</table>
+
+<h3 style="color:#047857;margin-top:24px">Frequently Asked Questions</h3>
 <ul>
-<li>Auto Defrost (compressor models)</li>
-<li>Reversible Door (Left/Right Opening)</li>
-<li>Lock Option for VIP Rooms</li>
-<li>Interior LED Lighting</li>
-<li>Removable Shelves / Can Racks</li>
-<li>Japanese-grade aluminum heat sink fan</li>
-<li>Digital controller with auto cut-off</li>
-</ul>`,
+<li><strong>Q: Can I order a mix of models for different room types?</strong> — A: Absolutely. Most hotels order 2–3 models (standard rooms get LRMB-126, suites get LRMB-131). Volume discounts apply across the combined order.</li>
+<li><strong>Q: What is the lead time for orders?</strong> — A: Standard models ship within 7–10 business days. Custom branding adds 5–7 days.</li>
+<li><strong>Q: Are replacement parts available?</strong> — A: Yes. Shelves, door gaskets, locks, and LED lights are stocked for immediate dispatch. Heat sink assemblies available within 48 hours.</li>
+<li><strong>Q: Do you offer a warranty?</strong> — A: All LAXREE mini bars come with a standard 1-year warranty covering manufacturing defects. Extended warranty options are available.</li>
+</ul>
+
+<h3 style="color:#047857;margin-top:24px">Cross-Selling Opportunities</h3>
+<p>Every mini bar order is an opportunity to bundle <strong>TCM Trays</strong> (LRWT-158 for budget, LRWT-163 for premium) to complete the in-room refreshment station. Pair with <strong>Electric Kettles</strong> for the full beverage setup, and recommend <strong>Safe Boxes</strong> as a room-security package deal.</p>
+</div>`,
       contentType: 'video',
-      contentUrl: '/upload/Minibar (1).mp4',
-      pdfUrl: '/upload/Mini Bar.pdf',
       order: 3,
       duration: 20,
       courseId: productAcademyCourse.id,
@@ -222,30 +287,63 @@ export async function seedDatabase() {
     data: {
       title: 'LAXREE vs Godrej Qube Comparison',
       description: 'Competitive comparison showing LAXREE advantages over Godrej Qube',
-      content: `<h3>Competitive Comparison: LAXREE Mini Bar vs Godrej Qube</h3>
-<p>When a client compares our mini bar with Godrej Qube, here's how we win:</p>
+      content: `<div style="font-family:system-ui,sans-serif;line-height:1.7;color:#1a1a1a">
+<img src="https://sfile.chatglm.cn/images-ppt/650c00aeb47d.png" alt="LAXREE vs Godrej Qube Mini Bar Comparison" style="width:100%;max-width:600px;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1)" />
+<h2 style="color:#065f46;border-bottom:2px solid #059669;padding-bottom:8px">Competitive Comparison: LAXREE Mini Bar vs Godrej Qube</h2>
+<p>Godrej Qube is the most common competitor you'll face in mini bar deals. When a client compares our mini bar with Godrej Qube, this module arms you with the data, talking points, and ROI calculations to win decisively. The key insight is that while Godrej Qube may appear cheaper on the SSP, LAXREE delivers superior total cost of ownership through energy savings, lower maintenance, and better guest experience — a compelling value story for any hotel owner or procurement manager.</p>
+
+<h3 style="color:#047857;margin-top:24px">Head-to-Head Feature Comparison</h3>
 <table style="width:100%;border-collapse:collapse;margin:10px 0">
 <tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Feature</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">LAXREE Mini Bar</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Godrej Qube</th></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">Performance @ 30°C</td><td style="padding:8px;border:1px solid #e5e7eb">6°C (solid) / 8.5°C (glass)</td><td style="padding:8px;border:1px solid #e5e7eb">8-15°C+ only</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">Cooling Tech</td><td style="padding:8px;border:1px solid #e5e7eb">Dual fan thermoelectric / Absorption</td><td style="padding:8px;border:1px solid #e5e7eb">Basic TEC plate, no internal fan</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">Heat Sink Fan</td><td style="padding:8px;border:1px solid #e5e7eb">Japanese-grade aluminum</td><td style="padding:8px;border:1px solid #e5e7eb">Plastic fan, low life</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">Temperature Control</td><td style="padding:8px;border:1px solid #e5e7eb">Digital controller with auto cut-off</td><td style="padding:8px;border:1px solid #e5e7eb">Manual knob</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LED Light</td><td style="padding:8px;border:1px solid #e5e7eb">✅ Yes</td><td style="padding:8px;border:1px solid #e5e7eb">❌ No</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Performance @ 30°C</td><td style="padding:8px;border:1px solid #e5e7eb">6°C (solid) / 8.5°C (glass)</td><td style="padding:8px;border:1px solid #e5e7eb">8–15°C+ only</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Cooling Technology</td><td style="padding:8px;border:1px solid #e5e7eb">Dual fan thermoelectric / Absorption</td><td style="padding:8px;border:1px solid #e5e7eb">Basic TEC plate, no internal fan</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Heat Sink Fan</td><td style="padding:8px;border:1px solid #e5e7eb">Japanese-grade aluminum</td><td style="padding:8px;border:1px solid #e5e7eb">Plastic fan, shorter lifespan</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Temperature Control</td><td style="padding:8px;border:1px solid #e5e7eb">Digital controller with auto cut-off</td><td style="padding:8px;border:1px solid #e5e7eb">Manual knob only</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Interior LED Light</td><td style="padding:8px;border:1px solid #e5e7eb">✅ Yes — premium feel for guests</td><td style="padding:8px;border:1px solid #e5e7eb">❌ No</td></tr>
 <tr><td style="padding:8px;border:1px solid #e5e7eb">Door Lock</td><td style="padding:8px;border:1px solid #e5e7eb">✅ Yes (cam-lock with key)</td><td style="padding:8px;border:1px solid #e5e7eb">❌ No</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">Storage</td><td style="padding:8px;border:1px solid #e5e7eb">Adjustable shelves + bottle racks</td><td style="padding:8px;border:1px solid #e5e7eb">Fixed layout</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">Noise</td><td style="padding:8px;border:1px solid #e5e7eb">Ultra-low (≤25dB)</td><td style="padding:8px;border:1px solid #e5e7eb">Audible hum</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">Power</td><td style="padding:8px;border:1px solid #e5e7eb">55 Watts</td><td style="padding:8px;border:1px solid #e5e7eb">60 Watts</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Storage Layout</td><td style="padding:8px;border:1px solid #e5e7eb">Adjustable shelves + bottle racks</td><td style="padding:8px;border:1px solid #e5e7eb">Fixed layout, limited flexibility</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Noise Level</td><td style="padding:8px;border:1px solid #e5e7eb">Ultra-low (≤25dB)</td><td style="padding:8px;border:1px solid #e5e7eb">Audible hum (~35–40dB)</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Power Consumption</td><td style="padding:8px;border:1px solid #e5e7eb">55 Watts</td><td style="padding:8px;border:1px solid #e5e7eb">60 Watts</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Door Options</td><td style="padding:8px;border:1px solid #e5e7eb">Solid, Glass, Mirror Finish</td><td style="padding:8px;border:1px solid #e5e7eb">Solid only</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Technology Options</td><td style="padding:8px;border:1px solid #e5e7eb">3 (Compressor, TE, Absorption)</td><td style="padding:8px;border:1px solid #e5e7eb">1 (Basic thermoelectric)</td></tr>
 </table>
-<h4>Electricity Cost Analysis (100 Rooms)</h4>
+
+<h3 style="color:#047857;margin-top:24px">Total Cost of Ownership: 100-Room Hotel</h3>
+<p>The true cost of a mini bar is not the purchase price — it's the total cost of ownership over 5+ years. Here's the math that wins deals:</p>
+<table style="width:100%;border-collapse:collapse;margin:10px 0">
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Cost Factor</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">LAXREE</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Godrej Qube</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Savings</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Daily Energy (100 rooms × 24hrs)</td><td style="padding:8px;border:1px solid #e5e7eb">132 kWh</td><td style="padding:8px;border:1px solid #e5e7eb">144 kWh</td><td style="padding:8px;border:1px solid #e5e7eb">12 kWh/day</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Daily Electricity Cost (@ ₹9/kWh)</td><td style="padding:8px;border:1px solid #e5e7eb">₹1,188</td><td style="padding:8px;border:1px solid #e5e7eb">₹1,296</td><td style="padding:8px;border:1px solid #e5e7eb">₹108/day</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Annual Electricity Cost</td><td style="padding:8px;border:1px solid #e5e7eb">₹4,33,620</td><td style="padding:8px;border:1px solid #e5e7eb">₹4,73,040</td><td style="padding:8px;border:1px solid #e5e7eb">₹39,420/year</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">5-Year Energy Cost</td><td style="padding:8px;border:1px solid #e5e7eb">₹21,68,100</td><td style="padding:8px;border:1px solid #e5e7eb">₹23,65,200</td><td style="padding:8px;border:1px solid #e5e7eb">₹1,97,100</td></tr>
+</table>
+
+<h3 style="color:#047857;margin-top:24px">Sales Scripts for Common Objections</h3>
+<h4>"Godrej Qube is cheaper"</h4>
+<p>"You're right that the upfront SSP is slightly lower. But let me show you the total cost of ownership. LAXREE saves you 5 watts per unit — that's nearly ₹40,000 per year in electricity for 100 rooms. Over 5 years, you save almost ₹2 lakhs on energy alone. Plus, our digital controller prevents temperature fluctuations that spoil beverages, reducing waste. The lock option protects VIP room inventory. And the LED interior light increases minibar usage revenue by making items visible and appealing."</p>
+
+<h4>"We've always used Godrej"</h4>
+<p>"Many of our current clients said the same thing before switching. The key difference they noticed? Guest complaints about noise dropped to zero, and minibar revenue increased because the LED light and glass door option make items more visible. I can connect you with a reference property that made the switch."</p>
+
+<h4>"I need proof of performance"</h4>
+<p>"Absolutely. We can arrange a demo unit for your property so you can test it side-by-side with your current minibar. You'll see the temperature difference, hear the silence, and experience the quality firsthand. Many of our largest accounts started with a pilot of 5–10 rooms."</p>
+
+<h3 style="color:#047857;margin-top:24px">When NOT to Compete on Price</h3>
+<p>Never lead with discounts. Instead, reframe the conversation:</p>
 <ul>
-<li>Daily: 150 units × ₹9 = ₹1,350/day</li>
-<li>Monthly: ₹40,500/month</li>
-<li>Yearly: ₹4,86,000/year</li>
-<li>LAXREE saves 5 watts per unit vs Godrej</li>
-</ul>`,
+<li><strong>Shift from price to value:</strong> "Let me show you the total cost of ownership comparison"</li>
+<li><strong>Shift from product to experience:</strong> "Your guests deserve silent, reliable minibars"</li>
+<li><strong>Shift from unit to package:</strong> "LAXREE offers 15+ categories — single vendor, single invoice, single service team"</li>
+</ul>
+
+<h3 style="color:#047857;margin-top:24px">FAQ</h3>
+<ul>
+<li><strong>Q: Do you price-match Godrej Qube?</strong> — A: We don't compete on price; we compete on value. The TCO savings alone exceed any price difference.</li>
+<li><strong>Q: Can we trial before committing?</strong> — A: Yes, pilot programs of 5–10 rooms are available for qualified properties.</li>
+<li><strong>Q: What about after-sales service vs Godrej?</strong> — A: LAXREE provides PAN India service with spare parts within 48 hours. Our single-vendor model means one call solves everything.</li>
+</ul>
+</div>`,
       contentType: 'video',
-      contentUrl: '/upload/Minibar (1).mp4',
-      pdfUrl: '/upload/Mini Bar.pdf',
       order: 4,
       duration: 20,
       courseId: productAcademyCourse.id,
@@ -258,39 +356,81 @@ export async function seedDatabase() {
     data: {
       title: 'Safe Box Product Series',
       description: 'Complete overview of Essential, Medium, Laptop, and Orbita safe box series',
-      content: `<h3>LAXREE Safe Box Product Line</h3>
-<p>LAXREE offers 4 safe box series designed for every hotel room type:</p>
-<h4>1. Essential Series</h4>
+      content: `<div style="font-family:system-ui,sans-serif;line-height:1.7;color:#1a1a1a">
+<img src="https://sfile.chatglm.cn/images-ppt/f896588e4161.jpg" alt="LAXREE Safe Box Product Series" style="width:100%;max-width:600px;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1)" />
+<h2 style="color:#065f46;border-bottom:2px solid #059669;padding-bottom:8px">LAXREE Safe Box Product Series</h2>
+<p>LAXREE offers four distinct safe box series designed to cover every hotel segment from budget guest houses to ultra-luxury suites. Hotel safes are one of the most frequently evaluated in-room products — every guest expects a secure place for valuables, and every hotel needs a solution that balances security, ease of use, and cost. This module provides a comprehensive overview of each series, their specifications, and the ideal use cases so you can recommend the right model with confidence.</p>
+
+<h3 style="color:#047857;margin-top:24px">1. Essential Series — Budget Reliability</h3>
+<p>The Essential Series delivers core safe-box functionality at the most competitive price point in the market. Designed for budget hotels and guest houses where the primary requirement is a secure lockable container without advanced features. Despite the affordable price, every Essential safe includes a manual override key and low-energy battery operation.</p>
 <ul>
-<li><strong>Model:</strong> LRSB-201 (W230×D170×H170mm)</li>
+<li><strong>Model:</strong> LRSB-201 (W230 × D170 × H170mm)</li>
 <li><strong>SSP:</strong> ₹1,700</li>
-<li><strong>Features:</strong> Manual override key, low energy, master key</li>
-<li><strong>Ideal For:</strong> Budget rooms, guest houses</li>
+<li><strong>Locking:</strong> Electronic keypad with manual override key</li>
+<li><strong>Power:</strong> 4× AA batteries (1–1.5 year life), low battery alert</li>
+<li><strong>Mounting:</strong> Pre-drilled holes for floor or shelf mounting</li>
+<li><strong>Best For:</strong> Budget hotels, guest houses, hostels, serviced apartments</li>
 </ul>
-<h4>2. Medium Series</h4>
+
+<h3 style="color:#047857;margin-top:24px">2. Medium Series — Standard Security</h3>
+<p>The Medium Series adds intelligent security features like auto-lockout after wrong PIN entries and personal code management. This is the workhorse of the LAXREE safe box lineup — the most popular choice for 3-star and 4-star hotels that need reliable security without the premium price tag.</p>
 <ul>
-<li><strong>Models:</strong> LRSB-206 (W200×D310×H200), LRSB-211 (W315×D200×H200)</li>
-<li><strong>SSP:</strong> ₹2,888 - ₹3,000</li>
-<li><strong>Features:</strong> Auto-lock after 4 wrong inputs, personal PINs, pre-drilled mounting</li>
-<li><strong>Ideal For:</strong> Standard rooms</li>
+<li><strong>Models:</strong> LRSB-206 (W200 × D310 × H200mm), LRSB-211 (W315 × D200 × H200mm)</li>
+<li><strong>SSP:</strong> ₹2,888 – ₹3,000</li>
+<li><strong>Locking:</strong> 4–6 digit personal codes with auto-lock after 4 wrong inputs</li>
+<li><strong>Power:</strong> 4× AA batteries with low battery alert</li>
+<li><strong>Mounting:</strong> Pre-drilled for secure anchoring</li>
+<li><strong>Best For:</strong> Standard rooms in 3-star and 4-star hotels</li>
 </ul>
-<h4>3. Laptop Series</h4>
+
+<h3 style="color:#047857;margin-top:24px">3. Laptop Series — Premium Business</h3>
+<p>The Laptop Series is designed for business travelers who need to secure laptops and larger valuables. These models feature LED displays, interior lighting, and comprehensive audit trails — features that corporate hotels and business-focused properties demand. The audit trail capability is a significant differentiator that most competitors at this price point cannot match.</p>
 <ul>
-<li><strong>Models:</strong> LRSB-214, LRSB-203, LRSB-204 (W420×D370×H200)</li>
-<li><strong>SSP:</strong> ₹4,335 - ₹4,590</li>
-<li><strong>Features:</strong> LED Display, LED Interior Light, Audit trail (100 logs), Back-lit Keypad</li>
-<li><strong>Ideal For:</strong> Premium rooms, business suites</li>
+<li><strong>Models:</strong> LRSB-214, LRSB-203, LRSB-204 (W420 × D370 × H200mm)</li>
+<li><strong>SSP:</strong> ₹4,335 – ₹4,590</li>
+<li><strong>Locking:</strong> Advanced electronic with back-lit keypad, personal + master codes</li>
+<li><strong>Special Features:</strong> LED display, LED interior light, 100-entry audit trail</li>
+<li><strong>Power:</strong> 4× AA batteries with low battery alert</li>
+<li><strong>Best For:</strong> Business hotels, premium rooms, executive suites</li>
 </ul>
-<h4>4. Orbita Series</h4>
+
+<h3 style="color:#047857;margin-top:24px">4. Orbita Series — Ultra Luxury</h3>
+<p>The Orbita Series represents the pinnacle of hotel safe technology. With master password capability, comprehensive audit trails, and premium LED interior lighting, the Orbita is designed for 5-star properties where guest experience and management control are equally paramount. The audit trail provides hotel management with a complete access history — invaluable for resolving disputes and ensuring accountability.</p>
 <ul>
-<li><strong>Model:</strong> LRSB-209 (W420×D370×H200)</li>
+<li><strong>Model:</strong> LRSB-209 (W420 × D370 × H200mm)</li>
 <li><strong>SSP:</strong> ₹5,220</li>
-<li><strong>Features:</strong> Master Password, Auto lock, Full audit trail, LED Interior Light</li>
-<li><strong>Ideal For:</strong> 5-star hotels, luxury suites</li>
-</ul>`,
+<li><strong>Locking:</strong> Master password + personal codes, auto-lock</li>
+<li><strong>Special Features:</strong> Full audit trail (100 logs), LED interior light, back-lit keypad</li>
+<li><strong>Power:</strong> 4× AA batteries with low battery alert</li>
+<li><strong>Best For:</strong> 5-star luxury hotels, presidential suites, high-security rooms</li>
+</ul>
+
+<h3 style="color:#047857;margin-top:24px">Complete Specifications Comparison</h3>
+<table style="width:100%;border-collapse:collapse;margin:10px 0">
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Feature</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Essential</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Medium</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Laptop</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Orbita</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">SSP Range</td><td style="padding:8px;border:1px solid #e5e7eb">₹1,700</td><td style="padding:8px;border:1px solid #e5e7eb">₹2,888–3,000</td><td style="padding:8px;border:1px solid #e5e7eb">₹4,335–4,590</td><td style="padding:8px;border:1px solid #e5e7eb">₹5,220</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Auto Lockout</td><td style="padding:8px;border:1px solid #e5e7eb">❌</td><td style="padding:8px;border:1px solid #e5e7eb">✅ 4 wrong</td><td style="padding:8px;border:1px solid #e5e7eb">✅ 4 wrong</td><td style="padding:8px;border:1px solid #e5e7eb">✅ 4 wrong</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LED Display</td><td style="padding:8px;border:1px solid #e5e7eb">❌</td><td style="padding:8px;border:1px solid #e5e7eb">❌</td><td style="padding:8px;border:1px solid #e5e7eb">✅</td><td style="padding:8px;border:1px solid #e5e7eb">✅</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Interior Light</td><td style="padding:8px;border:1px solid #e5e7eb">❌</td><td style="padding:8px;border:1px solid #e5e7eb">❌</td><td style="padding:8px;border:1px solid #e5e7eb">✅ LED</td><td style="padding:8px;border:1px solid #e5e7eb">✅ LED</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Audit Trail</td><td style="padding:8px;border:1px solid #e5e7eb">❌</td><td style="padding:8px;border:1px solid #e5e7eb">❌</td><td style="padding:8px;border:1px solid #e5e7eb">✅ 100 logs</td><td style="padding:8px;border:1px solid #e5e7eb">✅ 100 logs</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Master Password</td><td style="padding:8px;border:1px solid #e5e7eb">❌</td><td style="padding:8px;border:1px solid #e5e7eb">❌</td><td style="padding:8px;border:1px solid #e5e7eb">⚠️</td><td style="padding:8px;border:1px solid #e5e7eb">✅</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Laptop-Fit Size</td><td style="padding:8px;border:1px solid #e5e7eb">❌</td><td style="padding:8px;border:1px solid #e5e7eb">❌</td><td style="padding:8px;border:1px solid #e5e7eb">✅</td><td style="padding:8px;border:1px solid #e5e7eb">✅</td></tr>
+</table>
+
+<h3 style="color:#047857;margin-top:24px">Installation Guide</h3>
+<ol>
+<li>Choose mounting location: inside wardrobe, under desk, or in closet shelf</li>
+<li>Mark drilling points through pre-drilled mounting holes in the safe base</li>
+<li>Drill appropriate anchors into the floor or shelf surface</li>
+<li>Secure safe with provided bolts — verify it cannot be removed by hand</li>
+<li>Install 4× AA batteries and test electronic lock before guest handover</li>
+<li>Set master code first, then demonstrate guest code setting procedure</li>
+</ol>
+
+<h3 style="color:#047857;margin-top:24px">Cross-Selling Suggestions</h3>
+<p>Safe boxes pair naturally with <strong>RFID Door Locks</strong> for a complete room security package. For premium rooms, combine the Laptop or Orbita safe with <strong>Mini Bars</strong> (lock-option models) for VIP-level inventory protection. Also recommend <strong>Hair Dryers</strong> with wall-mount and shaver socket to complete the premium room setup.</p>
+</div>`,
       contentType: 'video',
-      contentUrl: '/upload/Safe_box.mp4',
-      pdfUrl: '/upload/Safe Box.pdf',
       order: 5,
       duration: 20,
       courseId: productAcademyCourse.id,
@@ -303,30 +443,78 @@ export async function seedDatabase() {
     data: {
       title: 'Safe Box Security Features & Competitive Edge',
       description: 'Deep dive into security features and competitive advantages of LAXREE safe boxes',
-      content: `<h3>Security Features Deep Dive</h3>
-<h4>Key Security Features</h4>
+      content: `<div style="font-family:system-ui,sans-serif;line-height:1.7;color:#1a1a1a">
+<img src="https://sfile.chatglm.cn/images-ppt/f896588e4161.jpg" alt="LAXREE Safe Box Security Features" style="width:100%;max-width:600px;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1)" />
+<h2 style="color:#065f46;border-bottom:2px solid #059669;padding-bottom:8px">Safe Box Security Features & Competitive Edge</h2>
+<p>Understanding the security features of LAXREE safe boxes is essential for building confidence with hotel owners and procurement managers. Security is the primary purchase driver for hotel safes — features like audit trails, auto-lockout, and dual override systems aren't just nice-to-haves; they're deal-makers that directly address hotel management's concerns about guest disputes, theft liability, and operational control. This module breaks down every security feature and shows how LAXREE outperforms the competition.</p>
+
+<h3 style="color:#047857;margin-top:24px">Core Security Features</h3>
+<h4>4–6 Digit Personal Codes</h4>
+<p>Guests set their own personal code at check-in, providing a unique combination that only they know. The system supports 4 to 6 digit codes, balancing ease of use with security strength. Each new guest can reset the code, and housekeeping access is managed through the master code.</p>
+
+<h4>Auto Lockout After Wrong Entries</h4>
+<p>After 4 consecutive incorrect code entries, the safe automatically locks and requires master override to reset. This prevents brute-force attempts and provides a clear alert to hotel security. This feature is standard on Medium, Laptop, and Orbita series — most competitors at comparable price points don't offer this.</p>
+
+<h4>Dual Override System</h4>
+<p>Every LAXREE safe provides two independent override methods:</p>
 <ul>
-<li><strong>4-6 Digit Personal Codes</strong> - Secure guest access</li>
-<li><strong>Auto Lockout</strong> - Locks after 4 incorrect entries</li>
-<li><strong>Dual Override</strong> - Master key + Manual key backup</li>
-<li><strong>Low Energy Tech</strong> - 4 AA batteries with low battery alert (1-1.5 year life)</li>
-<li><strong>Audit Trail</strong> - 100 entry logs in advanced models</li>
-<li><strong>LED Interior Light</strong> - Easy visibility in dark rooms</li>
-<li><strong>Pre-drilled Mounting Holes</strong> - All models, easy installation</li>
-<li><strong>Custom Hotel Branding</strong> - Logo printing available</li>
+<li><strong>Master Code:</strong> Electronic override used by hotel management to access any safe in an emergency</li>
+<li><strong>Manual Override Key:</strong> Physical key backup that works even when batteries are dead or electronics fail</li>
 </ul>
-<h4>LAXREE vs Competitors</h4>
+<p>This dual system ensures the hotel is never locked out of a safe, even in worst-case scenarios. Competitors often provide only one override method, creating a single point of failure.</p>
+
+<h4>Low Energy Technology</h4>
+<p>All LAXREE safes operate on just 4 AA batteries with an expected lifespan of 1–1.5 years. The low-energy design means fewer battery replacements across hundreds of rooms, reducing maintenance costs and housekeeping workload. A low battery alert provides 2–4 weeks of warning before batteries are fully depleted, ensuring no guest is ever locked out due to dead batteries.</p>
+
+<h4>Audit Trail (Laptop & Orbita Series)</h4>
+<p>The audit trail records up to 100 access events with timestamps, providing a complete history of who accessed the safe and when. This is invaluable for:</p>
+<ul>
+<li>Resolving guest disputes about missing valuables</li>
+<li>Verifying housekeeping access logs</li>
+<li>Providing evidence for insurance claims</li>
+<li>Monitoring unauthorized access attempts</li>
+</ul>
+<p>Most competitors in the ₹3,000–5,000 range do not offer audit trail capability. This feature alone can tip the decision in LAXREE's favor when selling to management-conscious hotel chains.</p>
+
+<h4>LED Interior Light (Laptop & Orbita)</h4>
+<p>The LED interior light activates when the safe door opens, allowing guests to see contents clearly even in dimly lit wardrobes or closets. This premium touch enhances the guest experience and reduces the chance of items being left behind at checkout.</p>
+
+<h3 style="color:#047857;margin-top:24px">Competitive Comparison: LAXREE vs Industry</h3>
 <table style="width:100%;border-collapse:collapse;margin:10px 0">
-<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Feature</th><th style="padding:8px;border:1px solid #e5e7eb">LAXREE</th><th style="padding:8px;border:1px solid #e5e7eb">Godrej/Yale/Hafele</th></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">Auto Lock on Wrong Code</td><td style="padding:8px;border:1px solid #e5e7eb">✅ (4 wrong attempts)</td><td style="padding:8px;border:1px solid #e5e7eb">⚠️ Not standard</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">Audit Trail</td><td style="padding:8px;border:1px solid #e5e7eb">✅ 100 records</td><td style="padding:8px;border:1px solid #e5e7eb">❌ Many don't offer</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LED Interior Light</td><td style="padding:8px;border:1px solid #e5e7eb">✅ Laptop & Orbita</td><td style="padding:8px;border:1px solid #e5e7eb">❌ Usually not available</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">Override Options</td><td style="padding:8px;border:1px solid #e5e7eb">✅ Master + Individual Key</td><td style="padding:8px;border:1px solid #e5e7eb">⚠️ Some only one</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">Custom Branding</td><td style="padding:8px;border:1px solid #e5e7eb">✅ Hotel logo available</td><td style="padding:8px;border:1px solid #e5e7eb">❌ Rarely offered</td></tr>
-</table>`,
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Feature</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">LAXREE</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Godrej / Yale / Hafele</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Auto Lock on Wrong Code</td><td style="padding:8px;border:1px solid #e5e7eb">✅ After 4 attempts</td><td style="padding:8px;border:1px solid #e5e7eb">⚠️ Not standard across models</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Audit Trail</td><td style="padding:8px;border:1px solid #e5e7eb">✅ Up to 100 records</td><td style="padding:8px;border:1px solid #e5e7eb">❌ Rarely offered below ₹8,000</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LED Interior Light</td><td style="padding:8px;border:1px solid #e5e7eb">✅ Laptop & Orbita series</td><td style="padding:8px;border:1px solid #e5e7eb">❌ Usually not available</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Override Options</td><td style="padding:8px;border:1px solid #e5e7eb">✅ Master Code + Physical Key</td><td style="padding:8px;border:1px solid #e5e7eb">⚠️ Some offer only one method</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Custom Hotel Branding</td><td style="padding:8px;border:1px solid #e5e7eb">✅ Logo printing available</td><td style="padding:8px;border:1px solid #e5e7eb">❌ Rarely offered or high MOQ</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Pre-drilled Mounting</td><td style="padding:8px;border:1px solid #e5e7eb">✅ All models</td><td style="padding:8px;border:1px solid #e5e7eb">⚠️ Some require custom drilling</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Battery Life</td><td style="padding:8px;border:1px solid #e5e7eb">1–1.5 years</td><td style="padding:8px;border:1px solid #e5e7eb">6–12 months typical</td></tr>
+</table>
+
+<h3 style="color:#047857;margin-top:24px">Troubleshooting Guide</h3>
+<table style="width:100%;border-collapse:collapse;margin:10px 0">
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Issue</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Cause</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Solution</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Guest forgot code</td><td style="padding:8px;border:1px solid #e5e7eb">Guest error</td><td style="padding:8px;border:1px solid #e5e7eb">Use master code or manual override key</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Safe locked out (4 wrong attempts)</td><td style="padding:8px;border:1px solid #e5e7eb">Security feature activated</td><td style="padding:8px;border:1px solid #e5e7eb">Master code reset, then guest sets new code</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Keypad not responding</td><td style="padding:8px;border:1px solid #e5e7eb">Dead batteries</td><td style="padding:8px;border:1px solid #e5e7eb">Use manual override key, replace batteries</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Door won't close properly</td><td style="padding:8px;border:1px solid #e5e7eb">Obstruction or misalignment</td><td style="padding:8px;border:1px solid #e5e7eb">Clear interior, check bolt alignment</td></tr>
+</table>
+
+<h3 style="color:#047857;margin-top:24px">Sales Talking Points</h3>
+<ul>
+<li><strong>For GMs:</strong> "The audit trail on our Laptop and Orbita series protects your hotel from liability in guest disputes — you'll have a timestamped record of every access event."</li>
+<li><strong>For Procurement:</strong> "Our dual override system means you're never locked out. Master code plus physical key ensures zero downtime."</li>
+<li><strong>For Housekeeping:</strong> "1.5-year battery life means fewer room interruptions for battery changes. The low battery alert gives 2–4 weeks advance notice."</li>
+</ul>
+
+<h3 style="color:#047857;margin-top:24px">FAQ</h3>
+<ul>
+<li><strong>Q: Can the audit trail be downloaded?</strong> — A: Yes, audit data can be retrieved via the safe's interface. For high-volume properties, we offer PMS integration on the Orbita series.</li>
+<li><strong>Q: Is custom branding available on all models?</strong> — A: Yes, hotel logo printing is available on all four series. Minimum order of 50 units applies.</li>
+<li><strong>Q: What happens if both batteries die and the key is lost?</strong> — A: LAXREE provides emergency drilling instructions for certified technicians. We recommend hotels store master keys in a secure location with access logging.</li>
+</ul>
+</div>`,
       contentType: 'video',
-      contentUrl: '/upload/Safe_box.mp4',
-      pdfUrl: '/upload/Safe Box.pdf',
       order: 6,
       duration: 15,
       courseId: productAcademyCourse.id,
@@ -339,29 +527,73 @@ export async function seedDatabase() {
     data: {
       title: 'RFID Locks & Access Control',
       description: 'Complete guide to LAXREE RFID door lock systems and features',
-      content: `<h3>LAXREE RFID Door Lock Systems</h3>
-<p>LAXREE provides a range of RFID locks for every hotel segment:</p>
-<h4>Model Lineup</h4>
+      content: `<div style="font-family:system-ui,sans-serif;line-height:1.7;color:#1a1a1a">
+<img src="https://sfile.chatglm.cn/images-ppt/5e822e3c57c5.png" alt="LAXREE RFID Door Lock Systems" style="width:100%;max-width:600px;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1)" />
+<h2 style="color:#065f46;border-bottom:2px solid #059669;padding-bottom:8px">LAXREE RFID Door Lock Systems & Access Control</h2>
+<p>RFID door locks are one of the highest-value products in the LAXREE portfolio and a critical differentiator when selling to hotel chains. Unlike consumer-grade smart locks, LAXREE's hospitality-grade RFID locks are built for the demands of hotel operations — high traffic, PMS integration, audit compliance, and master override capabilities. Understanding these features deeply allows you to sell not just a lock, but a complete access control solution that impacts the hotel's operational efficiency, guest satisfaction, and security posture.</p>
+
+<h3 style="color:#047857;margin-top:24px">Model Lineup & Specifications</h3>
 <table style="width:100%;border-collapse:collapse;margin:10px 0">
-<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb">Model</th><th style="padding:8px;border:1px solid #e5e7eb">Description</th><th style="padding:8px;border:1px solid #e5e7eb">SSP (₹)</th></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRFD-608</td><td style="padding:8px;border:1px solid #e5e7eb">SS Body, 5 Latch Mortise</td><td style="padding:8px;border:1px solid #e5e7eb">3,337</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRFD-610</td><td style="padding:8px;border:1px solid #e5e7eb">SS Body, 5 Latch Mortise, Master Override</td><td style="padding:8px;border:1px solid #e5e7eb">4,110</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRFD-609</td><td style="padding:8px;border:1px solid #e5e7eb">Aluminium Alloy, Gloss Paint</td><td style="padding:8px;border:1px solid #e5e7eb">4,500</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRFD-607</td><td style="padding:8px;border:1px solid #e5e7eb">304 SS, Moisture Proof, Fire Rated, 1680 audit records, PMS interface</td><td style="padding:8px;border:1px solid #e5e7eb">8,320</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRFD-606</td><td style="padding:8px;border:1px solid #e5e7eb">304 SS, Compact, PMS interface</td><td style="padding:8px;border:1px solid #e5e7eb">9,440</td></tr>
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb">Model</th><th style="padding:8px;border:1px solid #e5e7eb">Body Material</th><th style="padding:8px;border:1px solid #e5e7eb">Key Features</th><th style="padding:8px;border:1px solid #e5e7eb">SSP (₹)</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRFD-608</td><td style="padding:8px;border:1px solid #e5e7eb">SS Body</td><td style="padding:8px;border:1px solid #e5e7eb">5 Latch Mortise, basic RFID</td><td style="padding:8px;border:1px solid #e5e7eb">3,337</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRFD-610</td><td style="padding:8px;border:1px solid #e5e7eb">SS Body</td><td style="padding:8px;border:1px solid #e5e7eb">5 Latch Mortise, Master Override</td><td style="padding:8px;border:1px solid #e5e7eb">4,110</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRFD-609</td><td style="padding:8px;border:1px solid #e5e7eb">Aluminium Alloy, Gloss Paint</td><td style="padding:8px;border:1px solid #e5e7eb">Premium finish, RFID + mechanical</td><td style="padding:8px;border:1px solid #e5e7eb">4,500</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRFD-607</td><td style="padding:8px;border:1px solid #e5e7eb">304 SS</td><td style="padding:8px;border:1px solid #e5e7eb">Moisture Proof, Fire Rated, 1680 audit records, PMS interface</td><td style="padding:8px;border:1px solid #e5e7eb">8,320</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRFD-606</td><td style="padding:8px;border:1px solid #e5e7eb">304 SS, Compact</td><td style="padding:8px;border:1px solid #e5e7eb">PMS interface, sleek design, premium</td><td style="padding:8px;border:1px solid #e5e7eb">9,440</td></tr>
 </table>
-<h4>Key Features</h4>
+
+<h3 style="color:#047857;margin-top:24px">PMS Integration: The Game Changer</h3>
+<p>The LRFD-607 and LRFD-606 models offer direct PMS (Property Management System) integration, compatible with Opera and other leading hotel management software. This integration enables:</p>
 <ul>
-<li>PMS Integration (Opera compatible)</li>
-<li>Up to 1,680 audit records</li>
-<li>Master Override capability</li>
-<li>Fire rated options available</li>
-<li>Moisture proof (ideal for coastal hotels)</li>
-<li>Driverless USB Encoder with encryption</li>
-</ul>`,
+<li><strong>Automatic Key Encoding:</strong> Guest RFID cards are encoded at check-in through the PMS — no separate encoding device needed</li>
+<li><strong>Real-Time Access Management:</strong> Keys are automatically invalidated at checkout, eliminating physical key return logistics</li>
+<li><strong>Audit Trail Integration:</strong> All door access events flow into the PMS for unified reporting and compliance</li>
+<li><strong>Staff Access Control:</strong> Housekeeping and maintenance staff cards can be programmed with time-based access windows</li>
+<li><strong>Emergency Override Logging:</strong> All master key uses are logged with timestamps for security compliance</li>
+</ul>
+<p>For hotels currently using traditional key cards or mechanical keys, PMS integration alone can justify the upgrade. The labor savings from automated key management and the liability protection from comprehensive audit trails deliver measurable ROI.</p>
+
+<h3 style="color:#047857;margin-top:24px">Key Technical Features</h3>
+<ul>
+<li><strong>5 Latch Mortise Lock:</strong> Industry-standard security with deadbolt engagement for maximum door strength</li>
+<li><strong>1,680 Audit Records:</strong> LRFD-607 stores up to 1,680 access events — the highest capacity in this price range</li>
+<li><strong>Master Override:</strong> Emergency access through master RFID card or mechanical key backup</li>
+<li><strong>Fire Rated (LRFD-607):</strong> Certified for fire-rated doors, essential for commercial hotel compliance</li>
+<li><strong>Moisture Proof (LRFD-607):</strong> IP-rated protection ideal for coastal hotels, pool areas, and humid climates</li>
+<li><strong>Driverless USB Encoder:</strong> Card encoding software works without installing drivers — plug and encode</li>
+<li><strong>Encryption:</strong> Mifare/RFID encryption prevents card cloning and unauthorized duplication</li>
+</ul>
+
+<h3 style="color:#047857;margin-top:24px">Installation Guide</h3>
+<ol>
+<li>Verify door thickness (standard 35–55mm) and prepare mortise cutout per specification sheet</li>
+<li>Install 5-latch mortise body into door edge, ensuring smooth bolt throw</li>
+<li>Mount exterior RFID reader panel with provided screws and cable routing</li>
+<li>Mount interior battery cover panel and connect wiring harness</li>
+<li>Install 4× AA batteries and test lock/unlock with test cards</li>
+<li>Program master card, floor cards, and guest cards via USB encoder</li>
+<li>Test PMS integration if applicable — verify check-in/check-out key lifecycle</li>
+</ol>
+
+<h3 style="color:#047857;margin-top:24px">Troubleshooting</h3>
+<table style="width:100%;border-collapse:collapse;margin:10px 0">
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Issue</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Cause</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Solution</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Card not reading</td><td style="padding:8px;border:1px solid #e5e7eb">Dirty reader / wrong card type</td><td style="padding:8px;border:1px solid #e5e7eb">Clean reader surface, verify Mifare card compatibility</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Lock not responding</td><td style="padding:8px;border:1px solid #e5e7eb">Dead batteries</td><td style="padding:8px;border:1px solid #e5e7eb">Use mechanical override, replace batteries</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Guest card not working after check-in</td><td style="padding:8px;border:1px solid #e5e7eb">PMS encoding error</td><td style="padding:8px;border:1px solid #e5e7eb">Re-encode at reception, check PMS connection</td></tr>
+</table>
+
+<h3 style="color:#047857;margin-top:24px">Sales Talking Points</h3>
+<ul>
+<li><strong>For GMs:</strong> "1,680 audit records mean you have complete visibility into every door access event — invaluable for security compliance and dispute resolution."</li>
+<li><strong>For IT Managers:</strong> "Our driverless USB encoder integrates with Opera PMS without custom software installation. Zero IT overhead."</li>
+<li><strong>For Coastal Hotels:</strong> "The LRFD-607 is moisture-proof and fire-rated — specifically engineered for harsh environments where standard locks corrode within months."</li>
+</ul>
+
+<h3 style="color:#047857;margin-top:24px">Cross-Selling Opportunities</h3>
+<p>RFID locks are the anchor product for a complete room security package. Always bundle with <strong>Safe Boxes</strong> (Orbita series for 5-star, Medium for 3-star) for in-room valuables security. Recommend <strong>Digital Signages</strong> for lobby wayfinding that uses the same RFID infrastructure. For new builds, propose the full LAXREE room package including <strong>Mini Bars</strong>, <strong>Hair Dryers</strong>, and <strong>Kettles</strong> for maximum single-vendor convenience.</p>
+</div>`,
       contentType: 'video',
-      contentUrl: '/upload/Rfid.mp4',
-      pdfUrl: '/upload/RFID Door Lock.pdf',
       order: 7,
       duration: 20,
       courseId: productAcademyCourse.id,
@@ -374,26 +606,74 @@ export async function seedDatabase() {
     data: {
       title: 'Electric Kettles & TCM Trays',
       description: 'Complete guide to LAXREE electric kettles and tea coffee maker trays',
-      content: `<h3>Electric Kettles & TCM Trays</h3>
-<h4>Electric Kettle Range</h4>
+      content: `<div style="font-family:system-ui,sans-serif;line-height:1.7;color:#1a1a1a">
+<img src="https://sfile.chatglm.cn/images-ppt/2eece29f9d02.jpg" alt="LAXREE Electric Kettles & TCM Trays" style="width:100%;max-width:600px;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1)" />
+<h2 style="color:#065f46;border-bottom:2px solid #059669;padding-bottom:8px">Electric Kettles & TCM Trays</h2>
+<p>Electric kettles and Tea Coffee Maker (TCM) trays are among the most frequently replaced items in any hotel room. High guest usage, limescale buildup, and wear-and-tear from housekeeping mean hotels typically replace kettles every 2–3 years. This makes them an excellent recurring-revenue product and a natural entry point for building relationships with new hotel clients. LAXREE offers five kettle models and three TCM tray options covering every budget and design requirement.</p>
+
+<h3 style="color:#047857;margin-top:24px">Electric Kettle Range</h3>
 <table style="width:100%;border-collapse:collapse;margin:10px 0">
-<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb">Model</th><th style="padding:8px;border:1px solid #e5e7eb">Description</th><th style="padding:8px;border:1px solid #e5e7eb">SSP (₹)</th></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWT-143</td><td style="padding:8px;border:1px solid #e5e7eb">0.6L, 1000W, SS 201, auto-shut off</td><td style="padding:8px;border:1px solid #e5e7eb">560</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWT-145</td><td style="padding:8px;border:1px solid #e5e7eb">0.8L, 800W, SS 201, Matt finish</td><td style="padding:8px;border:1px solid #e5e7eb">488</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWT-155</td><td style="padding:8px;border:1px solid #e5e7eb">0.8L, 1200W, SS 304 Double Layer</td><td style="padding:8px;border:1px solid #e5e7eb">1,104</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWT-150</td><td style="padding:8px;border:1px solid #e5e7eb">0.8L, Strix Controller</td><td style="padding:8px;border:1px solid #e5e7eb">1,320</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWT-156</td><td style="padding:8px;border:1px solid #e5e7eb">1L, Strix Controller, SS 304 Double Layer</td><td style="padding:8px;border:1px solid #e5e7eb">1,400</td></tr>
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb">Model</th><th style="padding:8px;border:1px solid #e5e7eb">Capacity</th><th style="padding:8px;border:1px solid #e5e7eb">Power</th><th style="padding:8px;border:1px solid #e5e7eb">Material</th><th style="padding:8px;border:1px solid #e5e7eb">Key Feature</th><th style="padding:8px;border:1px solid #e5e7eb">SSP (₹)</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWT-143</td><td style="padding:8px;border:1px solid #e5e7eb">0.6L</td><td style="padding:8px;border:1px solid #e5e7eb">1000W</td><td style="padding:8px;border:1px solid #e5e7eb">SS 201</td><td style="padding:8px;border:1px solid #e5e7eb">Auto shut-off, compact</td><td style="padding:8px;border:1px solid #e5e7eb">560</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWT-145</td><td style="padding:8px;border:1px solid #e5e7eb">0.8L</td><td style="padding:8px;border:1px solid #e5e7eb">800W</td><td style="padding:8px;border:1px solid #e5e7eb">SS 201 Matt</td><td style="padding:8px;border:1px solid #e5e7eb">Matt finish, quiet boil</td><td style="padding:8px;border:1px solid #e5e7eb">488</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWT-155</td><td style="padding:8px;border:1px solid #e5e7eb">0.8L</td><td style="padding:8px;border:1px solid #e5e7eb">1200W</td><td style="padding:8px;border:1px solid #e5e7eb">SS 304 Double</td><td style="padding:8px;border:1px solid #e5e7eb">Double wall, cool touch</td><td style="padding:8px;border:1px solid #e5e7eb">1,104</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWT-150</td><td style="padding:8px;border:1px solid #e5e7eb">0.8L</td><td style="padding:8px;border:1px solid #e5e7eb">Strix</td><td style="padding:8px;border:1px solid #e5e7eb">Premium</td><td style="padding:8px;border:1px solid #e5e7eb">Strix controller, longest life</td><td style="padding:8px;border:1px solid #e5e7eb">1,320</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWT-156</td><td style="padding:8px;border:1px solid #e5e7eb">1.0L</td><td style="padding:8px;border:1px solid #e5e7eb">Strix</td><td style="padding:8px;border:1px solid #e5e7eb">SS 304 Double</td><td style="padding:8px;border:1px solid #e5e7eb">Strix + double wall + 1L</td><td style="padding:8px;border:1px solid #e5e7eb">1,400</td></tr>
 </table>
-<h4>TCM Tray Range</h4>
+
+<h3 style="color:#047857;margin-top:24px">Understanding Strix Controllers</h3>
+<p>The Strix controller is a UK-manufactured steam-switch and safety controller used in premium kettles worldwide. It's the gold standard for commercial kettles because it provides:</p>
+<ul>
+<li><strong>Longer Lifespan:</strong> 10,000+ boil cycles vs 3,000–5,000 for standard controllers</li>
+<li><strong>Precise Auto Shut-Off:</strong> Consistently cuts power at boiling point, preventing dry-boil damage</li>
+<li><strong>Safety Certification:</strong> Internationally certified for commercial use (VDE, UL, CCC)</li>
+<li><strong>Lower Failure Rate:</strong> Less than 0.1% failure rate in commercial environments</li>
+</ul>
+<p>For hotels that replace kettles frequently due to controller failure, the Strix-equipped LRWT-150 and LRWT-156 deliver 3x the lifespan at only 2x the price — a clear total cost of ownership win.</p>
+
+<h3 style="color:#047857;margin-top:24px">TCM Tray Range</h3>
+<p>TCM (Tea Coffee Maker) trays organize the in-room beverage station, providing a professional presentation that enhances guest experience and reduces clutter. LAXREE offers three tray options from budget to premium:</p>
 <table style="width:100%;border-collapse:collapse;margin:10px 0">
-<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb">Model</th><th style="padding:8px;border:1px solid #e5e7eb">Description</th><th style="padding:8px;border:1px solid #e5e7eb">SSP (₹)</th></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWT-158</td><td style="padding:8px;border:1px solid #e5e7eb">Anti Theft Tray, ABS</td><td style="padding:8px;border:1px solid #e5e7eb">706</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWT-163</td><td style="padding:8px;border:1px solid #e5e7eb">PU Leatherette Tray</td><td style="padding:8px;border:1px solid #e5e7eb">1,305</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWT-162</td><td style="padding:8px;border:1px solid #e5e7eb">Leatherette Tray, Large</td><td style="padding:8px;border:1px solid #e5e7eb">1,425</td></tr>
-</table>`,
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb">Model</th><th style="padding:8px;border:1px solid #e5e7eb">Material</th><th style="padding:8px;border:1px solid #e5e7eb">Key Feature</th><th style="padding:8px;border:1px solid #e5e7eb">SSP (₹)</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWT-158</td><td style="padding:8px;border:1px solid #e5e7eb">ABS Plastic</td><td style="padding:8px;border:1px solid #e5e7eb">Anti-theft cable, durable, lightweight</td><td style="padding:8px;border:1px solid #e5e7eb">706</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWT-163</td><td style="padding:8px;border:1px solid #e5e7eb">PU Leatherette</td><td style="padding:8px;border:1px solid #e5e7eb">Elegant finish, easy to clean</td><td style="padding:8px;border:1px solid #e5e7eb">1,305</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWT-162</td><td style="padding:8px;border:1px solid #e5e7eb">Leatherette, Large</td><td style="padding:8px;border:1px solid #e5e7eb">Premium feel, accommodates full TCM set</td><td style="padding:8px;border:1px solid #e5e7eb">1,425</td></tr>
+</table>
+
+<h3 style="color:#047857;margin-top:24px">Installation & Care Guide</h3>
+<ul>
+<li>Place kettle on TCM tray with cable routed through the anti-theft slot (LRWT-158) or beneath the tray</li>
+<li>Descale kettles monthly in hard-water areas using white vinegar or commercial descaler</li>
+<li>Wipe TCM trays daily with damp cloth; avoid abrasive cleaners on leatherette surfaces</li>
+<li>Check auto shut-off function quarterly to ensure safety compliance</li>
+</ul>
+
+<h3 style="color:#047857;margin-top:24px">Troubleshooting</h3>
+<table style="width:100%;border-collapse:collapse;margin:10px 0">
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Issue</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Cause</th><th style="padding:8px;border:1px solid #e5e7eb;text-align:left">Solution</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Kettle not switching off</td><td style="padding:8px;border:1px solid #e5e7eb">Limescale on steam vent</td><td style="padding:8px;border:1px solid #e5e7eb">Descale immediately, replace controller if persistent</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Slow heating</td><td style="padding:8px;border:1px solid #e5e7eb">Mineral buildup on element</td><td style="padding:8px;border:1px solid #e5e7eb">Descale with vinegar solution</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Leaking from base</td><td style="padding:8px;border:1px solid #e5e7eb">Cracked body or seal</td><td style="padding:8px;border:1px solid #e5e7eb">Replace unit — not repairable in field</td></tr>
+</table>
+
+<h3 style="color:#047857;margin-top:24px">Sales Talking Points</h3>
+<ul>
+<li><strong>For Budget Hotels:</strong> "LRWT-145 at ₹488 is the most competitive 0.8L kettle in the market — matt finish looks premium at a budget price."</li>
+<li><strong>For Premium Hotels:</strong> "Strix controllers last 3x longer than standard switches. The LRWT-156 with double-wall SS 304 protects guests from burns while delivering commercial-grade reliability."</li>
+<li><strong>For Procurement:</strong> "Kettles are high-turnover items. Our competitive pricing and PAN India delivery means you'll always have stock when replacements are needed."</li>
+</ul>
+
+<h3 style="color:#047857;margin-top:24px">FAQ</h3>
+<ul>
+<li><strong>Q: What is the difference between SS 201 and SS 304?</strong> — A: SS 304 is a higher-grade stainless steel with superior corrosion resistance. For coastal hotels or areas with hard water, SS 304 kettles last significantly longer.</li>
+<li><strong>Q: Do you offer bulk replacement pricing?</strong> — A: Yes, annual replacement contracts are available at discounted rates with scheduled deliveries.</li>
+<li><strong>Q: Are the trays compatible with all kettle models?</strong> — A: All three tray models are designed to accommodate any LAXREE kettle. The LRWT-162 large tray also fits additional TCM accessories.</li>
+</ul>
+
+<h3 style="color:#047857;margin-top:24px">Cross-Selling Suggestions</h3>
+<p>Every kettle order is an opportunity to sell the complete in-room beverage station: pair with <strong>TCM Trays</strong> and <strong>Mini Bars</strong> for the full refreshment setup. For new builds, recommend kettles alongside <strong>Hair Dryers</strong> and <strong>Magnifying Mirrors</strong> for a complete bathroom vanity package.</p>
+</div>`,
       contentType: 'video',
-      contentUrl: '/upload/kettle (1).mp4',
-      pdfUrl: '/upload/Electric Kettle.pdf',
       order: 8,
       duration: 15,
       courseId: productAcademyCourse.id,
@@ -406,29 +686,68 @@ export async function seedDatabase() {
     data: {
       title: 'Hair Dryers, Mirrors & Dispensers',
       description: 'Guide to LAXREE hair dryers, magnifying mirrors, and soap dispensers',
-      content: `<h3>Room Appliances</h3>
-<h4>Hair Dryers</h4>
+      content: `<div style="font-family:system-ui,sans-serif;line-height:1.7;color:#1a1a1a">
+<img src="https://sfile.chatglm.cn/images-ppt/683a45ce407a.jpg" alt="LAXREE Hair Dryers, Mirrors & Dispensers" style="width:100%;max-width:600px;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1)" />
+<h2 style="color:#065f46;border-bottom:2px solid #059669;padding-bottom:8px">Hair Dryers, Magnifying Mirrors & Soap Dispensers</h2>
+<p>Bathroom accessories are often overlooked in hotel procurement, yet they directly impact guest satisfaction scores and online reviews. A malfunctioning hair dryer or a cheap soap dispenser can result in negative TripAdvisor comments that affect bookings. LAXREE's bathroom product range is designed specifically for hospitality use — durable, easy to maintain, and available in finishes that complement any bathroom design. This module covers three essential bathroom product categories that every hotel needs.</p>
+
+<h3 style="color:#047857;margin-top:24px">Hair Dryer Range</h3>
+<p>LAXREE offers three hair dryer models designed for different hotel segments and installation preferences:</p>
 <table style="width:100%;border-collapse:collapse;margin:10px 0">
-<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb">Model</th><th style="padding:8px;border:1px solid #e5e7eb">Description</th><th style="padding:8px;border:1px solid #e5e7eb">SSP (₹)</th></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRHD-276</td><td style="padding:8px;border:1px solid #e5e7eb">Wall Mount, 1300W, Shaver Socket</td><td style="padding:8px;border:1px solid #e5e7eb">1,035</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRHD-287</td><td style="padding:8px;border:1px solid #e5e7eb">Wall Mount, 1600W, Shaver Socket</td><td style="padding:8px;border:1px solid #e5e7eb">1,277</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRHD-280</td><td style="padding:8px;border:1px solid #e5e7eb">Foldable, 2100W, Ionized air</td><td style="padding:8px;border:1px solid #e5e7eb">1,744</td></tr>
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb">Model</th><th style="padding:8px;border:1px solid #e5e7eb">Type</th><th style="padding:8px;border:1px solid #e5e7eb">Power</th><th style="padding:8px;border:1px solid #e5e7eb">Special Feature</th><th style="padding:8px;border:1px solid #e5e7eb">SSP (₹)</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRHD-276</td><td style="padding:8px;border:1px solid #e5e7eb">Wall Mount</td><td style="padding:8px;border:1px solid #e5e7eb">1300W</td><td style="padding:8px;border:1px solid #e5e7eb">Integrated shaver socket</td><td style="padding:8px;border:1px solid #e5e7eb">1,035</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRHD-287</td><td style="padding:8px;border:1px solid #e5e7eb">Wall Mount</td><td style="padding:8px;border:1px solid #e5e7eb">1600W</td><td style="padding:8px;border:1px solid #e5e7eb">Shaver socket, faster drying</td><td style="padding:8px;border:1px solid #e5e7eb">1,277</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRHD-280</td><td style="padding:8px;border:1px solid #e5e7eb">Foldable Handheld</td><td style="padding:8px;border:1px solid #e5e7eb">2100W</td><td style="padding:8px;border:1px solid #e5e7eb">Ionized air, premium feel</td><td style="padding:8px;border:1px solid #e5e7eb">1,744</td></tr>
 </table>
-<h4>Magnifying Mirrors</h4>
+
+<h4>Wall Mount vs Foldable: When to Recommend Each</h4>
+<p><strong>Wall Mount (LRHD-276, LRHD-287):</strong> The industry standard for most hotels. Wall mounting prevents theft, saves counter space, and ensures the dryer is always in the same location. The integrated shaver socket is a valuable addition that eliminates the need for a separate shaver adapter — a detail that impresses international guests. The 1300W model is sufficient for short hair, while the 1600W model is better for hotels with a diverse guest profile.</p>
+<p><strong>Foldable Handheld (LRHD-280):</strong> The premium choice for luxury hotels and suites. Ionized air technology reduces frizz and static, delivering a salon-quality experience that guests notice and appreciate. The foldable design is compact and portable, ideal for suites where guests expect premium amenities. The 2100W power provides the fastest drying time.</p>
+
+<h3 style="color:#047857;margin-top:24px">Magnifying Mirror Range</h3>
+<p>Magnifying mirrors are a bathroom luxury that guests consistently rate highly in satisfaction surveys. LAXREE offers two models:</p>
+<table style="width:100%;border-collapse:collapse;margin:10px 0">
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb">Model</th><th style="padding:8px;border:1px solid #e5e7eb">Size</th><th style="padding:8px;border:1px solid #e5e7eb">Features</th><th style="padding:8px;border:1px solid #e5e7eb">Finish Options</th><th style="padding:8px;border:1px solid #e5e7eb">SSP (₹)</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMM-305S</td><td style="padding:8px;border:1px solid #e5e7eb">8" SS</td><td style="padding:8px;border:1px solid #e5e7eb">3x Magnification, foldable arm</td><td style="padding:8px;border:1px solid #e5e7eb">SS, Rose Gold, Matte Black</td><td style="padding:8px;border:1px solid #e5e7eb">1,061</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMM-302S</td><td style="padding:8px;border:1px solid #e5e7eb">8" LED SS</td><td style="padding:8px;border:1px solid #e5e7eb">3x Mag, LED ring light, power supply</td><td style="padding:8px;border:1px solid #e5e7eb">SS, Rose Gold, Matte Black</td><td style="padding:8px;border:1px solid #e5e7eb">3,264</td></tr>
+</table>
+<p>The LED model (LRMM-302S) is a significant upgrade — the built-in ring light provides perfect illumination for makeup application and grooming, especially in bathrooms with dim lighting. The foldable swing arm allows guests to position the mirror at any angle and fold it flat against the wall when not in use. Three finish options (SS, Rose Gold, Matte Black) allow matching with any bathroom hardware.</p>
+
+<h3 style="color:#047857;margin-top:24px">Soap Dispenser Range</h3>
+<p>Soap dispensers are transitioning from luxury to standard in modern hotels, driven by sustainability goals (reducing single-use plastic bottles) and cost savings (bulk soap is cheaper than individual bottles). LAXREE offers three models:</p>
+<table style="width:100%;border-collapse:collapse;margin:10px 0">
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb">Model</th><th style="padding:8px;border:1px solid #e5e7eb">Type</th><th style="padding:8px;border:1px solid #e5e7eb">Capacity</th><th style="padding:8px;border:1px solid #e5e7eb">Key Feature</th><th style="padding:8px;border:1px solid #e5e7eb">SSP (₹)</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWA-362</td><td style="padding:8px;border:1px solid #e5e7eb">Manual</td><td style="padding:8px;border:1px solid #e5e7eb">300ml × 1/2</td><td style="padding:8px;border:1px solid #e5e7eb">Simple, reliable, dual-bottle option</td><td style="padding:8px;border:1px solid #e5e7eb">683 / 1,136</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWA-373</td><td style="padding:8px;border:1px solid #e5e7eb">Automatic</td><td style="padding:8px;border:1px solid #e5e7eb">ABS</td><td style="padding:8px;border:1px solid #e5e7eb">Touchless, hygienic, sensor-operated</td><td style="padding:8px;border:1px solid #e5e7eb">780</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRWA-374</td><td style="padding:8px;border:1px solid #e5e7eb">Automatic</td><td style="padding:8px;border:1px solid #e5e7eb">800ml, 304 SS</td><td style="padding:8px;border:1px solid #e5e7eb">Anti-theft, premium, large capacity</td><td style="padding:8px;border:1px solid #e5e7eb">4,170</td></tr>
+</table>
+<img src="https://sfile.chatglm.cn/images-ppt/f275fdaffe40.jpg" alt="LAXREE Soap Dispenser" style="width:100%;max-width:400px;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1)" />
+
+<h3 style="color:#047857;margin-top:24px">Installation Guide</h3>
 <ul>
-<li>LRMM-305S: 8" SS, 3x Magnifying, Foldable Arm - ₹1,061</li>
-<li>LRMM-302S: 8" LED, SS, Power Supply, 3x - ₹3,264</li>
-<li>Available in SS, Rose Gold, Matte Black finishes</li>
+<li><strong>Hair Dryers:</strong> Mount wall bracket at 120cm height near the bathroom mirror. Ensure power outlet is within 50cm. For foldable models, provide a designated holder or drawer.</li>
+<li><strong>Mirrors:</strong> Mount at 150cm center height on the wall adjacent to the main bathroom mirror. The foldable arm needs 40cm clearance when extended.</li>
+<li><strong>Dispensers:</strong> Mount on shower wall or vanity at 90–100cm height. Use provided wall anchors for secure mounting. Fill with recommended soap formulation.</li>
 </ul>
-<h4>Soap Dispensers</h4>
+
+<h3 style="color:#047857;margin-top:24px">Sales Talking Points</h3>
 <ul>
-<li>LRWA-362: Manual, 300ml × 1/2 bottles - ₹683/₹1,136</li>
-<li>LRWA-373: Automatic, ABS - ₹780</li>
-<li>LRWA-374: Automatic, 304 SS, 800ml, anti-theft - ₹4,170</li>
-</ul>`,
+<li><strong>For Design-Focused Hotels:</strong> "Our mirrors come in SS, Rose Gold, and Matte Black finishes — perfectly matched to your bathroom hardware."</li>
+<li><strong>For Sustainability-Minded Hotels:</strong> "Switching to dispensers eliminates 10,000+ single-use plastic bottles per year for a 100-room property. The LRWA-373 touchless model adds a hygiene premium."</li>
+<li><strong>For Premium Hotels:</strong> "The LRHD-280 with ionized air technology gives guests a salon-quality experience — it's the kind of detail that shows up in positive reviews."</li>
+</ul>
+
+<h3 style="color:#047857;margin-top:24px">FAQ</h3>
+<ul>
+<li><strong>Q: Can dispensers use any soap brand?</strong> — A: Yes, all LAXREE dispensers are compatible with standard liquid soap, shampoo, and body wash formulations. Avoid soap with exfoliating particles that can clog the pump.</li>
+<li><strong>Q: How often do automatic dispenser sensors need calibration?</strong> — A: Typically once every 6 months. The sensor is factory-calibrated and self-adjusting for normal use.</li>
+<li><strong>Q: Are replacement parts available for hair dryers?</strong> — A: Wall-mount brackets, filters, and heating elements are available for immediate dispatch.</li>
+</ul>
+
+<h3 style="color:#047857;margin-top:24px">Cross-Selling Suggestions</h3>
+<p>Bathroom products naturally bundle together: pair <strong>Hair Dryers</strong> with <strong>Magnifying Mirrors</strong> for the vanity area, add <strong>Dispensers</strong> for the shower, and complete the room package with <strong>Kettles</strong> and <strong>Mini Bars</strong>. For new builds, propose the full LAXREE bathroom and in-room package for single-vendor convenience.</p>
+</div>`,
       contentType: 'video',
-      contentUrl: '/upload/mirror & hair drayer.mp4',
-      pdfUrl: '/upload/Mirror & Hair Dryer.pdf',
       order: 9,
       duration: 15,
       courseId: productAcademyCourse.id,
@@ -441,34 +760,69 @@ export async function seedDatabase() {
     data: {
       title: 'Mattresses, Beds & Housekeeping',
       description: 'Complete guide to LAXREE mattresses, rollaway beds, housekeeping trolleys, and digital signages',
-      content: `<h3>Sleep Comfort & Housekeeping</h3>
-<h4>Mattresses</h4>
+      content: `<div style="font-family:system-ui,sans-serif;line-height:1.7;color:#1a1a1a">
+<img src="https://sfile.chatglm.cn/images-ppt/2619e87ae6aa.jpg" alt="LAXREE Mattresses, Beds & Housekeeping" style="width:100%;max-width:600px;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1)" />
+<h2 style="color:#065f46;border-bottom:2px solid #059669;padding-bottom:8px">Mattresses, Rollaway Beds, Housekeeping Trolleys & Digital Signages</h2>
+<p>This module covers four distinct but complementary product categories that are essential to hotel operations. Mattresses and rollaway beds are high-ticket items with significant revenue potential per unit. Housekeeping trolleys are operational workhorses that hotels replace every 5–7 years. Digital signages are emerging as a premium differentiator for modern hotels, particularly in lobbies and conference areas. Understanding all four categories allows you to offer complete solutions and maximize order value per client.</p>
+
+<h3 style="color:#047857;margin-top:24px">Mattress Range</h3>
+<p>LAXREE mattresses are purpose-built for the hospitality industry, balancing durability for commercial use with comfort that earns positive guest reviews. All models use Bonnell Spring construction with premium upholstery layers designed to maintain support through thousands of guest nights.</p>
 <table style="width:100%;border-collapse:collapse;margin:10px 0">
-<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb">Model</th><th style="padding:8px;border:1px solid #e5e7eb">Description</th><th style="padding:8px;border:1px solid #e5e7eb">SSP (₹)</th></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMR-251 (8")</td><td style="padding:8px;border:1px solid #e5e7eb">Bonnell Spring</td><td style="padding:8px;border:1px solid #e5e7eb">9,750</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMR-252 (10")</td><td style="padding:8px;border:1px solid #e5e7eb">Bonnell Spring Euro Top</td><td style="padding:8px;border:1px solid #e5e7eb">10,400</td></tr>
-<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMR-252 (12")</td><td style="padding:8px;border:1px solid #e5e7eb">Bonnell Spring Euro Top</td><td style="padding:8px;border:1px solid #e5e7eb">12,025</td></tr>
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb">Model</th><th style="padding:8px;border:1px solid #e5e7eb">Thickness</th><th style="padding:8px;border:1px solid #e5e7eb">Construction</th><th style="padding:8px;border:1px solid #e5e7eb">Best For</th><th style="padding:8px;border:1px solid #e5e7eb">SSP (₹)</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMR-251</td><td style="padding:8px;border:1px solid #e5e7eb">8"</td><td style="padding:8px;border:1px solid #e5e7eb">Bonnell Spring</td><td style="padding:8px;border:1px solid #e5e7eb">Budget & 3-star hotels</td><td style="padding:8px;border:1px solid #e5e7eb">9,750</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMR-252</td><td style="padding:8px;border:1px solid #e5e7eb">10"</td><td style="padding:8px;border:1px solid #e5e7eb">Bonnell Spring Euro Top</td><td style="padding:8px;border:1px solid #e5e7eb">4-star business hotels</td><td style="padding:8px;border:1px solid #e5e7eb">10,400</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMR-252</td><td style="padding:8px;border:1px solid #e5e7eb">12"</td><td style="padding:8px;border:1px solid #e5e7eb">Bonnell Spring Euro Top</td><td style="padding:8px;border:1px solid #e5e7eb">5-star luxury hotels</td><td style="padding:8px;border:1px solid #e5e7eb">12,025</td></tr>
 </table>
-<h4>Rollaway Beds</h4>
+<h4>Why Bonnell Spring for Hotels?</h4>
+<p>Bonnell Spring mattresses are the industry standard for commercial hospitality use because they offer the best balance of durability, support, and cost. The interconnected spring system distributes weight evenly and maintains shape over thousands of sleep cycles. The Euro Top variant adds an extra plush comfort layer that significantly improves guest perception of bed quality — a key factor in online reviews and repeat bookings.</p>
+
+<h3 style="color:#047857;margin-top:24px">Rollaway Beds</h3>
+<p>Rollaway beds are an operational necessity for hotels that need flexible room capacity. LAXREE offers two models for different usage levels:</p>
+<table style="width:100%;border-collapse:collapse;margin:10px 0">
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb">Model</th><th style="padding:8px;border:1px solid #e5e7eb">Mattress</th><th style="padding:8px;border:1px solid #e5e7eb">Frame</th><th style="padding:8px;border:1px solid #e5e7eb">Wheels</th><th style="padding:8px;border:1px solid #e5e7eb">SSP (₹)</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMR-256</td><td style="padding:8px;border:1px solid #e5e7eb">2" Bonded Foam</td><td style="padding:8px;border:1px solid #e5e7eb">MS Frame</td><td style="padding:8px;border:1px solid #e5e7eb">Standard casters</td><td style="padding:8px;border:1px solid #e5e7eb">6,988</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRMR-257</td><td style="padding:8px;border:1px solid #e5e7eb">6" Pocket Spring</td><td style="padding:8px;border:1px solid #e5e7eb">Heavy-duty</td><td style="padding:8px;border:1px solid #e5e7eb">Lockable wheels</td><td style="padding:8px;border:1px solid #e5e7eb">10,350</td></tr>
+</table>
+<p>The LRMR-257 with pocket spring mattress and lockable wheels is the premium choice for hotels that frequently deploy rollaway beds. The lockable wheels prevent the bed from moving during use — a safety feature that also protects walls and furniture. The pocket spring mattress provides proper support, unlike thin foam alternatives that lead to guest complaints.</p>
+
+<h3 style="color:#047857;margin-top:24px">Housekeeping Trolleys</h3>
+<p>Housekeeping trolleys are the backbone of hotel operations. A good trolley improves housekeeping efficiency, reduces physical strain on staff, and presents a professional appearance in guest corridors. LAXREE offers three models across material types:</p>
+<table style="width:100%;border-collapse:collapse;margin:10px 0">
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb">Model</th><th style="padding:8px;border:1px solid #e5e7eb">Material</th><th style="padding:8px;border:1px solid #e5e7eb">Configuration</th><th style="padding:8px;border:1px solid #e5e7eb">SSP (₹)</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRHT-430</td><td style="padding:8px;border:1px solid #e5e7eb">Stainless Steel</td><td style="padding:8px;border:1px solid #e5e7eb">Linen trolley, basic</td><td style="padding:8px;border:1px solid #e5e7eb">6,300</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRHT-427</td><td style="padding:8px;border:1px solid #e5e7eb">MS Powder Coated</td><td style="padding:8px;border:1px solid #e5e7eb">3 shelves, 2 soil bags</td><td style="padding:8px;border:1px solid #e5e7eb">13,050</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">LRHT-429</td><td style="padding:8px;border:1px solid #e5e7eb">ABS Body</td><td style="padding:8px;border:1px solid #e5e7eb">3 shelves, 2 soil bags, premium</td><td style="padding:8px;border:1px solid #e5e7eb">22,800</td></tr>
+</table>
+<p>The ABS body model (LRHT-429) is the premium choice for 4-star and 5-star hotels. ABS plastic is lightweight, impact-resistant, easy to clean, and silent in corridors — unlike metal trolleys that can be noisy. The 3-shelf, 2-soil-bag configuration is the standard layout for full-service housekeeping.</p>
+
+<h3 style="color:#047857;margin-top:24px">Digital Signages</h3>
+<p>Digital signages are a rapidly growing category as hotels invest in modern guest communication, wayfinding, and advertising. LAXREE offers three display configurations:</p>
+<table style="width:100%;border-collapse:collapse;margin:10px 0">
+<tr style="background:#f0fdf4"><th style="padding:8px;border:1px solid #e5e7eb">Type</th><th style="padding:8px;border:1px solid #e5e7eb">Size</th><th style="padding:8px;border:1px solid #e5e7eb">Resolution</th><th style="padding:8px;border:1px solid #e5e7eb">OS</th><th style="padding:8px;border:1px solid #e5e7eb">Best Use</th><th style="padding:8px;border:1px solid #e5e7eb">SSP (₹)</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Wall Hanging</td><td style="padding:8px;border:1px solid #e5e7eb">32"</td><td style="padding:8px;border:1px solid #e5e7eb">HD</td><td style="padding:8px;border:1px solid #e5e7eb">Android 9.0</td><td style="padding:8px;border:1px solid #e5e7eb">Lobby info, restaurant menus</td><td style="padding:8px;border:1px solid #e5e7eb">19,361</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Totem</td><td style="padding:8px;border:1px solid #e5e7eb">43"</td><td style="padding:8px;border:1px solid #e5e7eb">FHD</td><td style="padding:8px;border:1px solid #e5e7eb">Android 9.0</td><td style="padding:8px;border:1px solid #e5e7eb">Wayfinding, event display</td><td style="padding:8px;border:1px solid #e5e7eb">61,876</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb">Totem</td><td style="padding:8px;border:1px solid #e5e7eb">55"</td><td style="padding:8px;border:1px solid #e5e7eb">UHD</td><td style="padding:8px;border:1px solid #e5e7eb">Android 9.0</td><td style="padding:8px;border:1px solid #e5e7eb">Conference, premium branding</td><td style="padding:8px;border:1px solid #e5e7eb">1,09,780</td></tr>
+</table>
+<p>All LAXREE digital signages run Android 9.0, enabling easy content management through standard digital signage apps. The built-in Android OS eliminates the need for external media players, reducing cost and complexity. Content can be managed remotely via Wi-Fi or Ethernet.</p>
+
+<h3 style="color:#047857;margin-top:24px">Sales Talking Points</h3>
 <ul>
-<li>LRMR-256: 2" Bonded Foam, MS Frame - ₹6,988</li>
-<li>LRMR-257: 6" Pocket Spring, Lockable Wheels - ₹10,350</li>
+<li><strong>For Mattresses:</strong> "A ₹12,025 Euro Top mattress that earns a 5-star review is the best marketing investment you can make. Guest sleep quality directly impacts your online ratings."</li>
+<li><strong>For Housekeeping:</strong> "The ABS trolley is silent in corridors — no more guest complaints about noisy housekeeping carts. Lightweight design also reduces staff fatigue."</li>
+<li><strong>For Digital Signage:</strong> "Android 9.0 means zero vendor lock-in for content management. Use any signage app you prefer, or we can recommend our preferred partners."</li>
 </ul>
-<h4>Housekeeping Trolleys</h4>
+
+<h3 style="color:#047857;margin-top:24px">FAQ</h3>
 <ul>
-<li>LRHT-430: Linen Trolley, SS - ₹6,300</li>
-<li>LRHT-427: MS Powder Coated, 3 shelves, 2 soil bags - ₹13,050</li>
-<li>LRHT-429: ABS Body, 3 shelves, 2 soil bags - ₹22,800</li>
+<li><strong>Q: Do mattresses include bed frames?</strong> — A: No, mattresses are sold separately. LAXREE focuses on the mattress product. Bed frames can be sourced through our partner network.</li>
+<li><strong>Q: What is the expected mattress lifespan in a hotel?</strong> — A: LAXREE Bonnell Spring mattresses are designed for 5–7 years of commercial use with proper rotation and maintenance.</li>
+<li><strong>Q: Can digital signages display live TV?</strong> — A: Yes, with an optional HDMI input module. The standard Android 9.0 OS supports streaming apps, live feeds, and scheduled content.</li>
 </ul>
-<h4>Digital Signages</h4>
-<ul>
-<li>Wall Hanging 32": HD, Android 9.0 - ₹19,361</li>
-<li>Totem 43": FHD, Android 9.0 - ₹61,876</li>
-<li>Totem 55": UHD, Android 9.0 - ₹1,09,780</li>
-</ul>`,
+
+<h3 style="color:#047857;margin-top:24px">Cross-Selling Suggestions</h3>
+<p>When selling mattresses, recommend <strong>Rollaway Beds</strong> for flexible capacity. When selling housekeeping trolleys, suggest <strong>Soap Dispensers</strong> for the bathroom amenity program. Digital signages pair well with <strong>RFID Locks</strong> for a complete modernization pitch. For new hotel projects, propose the full LAXREE product suite for unified procurement and service.</p>
+</div>`,
       contentType: 'video',
-      contentUrl: '/upload/Housekeeping.mp4',
-      pdfUrl: '/upload/Housekeeping Trolley.pdf',
       order: 10,
       duration: 20,
       courseId: productAcademyCourse.id,
@@ -2982,25 +3336,12 @@ export async function seedDatabase() {
   })
 
   // ==================== EXAM CENTER SEEDING ====================
-  // Import question banks from external files
-  const { EXAM_QUESTIONS } = await import('@/lib/exam-questions')
-  const { EXAM_QUESTIONS_FULL } = await import('@/lib/exam-questions-full')
+  // Import curated question banks (50 MCQ + 50 Short Answer covering all LAXREE product categories)
+  const { MCQ_QUESTIONS, SHORT_ANSWER_QUESTIONS } = await import('@/lib/exam-center-questions')
 
-  // Stage mapping from number to enum
-  const stageMap: Record<number, string> = { 1: 'PRE', 2: 'MID', 3: 'HARD', 4: 'EXTRA_HARD' }
-  const examTypeMap: Record<string, string> = { 'inbound_sales_exam': 'INBOUND_SALES', 'field_sales_exam': 'FIELD_SALES', 'both': 'BOTH' }
-
-  // Combine all MCQ questions from both files
-  const allMcqQuestions = [...EXAM_QUESTIONS, ...EXAM_QUESTIONS_FULL]
-
-  // Create QuestionBank entries for MCQ questions, tagged by examType and stage
-  const mcqQuestionBanks: Record<string, any[]> = {} // key: `${examType}_${stage}`
-  for (const q of allMcqQuestions) {
-    const eType = examTypeMap[q.examType] || 'BOTH'
-    const stage = stageMap[q.stage] || 'PRE'
-    const key = `${eType}_${stage}`
-    if (!mcqQuestionBanks[key]) mcqQuestionBanks[key] = []
-
+  // Create QuestionBank entries for all MCQ questions, grouped by difficulty for stage assignment
+  const mcqByDifficulty: Record<string, any[]> = { easy: [], medium: [], hard: [] }
+  for (const q of MCQ_QUESTIONS) {
     const qb = await db.questionBank.create({
       data: {
         question: q.question,
@@ -3016,218 +3357,51 @@ export async function seedDatabase() {
         difficulty: q.difficulty,
       }
     })
-    mcqQuestionBanks[key].push(qb)
-
-    // If examType is 'both', also add to both INBOUND and FIELD keys
-    if (eType === 'BOTH') {
-      const inboundKey = `INBOUND_SALES_${stage}`
-      const fieldKey = `FIELD_SALES_${stage}`
-      if (!mcqQuestionBanks[inboundKey]) mcqQuestionBanks[inboundKey] = []
-      if (!mcqQuestionBanks[fieldKey]) mcqQuestionBanks[fieldKey] = []
-      mcqQuestionBanks[inboundKey].push(qb)
-      mcqQuestionBanks[fieldKey].push(qb)
-    }
+    mcqByDifficulty[q.difficulty].push(qb)
   }
 
-  // Generate SHORT_ANSWER questions for each exam type and stage
-  const shortAnswerData: Record<string, Array<{ q: string; ans: string; cat: string; diff: string; expl: string }>> = {
-    'INBOUND_SALES_PRE': [
-      { q: 'What is the primary business of LAXREE Hospitality Solutions?', ans: 'premium hotel amenities and equipment', cat: 'Organization', diff: 'easy', expl: 'LAXREE specializes in premium hotel amenities including mini bars, safes, kettles, and more.' },
-      { q: 'What does SSP stand for in LAXREE pricing context?', ans: 'Suggested Selling Price', cat: 'Product Features', diff: 'easy', expl: 'SSP is the recommended retail pricing for LAXREE products.' },
-      { q: 'Name the key advantage of absorption mini bars for hotel rooms.', ans: 'completely silent operation', cat: 'Product Features', diff: 'easy', expl: 'Absorption mini bars have no compressor, making them completely silent — essential for guest comfort.' },
-      { q: 'What is the first step when receiving an inbound sales call?', ans: 'greet and identify the caller needs', cat: 'Sales Process', diff: 'easy', expl: 'Always greet professionally and identify the caller\'s needs before presenting products.' },
-      { q: 'What information should you collect during an inbound inquiry?', ans: 'hotel name contact person room count current supplier timeline', cat: 'Sales Process', diff: 'easy', expl: 'Collect hotel name, contact person, room count, current supplier, and decision timeline.' },
-      { q: 'Describe the default master code for LAXREE electronic safe boxes.', ans: '1234', cat: 'Product Features', diff: 'easy', expl: 'The default master code is 1234, which should be changed during installation.' },
-      { q: 'What technology do LAXREE RFID door locks use?', ans: '13.56MHz Mifare RFID', cat: 'Product Features', diff: 'easy', expl: 'LAXREE RFID locks use 13.56MHz Mifare technology for secure contactless room access.' },
-      { q: 'Name the three types of minibar cooling technology offered by LAXREE.', ans: 'thermoelectric absorption compressor', cat: 'Product Features', diff: 'easy', expl: 'LAXREE offers thermoelectric, absorption, and compressor minibar technologies.' },
-      { q: 'What is the standard warranty period for LAXREE products?', ans: '3 years', cat: 'Organization', diff: 'easy', expl: 'LAXREE offers a 3-year standard warranty, longer than the industry average of 1-2 years.' },
-      { q: 'How many electric kettle models does LAXREE offer?', ans: '5 models', cat: 'Product Features', diff: 'easy', expl: 'LAXREE offers 5 kettle models: LRWT-143, LRWT-145, LRWT-155, LRWT-150, LRWT-156.' },
-      { q: 'What is the lowest SSP kettle model and its price?', ans: 'LRWT-145 at 488 rupees', cat: 'Product Features', diff: 'easy', expl: 'LRWT-145 (0.8L, 800W, SS 201 Matte) is priced at ₹488, the lowest in the kettle range.' },
-      { q: 'Which kettle model has double wall insulation?', ans: 'LRWT-155', cat: 'Product Features', diff: 'easy', expl: 'LRWT-155 features SS 304 Double Layer construction with double-wall insulation.' },
-      { q: 'What safety feature prevents a kettle from boiling dry?', ans: 'boil dry protection', cat: 'Product Features', diff: 'easy', expl: 'Boil-dry protection automatically switches off the kettle when water level is too low.' },
-      { q: 'Name the card hierarchy in LAXREE RFID lock system from highest to lowest.', ans: 'Master Card Building Card Floor Card Guest Card Emergency Card', cat: 'Product Features', diff: 'easy', expl: 'Card hierarchy: Master, Building, Floor, Guest, and Emergency cards.' },
-      { q: 'What is the battery life of LAXREE RFID door locks?', ans: '12 to 18 months', cat: 'Product Features', diff: 'easy', expl: 'RFID lock batteries last 12-18 months, supporting approximately 50,000 operations.' },
-      { q: 'What refrigerant do LAXREE minibars use?', ans: 'R600a', cat: 'Product Features', diff: 'easy', expl: 'All LAXREE minibars use eco-friendly R600a refrigerant.' },
-      { q: 'What is the temperature range of compressor minibars?', ans: '2 to 8 degrees celsius', cat: 'Product Features', diff: 'easy', expl: 'Compressor minibars maintain 2-8°C range.' },
-      { q: 'What is the temperature range of absorption minibars?', ans: '5 to 12 degrees celsius', cat: 'Product Features', diff: 'easy', expl: 'Absorption minibars maintain 5-12°C range.' },
-      { q: 'Describe how to reset a safe box code.', ans: 'press star then enter new code then press hash then confirm', cat: 'Product Features', diff: 'easy', expl: 'Press *, enter new code, press #, re-enter to confirm the new code.' },
-      { q: 'What happens after 3 incorrect safe box code attempts?', ans: 'auto lockout for 5 minutes', cat: 'Product Features', diff: 'easy', expl: 'The safe auto-locks for 5 minutes after 3 incorrect attempts.' },
-      { q: 'What PMS systems are compatible with LAXREE RFID locks?', ans: 'Opera Protel IDS', cat: 'Technical', diff: 'easy', expl: 'LAXREE locks integrate with Opera, Protel, and IDS PMS systems.' },
-      { q: 'How many access records can an RFID lock store?', ans: '300 records', cat: 'Product Features', diff: 'easy', expl: 'Each LAXREE RFID lock stores up to 300 recent access records.' },
-      { q: 'What is the capacity range of LAXREE minibars?', ans: '20 liters to 60 liters', cat: 'Product Features', diff: 'easy', expl: 'LAXREE minibars are available in 20L to 60L capacities.' },
-      { q: 'Name the safe box model designed for laptops.', ans: 'LRSB-209 Orbita', cat: 'Product Features', diff: 'easy', expl: 'LRSB-209 Orbita Laptop Safe features LED interior light and USB charging port.' },
-      { q: 'What does the low battery indicator show on a safe box?', ans: 'LO-BAT display and 3 beeps', cat: 'Product Features', diff: 'easy', expl: 'Display shows "LO-BAT" and beeps 3 times per operation.' },
-      { q: 'How many override keys come with each safe box?', ans: '2 keys', cat: 'Product Features', diff: 'easy', expl: 'Each safe box includes 2 override keys for emergency access.' },
-      { q: 'What is the LAXREE minibar energy efficiency class?', ans: 'Class A plus', cat: 'Product Features', diff: 'easy', expl: 'All LAXREE minibars meet energy efficiency Class A+ standards.' },
-      { q: 'What is the weight capacity of LAXREE rollaway beds?', ans: '120 kilograms', cat: 'Product Features', diff: 'easy', expl: 'Rollaway beds support up to 120kg weight capacity.' },
-      { q: 'What is the par level standard for minibar stocking?', ans: '8 to 12 items per room', cat: 'Product Features', diff: 'easy', expl: 'Each room is stocked with 8-12 items as the standard par level.' },
-      { q: 'Describe the anti-panic exit feature of LAXREE RFID locks.', ans: 'inside handle always allows free egress', cat: 'Product Features', diff: 'easy', expl: 'The inside handle always allows free egress for guest safety, even when locked from outside.' },
-      { q: 'What is the power consumption of thermoelectric minibars?', ans: '45 watts', cat: 'Product Features', diff: 'easy', expl: 'Thermoelectric minibars consume just 45W, the most energy-efficient option.' },
-      { q: 'What material are LAXREE kettle interiors made of?', ans: 'BPA free food grade stainless steel', cat: 'Product Features', diff: 'easy', expl: 'All interior surfaces that contact water are BPA-free and food-grade.' },
-      { q: 'How should a kettle be descaled?', ans: 'vinegar and water solution boil sit 30 minutes rinse', cat: 'Product Features', diff: 'easy', expl: 'Use 1:1 water-vinegar solution, boil, let sit 30 minutes, then rinse thoroughly.' },
-      { q: 'What is the SSP of the LRSB-201 safe box?', ans: '3200 rupees', cat: 'Product Features', diff: 'easy', expl: 'LRSB-201 Compact safe is priced at ₹3,200 SSP.' },
-      { q: 'What is the SSP of the LRSB-209 Orbita laptop safe?', ans: '6500 rupees', cat: 'Product Features', diff: 'easy', expl: 'LRSB-209 Orbita Laptop Safe is priced at ₹6,500 SSP.' },
-      { q: 'How many chambers do LAXREE dispenser systems have?', ans: '2 chamber and 3 chamber systems', cat: 'Product Features', diff: 'easy', expl: 'LAXREE offers 2-chamber and 3-chamber dispenser systems, each holding 400ml per chamber.' },
-      { q: 'What is the saving from switching to dispensers vs individual bottles?', ans: '8 to 12 lakhs per year for 150 room hotel', cat: 'Calculation', diff: 'easy', expl: 'A 150-room hotel saves ₹8-12 lakhs annually by switching from individual bottles to dispensers.' },
-      { q: 'What mounting options are available for LAXREE hair dryers?', ans: 'wall mounted and foldable portable', cat: 'Product Features', diff: 'easy', expl: 'Wall-mounted models save counter space; portable models for premium suites.' },
-      { q: 'What is the cross-sell bundle discount for 5+ product categories?', ans: '8 percent discount', cat: 'Sales Process', diff: 'easy', expl: '5+ product categories get 8% discount; full room package gets 12%.' },
-      { q: 'Name three hanger types offered by LAXREE.', ans: 'wooden velvet tubular', cat: 'Product Features', diff: 'easy', expl: 'LAXREE offers wooden (premium), velvet (space-saving), and tubular (budget) hangers.' },
-      { q: 'What is the minimum wall clearance for absorption minibars?', ans: '10 centimeters', cat: 'Product Features', diff: 'easy', expl: 'Ensure minimum 10cm clearance from walls for proper ventilation on absorption models.' },
-      { q: 'How many AA batteries power the RFID lock?', ans: '4 AA batteries', cat: 'Product Features', diff: 'easy', expl: 'Each RFID lock is powered by 4× AA batteries.' },
-      { q: 'What does the emergency card do in the RFID system?', ans: 'opens all locks and overrides privacy settings', cat: 'Product Features', diff: 'easy', expl: 'The Emergency Card overrides all locks and privacy settings for emergency situations.' },
-      { q: 'What is the noise level of compressor minibars?', ans: 'less than 39 decibels', cat: 'Product Features', diff: 'easy', expl: 'Compressor minibars operate at <39 dB, suitable for hotel environments.' },
-      { q: 'What is the noise level of absorption minibars?', ans: '0 decibels completely silent', cat: 'Product Features', diff: 'easy', expl: 'Absorption minibars operate at 0 dB — completely silent.' },
-      { q: 'What finish options are available for LAXREE minibars?', ans: 'mirror wooden painted glass', cat: 'Product Features', diff: 'easy', expl: 'Available in mirror glass, wooden panel, and painted glass finishes.' },
-      { q: 'What is the SSP of the LRWT-155 kettle?', ans: '1104 rupees', cat: 'Product Features', diff: 'easy', expl: 'LRWT-155 (1.0L, SS 304 Double Wall) is priced at ₹1,104.' },
-      { q: 'What is the full room package bundle discount?', ans: '12 percent discount', cat: 'Sales Process', diff: 'easy', expl: 'Full room package including all products gets 12% discount.' },
-      { q: 'What is the recommended descaling frequency for kettles?', ans: 'every 2 to 3 months', cat: 'Product Features', diff: 'easy', expl: 'Descale kettles every 2-3 months using vinegar solution.' },
-      { q: 'What is the override key location on a safe box?', ans: 'hidden behind the front panel badge', cat: 'Product Features', diff: 'easy', expl: 'The override keyhole is concealed behind a removable badge on the front panel.' },
-    ],
-    'INBOUND_SALES_MID': [
-      { q: 'What does LACE stand for in LAXREE\'s objection handling framework?', ans: 'Listen Acknowledge Counter Engage', cat: 'Sales Process', diff: 'medium', expl: 'LACE is LAXREE\'s framework: Listen to the objection, Acknowledge it, Counter with value, Engage the client.' },
-      { q: 'What does BATNA stand for in negotiation?', ans: 'Best Alternative To Negotiated Agreement', cat: 'Negotiation', diff: 'medium', expl: 'BATNA is your walk-away option — the best alternative if negotiations fail.' },
-      { q: 'How should you respond when a client says your price is too high?', ans: 'acknowledge and redirect to value proposition', cat: 'Negotiation', diff: 'medium', expl: 'Using LACE: Listen, Acknowledge the concern, then Counter with value proposition (ROI, savings, quality).' },
-      { q: 'What closing technique gives the client two positive options that both lead to a sale?', ans: 'alternative close', cat: 'Sales Process', diff: 'medium', expl: 'The alternative close gives two positive options, both leading to a sale.' },
-      { q: 'What is the typical electricity savings per thermoelectric mini bar unit annually?', ans: '24300 rupees per year', cat: 'Calculation', diff: 'medium', expl: 'A thermoelectric mini bar saves approximately ₹24,300/year in electricity vs compressor units.' },
-      { q: 'What should be included in a post-call follow-up email?', ans: 'summary of discussion proposed solutions next steps timeline', cat: 'Sales Process', diff: 'medium', expl: 'Include discussion summary, proposed solutions, clear next steps, and agreed timeline.' },
-      { q: 'When is the best time to discuss pricing with a hotel prospect?', ans: 'after understanding needs and presenting value', cat: 'Sales Process', diff: 'medium', expl: 'Discuss pricing after understanding needs and presenting value — anchor price against value.' },
-      { q: 'Describe the key differentiator of LAXREE mini bars vs competitors.', ans: 'silent operation and premium design', cat: 'Product Features', diff: 'medium', expl: 'LAXREE differentiates through silent operation and premium design aesthetics.' },
-      { q: 'What is the typical lead time for a LAXREE bulk order of 100+ units?', ans: '2 to 4 weeks', cat: 'Real-time Case', diff: 'medium', expl: 'Typical lead time for bulk orders (100+ units) is 2-4 weeks including delivery.' },
-      { q: 'How do you handle a client who says they are happy with their current supplier?', ans: 'acknowledge satisfaction and ask what would make them consider alternative', cat: 'Customer Discovery', diff: 'medium', expl: 'Acknowledge their satisfaction, then ask what improvements they\'d like to see.' },
-      { q: 'What percentage discount does LAXREE typically offer on bulk orders above 100 units?', ans: '5 to 8 percent', cat: 'Calculation', diff: 'medium', expl: 'LAXREE typically offers 5-8% discount on bulk orders above 100 units.' },
-      { q: 'What is the recommended approach for a first-time hotel client presentation?', ans: 'focus on 3 to 5 most relevant products based on needs', cat: 'Sales Process', diff: 'medium', expl: 'Focus on 3-5 most relevant products based on their needs rather than overwhelming them.' },
-      { q: 'Describe the advantage of LAXREE\'s direct sales model over distributor-based sales.', ans: 'better pricing control faster support direct relationship', cat: 'Organization', diff: 'medium', expl: 'Direct sales allows better pricing control, faster support, and direct relationships.' },
-      { q: 'What is ROI and how is it used in LAXREE sales presentations?', ans: 'Return on Investment used to demonstrate value to hotel clients', cat: 'Calculation', diff: 'medium', expl: 'ROI (Return on Investment) demonstrates the financial value of LAXREE products to hotel clients.' },
-      { q: 'If a competitor offers mini bars at ₹12,000 and LAXREE at ₹15,000, how do you justify the premium?', ans: 'show total cost of ownership advantage with electricity savings', cat: 'Negotiation', diff: 'medium', expl: 'Justify the premium by showing TCO advantage — silent operation saves ₹24,300/year per unit.' },
-    ],
-    'INBOUND_SALES_HARD': [
-      { q: 'Calculate the 5-year total savings for 100 thermoelectric mini bar units at ₹24,300/year per unit.', ans: '1 crore 21 lakh 50 thousand rupees', cat: 'Calculation', diff: 'hard', expl: '₹24,300 × 100 units × 5 years = ₹1,21,50,000.' },
-      { q: 'Describe the SPIN selling methodology and how it applies to LAXREE inbound sales.', ans: 'Situation Problem Implication Need payoff questions to understand and address client needs', cat: 'Sales Process', diff: 'hard', expl: 'SPIN (Situation, Problem, Implication, Need-Payoff) helps uncover client needs systematically.' },
-      { q: 'What is Total Cost of Ownership and how do you present it for a LAXREE mini bar deal?', ans: 'initial cost plus operating costs minus savings over the product lifetime', cat: 'Negotiation', diff: 'hard', expl: 'TCO includes purchase price, operating costs, and savings — showing LAXREE\'s long-term value advantage.' },
-      { q: 'How would you handle a hotel GM who insists on a 30% discount on a 200-room order?', ans: 'use value anchoring show ROI offer flexible payment terms instead of deep discount', cat: 'Real-time Case', diff: 'hard', expl: 'Avoid deep discounts by anchoring to value, showing ROI, and offering alternative incentives like extended warranty.' },
-      { q: 'Describe a strategy to convert a competitor-loyal hotel chain with 15 properties.', ans: 'pilot program in one property demonstrate superior quality and support then expand', cat: 'Real-time Case', diff: 'hard', expl: 'Start with a pilot program in one property to prove quality, then use the success story to expand.' },
-      { q: 'What metrics should you track to demonstrate ROI to a hotel client for mini bar investment?', ans: 'electricity savings guest satisfaction scores revenue per room maintenance cost reduction', cat: 'Calculation', diff: 'hard', expl: 'Track electricity savings, guest satisfaction, revenue per room, and maintenance cost reduction.' },
-      { q: 'How do you structure a multi-product proposal combining mini bars, safes, and kettles?', ans: 'bundle pricing with volume discount integrated platform advantage single supplier benefit', cat: 'Negotiation', diff: 'hard', expl: 'Use bundle pricing, highlight integrated platform advantage, and single-supplier efficiency benefits.' },
-      { q: 'Describe the competitive landscape for hotel door locks in India.', ans: 'Saflok Dormakaba Onity Assa Abloy with LAXREE offering integrated solution advantage', cat: 'Competitive Intelligence', diff: 'hard', expl: 'Key competitors include Dormakaba, Onity, and Assa Abloy; LAXREE offers integrated solution advantage.' },
-      { q: 'How would you create urgency for a hotel that is planning a renovation in 6 months?', ans: 'highlight installation timeline early bird pricing and guarantee availability for their schedule', cat: 'Sales Process', diff: 'hard', expl: 'Create urgency through installation timeline, early-bird pricing, and guaranteed availability.' },
-      { q: 'What is the impact of GST on hotel amenity purchases and how does it affect pricing strategy?', ans: '18 percent GST on capital goods input tax credit available for hotels', cat: 'Calculation', diff: 'hard', expl: '18% GST applies but hotels can claim input tax credit, making the effective cost lower.' },
-      { q: 'Describe a cross-selling strategy for a hotel ordering 150 safe boxes.', ans: 'pitch compatible RFID locks mini bars for same rooms and kettles as room package', cat: 'Sales Process', diff: 'hard', expl: 'Cross-sell compatible RFID locks, mini bars, and kettles as a complete room solution package.' },
-      { q: 'How do you calculate the break-even point for a hotel investing in LAXREE smart mini bars?', ans: 'initial investment divided by annual net savings per unit including revenue and electricity savings', cat: 'Calculation', diff: 'hard', expl: 'Break-even = Total Investment ÷ Annual Net Savings (electricity savings + revenue gains).' },
-      { q: 'What are the key decision-making criteria for a hotel procurement committee?', ans: 'total cost of ownership quality and reliability after sales support delivery timeline', cat: 'Customer Discovery', diff: 'hard', expl: 'Procurement committees evaluate TCO, quality, after-sales support, and delivery timeline.' },
-      { q: 'How would you present LAXREE\'s competitive advantage to a Marriott or Taj hotel group?', ans: 'one stop solution integrated technology premium value positioning 3 year warranty', cat: 'Negotiation', diff: 'hard', expl: 'Emphasize one-stop solution, integrated technology, premium value positioning, and 3-year warranty.' },
-      { q: 'Describe the process of getting a LAXREE product specification approved by a hotel chain.', ans: 'submit technical specifications provide sample for testing get approval from engineering and procurement', cat: 'Real-time Case', diff: 'hard', expl: 'Submit specs, provide samples for testing, and get approval from engineering and procurement teams.' },
-    ],
-    'INBOUND_SALES_EXTRA_HARD': [
-      { q: 'Design a comprehensive account strategy for winning a 500-room luxury hotel chain with 8 properties.', ans: 'multi phase approach pilot at flagship property executive sponsorship volume pricing dedicated support team', cat: 'Strategic Selling', diff: 'hard', expl: 'Use multi-phase approach: pilot at flagship, executive sponsorship, volume pricing, and dedicated support.' },
-      { q: 'How would you structure a 3-year framework agreement with a hotel group including price escalation clauses?', ans: 'fixed pricing for year one with 3 to 5 percent annual escalation volume commitments for preferential rates', cat: 'Negotiation', diff: 'hard', expl: 'Fixed year-1 pricing with 3-5% annual escalation, volume commitments for preferential rates.' },
-      { q: 'Describe the financial modeling approach for a hotel chain evaluating LAXREE vs 3 competitors.', ans: 'total cost of ownership model including purchase price operating costs maintenance replacement and energy costs', cat: 'Calculation', diff: 'hard', expl: 'TCO model covering purchase price, operating costs, maintenance, replacement, and energy costs over 5+ years.' },
-      { q: 'How do you navigate a complex procurement process involving GM, Finance Director, and IT Head?', ans: 'tailor value proposition to each stakeholder GM for guest experience Finance for ROI IT for integration', cat: 'Strategic Selling', diff: 'hard', expl: 'Customize value proposition per stakeholder: GM for guest experience, Finance for ROI, IT for integration.' },
-      { q: 'What is the impact of LAXREE products on hotel RevPAR and how do you quantify it?', ans: 'improved guest satisfaction leads to higher ratings and premium room rates increasing revenue per available room', cat: 'Calculation', diff: 'hard', expl: 'Better amenities improve guest satisfaction → higher ratings → premium room rates → increased RevPAR.' },
-      { q: 'How would you build a business case for a hotel owner showing the ROI of upgrading all room amenities?', ans: 'calculate total investment project annual savings from energy and maintenance estimate revenue uplift from guest satisfaction', cat: 'Calculation', diff: 'hard', expl: 'Calculate total investment, project annual savings, and estimate revenue uplift from improved guest satisfaction.' },
-      { q: 'Describe a crisis management approach when a major hotel chain reports defective safe boxes.', ans: 'immediate response team on site replacement comprehensive root cause analysis and preventive measures', cat: 'Real-time Case', diff: 'hard', expl: 'Deploy immediate response team, on-site replacements, root cause analysis, and preventive measures.' },
-      { q: 'What market expansion strategy would you recommend for LAXREE entering the Southeast Asian hospitality market?', ans: 'partner with local distributors establish service centers adapt products to regional requirements build reference accounts', cat: 'Strategic Selling', diff: 'hard', expl: 'Partner with local distributors, establish service centers, adapt products to regional needs, and build reference accounts.' },
-      { q: 'How do you calculate the lifetime value of a hotel chain client for LAXREE?', ans: 'initial order value times number of properties times repeat purchase rate times years plus service revenue', cat: 'Calculation', diff: 'hard', expl: 'LTV = Initial order × properties × repeat rate × years + service revenue stream.' },
-      { q: 'Describe a coaching framework for training new LAXREE inbound sales representatives.', ans: 'product knowledge certification role play scenarios mentorship program performance metrics and continuous feedback', cat: 'Organization', diff: 'hard', expl: 'Use product knowledge certification, role-play scenarios, mentorship, performance metrics, and continuous feedback.' },
-    ],
-    'FIELD_SALES_PRE': [
-      { q: 'What is the first thing you should do when arriving for a hotel site visit?', ans: 'check in at front desk and confirm appointment with contact person', cat: 'Field Operations', diff: 'easy', expl: 'Always check in at the front desk professionally and confirm your appointment.' },
-      { q: 'What materials should you bring to a LAXREE product demonstration at a hotel?', ans: 'product samples catalogues price list business cards and demo devices', cat: 'Field Operations', diff: 'easy', expl: 'Bring product samples, catalogues, price list, business cards, and demo devices.' },
-      { q: 'Name the key product categories in LAXREE\'s portfolio for hotel demonstrations.', ans: 'mini bars safe boxes RFID locks kettles dispensers digital signage', cat: 'Product Features', diff: 'easy', expl: 'Key categories include mini bars, safe boxes, RFID locks, kettles, dispensers, and digital signage.' },
-      { q: 'What should you wear for a field sales visit to a 5-star hotel?', ans: 'formal business attire professional appearance', cat: 'Field Operations', diff: 'easy', expl: 'Always wear formal business attire appropriate for a 5-star hotel environment.' },
-      { q: 'Describe how to demonstrate a LAXREE electronic safe box to a hotel GM.', ans: 'show code entry master override emergency key and installation features', cat: 'Product Features', diff: 'easy', expl: 'Demonstrate code entry, master override, emergency key access, and installation options.' },
-      { q: 'What is the recommended approach when doing a product demo for a hotel procurement team?', ans: 'focus on 3 to 5 most relevant products based on their needs', cat: 'Sales Process', diff: 'easy', expl: 'Focus on the most relevant products based on their specific needs and requirements.' },
-      { q: 'How should you prepare before a field visit to a prospective hotel client?', ans: 'research the hotel property current supplier room count and recent renovations', cat: 'Field Operations', diff: 'easy', expl: 'Research the property: room count, star rating, current supplier, and recent renovations.' },
-      { q: 'What is the typical duration of a hotel site visit and product demonstration?', ans: '45 to 90 minutes', cat: 'Field Operations', diff: 'easy', expl: 'A typical hotel site visit with product demonstration takes 45-90 minutes.' },
-      { q: 'Name the key decision makers in a hotel who approve amenity purchases.', ans: 'General Manager Finance Director Housekeeping Director IT Manager', cat: 'Customer Discovery', diff: 'easy', expl: 'Key decision makers include GM, Finance Director, Housekeeping Director, and IT Manager.' },
-      { q: 'What should you do immediately after completing a field sales visit?', ans: 'send follow up email with summary proposed solutions and next steps', cat: 'Sales Process', diff: 'easy', expl: 'Send a follow-up email with discussion summary, proposed solutions, and next steps.' },
-      { q: 'Describe the proper way to present a LAXREE mini bar to a hotel housekeeping director.', ans: 'emphasize silent operation easy cleaning energy efficiency and par level management', cat: 'Product Features', diff: 'easy', expl: 'Focus on silent operation, easy cleaning, energy efficiency, and par level management features.' },
-      { q: 'What is the purpose of a site survey before installing LAXREE products?', ans: 'assess room dimensions electrical requirements installation feasibility and quantity', cat: 'Field Operations', diff: 'easy', expl: 'Assess room dimensions, electrical requirements, installation feasibility, and product quantities needed.' },
-      { q: 'What hotel areas should you inspect during a site visit for mini bar installation?', ans: 'guest rooms wardrobes electrical outlets and service corridors', cat: 'Field Operations', diff: 'easy', expl: 'Inspect guest rooms, wardrobe/cabinet spaces, electrical outlets, and service corridors for logistics.' },
-      { q: 'How do you demonstrate the RFID door lock system to a hotel IT manager?', ans: 'show card encoding software integration PMS compatibility and security features', cat: 'Product Features', diff: 'easy', expl: 'Demonstrate card encoding, software integration, PMS compatibility, and security features.' },
-      { q: 'What documentation should you leave with a hotel client after a product demonstration?', ans: 'product brochure price list technical specifications and your business card', cat: 'Sales Process', diff: 'easy', expl: 'Leave product brochures, price list, technical specifications, and your business card.' },
-    ],
-    'FIELD_SALES_MID': [
-      { q: 'How do you build a relationship with a hotel General Manager during a site visit?', ans: 'understand their priorities discuss guest experience challenges and offer tailored solutions', cat: 'Relationship Building', diff: 'medium', expl: 'Understand their priorities, discuss guest experience challenges, and offer tailored solutions.' },
-      { q: 'Describe the process of conducting a competitive analysis during a field visit.', ans: 'identify current supplier products assess satisfaction level find pain points and highlight LAXREE advantages', cat: 'Competitive Intelligence', diff: 'medium', expl: 'Identify current products, assess satisfaction, find pain points, and highlight LAXREE advantages.' },
-      { q: 'What is the recommended territory management strategy for LAXREE field sales?', ans: 'segment by hotel star rating and size prioritize high value prospects maintain regular visit cadence', cat: 'Field Operations', diff: 'medium', expl: 'Segment by hotel rating/size, prioritize high-value prospects, and maintain regular visit cadence.' },
-      { q: 'How do you handle a price objection during an on-site product demonstration?', ans: 'acknowledge concern demonstrate total cost of ownership advantage and offer pilot program', cat: 'Negotiation', diff: 'medium', expl: 'Acknowledge concern, demonstrate TCO advantage, and offer a pilot program for proof of quality.' },
-      { q: 'What is the best way to demonstrate the silent operation of an absorption mini bar?', ans: 'place it in a quiet room turn it on and let the client experience the silence', cat: 'Product Features', diff: 'medium', expl: 'In a quiet room, turn on the mini bar and let the client experience the silent operation firsthand.' },
-      { q: 'How do you manage multiple hotel prospects in the same geographic territory?', ans: 'cluster visits by location schedule efficiently leverage reference accounts in the area', cat: 'Field Operations', diff: 'medium', expl: 'Cluster visits by location, schedule efficiently, and leverage reference accounts in the area.' },
-      { q: 'Describe how to present a multi-product proposal during a follow-up visit.', ans: 'show integrated solution bundle pricing single supplier advantage and implementation timeline', cat: 'Sales Process', diff: 'medium', expl: 'Present integrated solution, bundle pricing, single-supplier advantage, and implementation timeline.' },
-      { q: 'What are the key questions to ask during a hotel needs assessment on-site?', ans: 'room count renovation timeline budget current supplier pain points decision process', cat: 'Customer Discovery', diff: 'medium', expl: 'Ask about room count, renovation timeline, budget, current supplier, pain points, and decision process.' },
-      { q: 'How do you demonstrate the ROI of LAXREE smart mini bars to a hotel Finance Director?', ans: 'show electricity savings revenue from automated billing reduced theft and lower maintenance costs', cat: 'Calculation', diff: 'medium', expl: 'Demonstrate savings from electricity, automated billing revenue, reduced theft, and lower maintenance.' },
-      { q: 'What is the best approach to get a second meeting with a hotel decision maker?', ans: 'send personalized follow up with relevant case studies and propose specific solutions to their challenges', cat: 'Sales Process', diff: 'medium', expl: 'Send personalized follow-up with case studies and propose specific solutions to their challenges.' },
-      { q: 'How do you handle a situation where a hotel client wants products not in LAXREE\'s range?', ans: 'acknowledge the need explain LAXREE core offerings and suggest compatible alternatives or future roadmap', cat: 'Real-time Case', diff: 'medium', expl: 'Acknowledge the need, explain LAXREE core offerings, and suggest compatible alternatives.' },
-      { q: 'Describe the proper way to measure a hotel room for safe box installation.', ans: 'measure wardrobe shelf dimensions check wall depth ensure clearance for door swing and verify power access', cat: 'Field Operations', diff: 'medium', expl: 'Measure wardrobe/shelf dimensions, wall depth, door swing clearance, and verify power access.' },
-      { q: 'What is the recommended approach for presenting LAXREE digital signage to a hotel marketing director?', ans: 'show content management system customization options revenue from advertising and guest engagement metrics', cat: 'Product Features', diff: 'medium', expl: 'Demonstrate content management, customization, advertising revenue, and guest engagement metrics.' },
-      { q: 'How do you coordinate a product installation timeline with a hotel renovation schedule?', ans: 'align with renovation phases sequence delivery after room completion and schedule installation before handover', cat: 'Real-time Case', diff: 'medium', expl: 'Align with renovation phases, deliver after room completion, and install before handover.' },
-      { q: 'What metrics should you track from your field sales visits?', ans: 'visit frequency conversion rate average deal size pipeline value and customer satisfaction', cat: 'Field Operations', diff: 'medium', expl: 'Track visit frequency, conversion rate, deal size, pipeline value, and customer satisfaction.' },
-    ],
-    'FIELD_SALES_HARD': [
-      { q: 'Describe how to manage a complex deal involving a hotel chain with 10+ properties across different cities.', ans: 'centralized negotiation with corporate local implementation with property managers national pricing agreement', cat: 'Key Account Management', diff: 'hard', expl: 'Centralize negotiation with corporate, implement locally with property managers, and establish national pricing.' },
-      { q: 'How do you structure a strategic partnership proposal with a hotel management company?', ans: 'preferred vendor agreement volume commitments dedicated account manager and co marketing initiatives', cat: 'Strategic Partnerships', diff: 'hard', expl: 'Propose preferred vendor agreement, volume commitments, dedicated account manager, and co-marketing.' },
-      { q: 'What approach would you take to displace an established competitor at a premium hotel property?', ans: 'identify dissatisfaction pilot program demonstrate superior service and leverage reference accounts', cat: 'Competitive Intelligence', diff: 'hard', expl: 'Identify dissatisfaction, propose pilot, demonstrate superior service, and leverage reference accounts.' },
-      { q: 'How do you present a 5-year TCO analysis comparing LAXREE vs competitors to a hotel CFO?', ans: 'include acquisition operating maintenance replacement costs plus intangible benefits like guest satisfaction', cat: 'Calculation', diff: 'hard', expl: 'Include acquisition, operating, maintenance, replacement costs plus intangible benefits like guest satisfaction.' },
-      { q: 'Describe the process of qualifying a large hotel project opportunity in the field.', ans: 'assess budget authority need timeline and competition identify decision makers and procurement process', cat: 'Customer Discovery', diff: 'hard', expl: 'Assess BANT (Budget, Authority, Need, Timeline) and identify decision-makers and procurement process.' },
-      { q: 'How would you handle a hotel chain that wants to customize LAXREE products with their branding?', ans: 'offer custom finishes logo engraving and brand specific colors with minimum order quantities and lead time', cat: 'Negotiation', diff: 'hard', expl: 'Offer custom finishes, logo engraving, and brand-specific colors with MOQ and lead time.' },
-      { q: 'What strategy would you use to win a government hotel project tender?', ans: 'ensure compliance with specifications competitive pricing strong reference projects and after sales service commitment', cat: 'Strategic Partnerships', diff: 'hard', expl: 'Ensure spec compliance, competitive pricing, strong references, and after-sales service commitment.' },
-      { q: 'How do you calculate the revenue impact of upselling LAXREE smart minibars with automated billing?', ans: 'revenue from consumption tracking minus implementation cost divided by number of rooms over 12 months', cat: 'Calculation', diff: 'hard', expl: 'Calculate revenue from consumption tracking minus implementation cost, divided by rooms over 12 months.' },
-      { q: 'Describe a comprehensive key account plan for a Taj or Oberoi hotel group.', ans: 'executive relationship mapping quarterly business reviews dedicated support innovation collaboration and growth targets', cat: 'Key Account Management', diff: 'hard', expl: 'Map executive relationships, quarterly business reviews, dedicated support, innovation collaboration, and growth targets.' },
-      { q: 'How do you navigate a situation where a hotel project is delayed by 6 months?', ans: 'maintain relationship adjust delivery schedule keep pipeline warm and find interim opportunities', cat: 'Real-time Case', diff: 'hard', expl: 'Maintain relationship, adjust delivery schedule, keep pipeline warm, and find interim opportunities.' },
-      { q: 'What competitive intelligence should you gather during a field visit to a competitor-equipped hotel?', ans: 'product models age condition guest complaints and hotel staff satisfaction with current supplier', cat: 'Competitive Intelligence', diff: 'hard', expl: 'Note product models, age, condition, guest complaints, and staff satisfaction with current supplier.' },
-      { q: 'How would you present a technology upgrade roadmap to a hotel IT committee?', ans: 'show current state future state integration requirements timeline phased implementation and ROI at each phase', cat: 'Strategic Partnerships', diff: 'hard', expl: 'Show current state, future state, integration requirements, timeline, phased implementation, and per-phase ROI.' },
-      { q: 'Describe the process of conducting a post-installation review at a hotel.', ans: 'inspect installed products collect staff feedback measure performance metrics and identify improvement opportunities', cat: 'Field Operations', diff: 'hard', expl: 'Inspect installed products, collect staff feedback, measure performance metrics, and identify improvements.' },
-      { q: 'How do you manage price negotiations when a hotel procurement team has a fixed budget?', ans: 'adjust product mix offer phased rollout suggest lease or rental options and demonstrate value over budget constraint', cat: 'Negotiation', diff: 'hard', expl: 'Adjust product mix, offer phased rollout, suggest lease/rental options, and demonstrate value over budget constraint.' },
-      { q: 'What is the approach for building a referral network with interior designers and architects?', ans: 'educate on LAXREE product benefits offer specification support provide commission structure and maintain regular engagement', cat: 'Strategic Partnerships', diff: 'hard', expl: 'Educate on product benefits, offer specification support, provide commission structure, and maintain engagement.' },
-    ],
-    'FIELD_SALES_EXTRA_HARD': [
-      { q: 'Design a market entry strategy for LAXREE hospitality solutions in a new metropolitan region.', ans: 'identify top 20 hotels build reference accounts hire local sales team establish service center and create market presence', cat: 'Market Expansion', diff: 'hard', expl: 'Identify top hotels, build references, hire local team, establish service center, and create market presence.' },
-      { q: 'How would you structure a 5-year exclusive supply agreement with a major hotel chain?', ans: 'volume commitments with tiered pricing exclusivity clauses performance guarantees and technology upgrade provisions', cat: 'Negotiation', diff: 'hard', expl: 'Volume commitments with tiered pricing, exclusivity clauses, performance guarantees, and tech upgrade provisions.' },
-      { q: 'Describe a C-suite engagement strategy for presenting LAXREE smart hotel solutions to a hotel ownership group.', ans: 'executive briefing customized ROI model technology roadmap and strategic partnership framework', cat: 'Strategic Selling', diff: 'hard', expl: 'Executive briefing, customized ROI model, technology roadmap, and strategic partnership framework.' },
-      { q: 'How do you build and lead a high-performing field sales team for LAXREE across multiple regions?', ans: 'clear targets product training territory optimization performance coaching and collaborative culture', cat: 'Leadership', diff: 'hard', expl: 'Set clear targets, product training, territory optimization, performance coaching, and collaborative culture.' },
-      { q: 'What is the financial impact analysis of converting a 300-room hotel from competitor products to LAXREE?', ans: 'migration cost savings from energy and maintenance revenue uplift from smart features total ROI over 5 years', cat: 'Calculation', diff: 'hard', expl: 'Calculate migration cost, savings from energy/maintenance, revenue uplift from smart features, and 5-year ROI.' },
-      { q: 'How would you develop a channel partnership strategy with hospitality procurement companies?', ans: 'certification program commission structure joint marketing and performance based incentives', cat: 'Market Expansion', diff: 'hard', expl: 'Develop certification program, commission structure, joint marketing, and performance-based incentives.' },
-      { q: 'Describe how to position LAXREE as a technology partner rather than just a product vendor.', ans: 'IoT integration data analytics platform centralized management and continuous innovation roadmap', cat: 'Strategic Selling', diff: 'hard', expl: 'Position through IoT integration, data analytics, centralized management platform, and innovation roadmap.' },
-      { q: 'What risk mitigation strategy would you propose for a hotel group concerned about vendor lock-in?', ans: 'open standards compatibility data portability commitment phased transition support and competitive pricing guarantee', cat: 'Negotiation', diff: 'hard', expl: 'Open standards compatibility, data portability, phased transition support, and competitive pricing guarantee.' },
-      { q: 'How do you calculate the market potential for LAXREE products in a Tier-2 Indian city?', ans: 'total hotel rooms multiplied by average spend per room multiplied by LAXREE target market share percentage', cat: 'Calculation', diff: 'hard', expl: 'Total hotel rooms × average spend per room × LAXREE target market share percentage.' },
-      { q: 'Describe a comprehensive annual business plan for a LAXREE field sales region.', ans: 'revenue targets account plans territory strategy resource allocation marketing support and quarterly milestones', cat: 'Leadership', diff: 'hard', expl: 'Include revenue targets, account plans, territory strategy, resource allocation, marketing support, and quarterly milestones.' },
-    ],
+  // Create QuestionBank entries for all Short Answer questions, grouped by difficulty
+  const saByDifficulty: Record<string, any[]> = { easy: [], medium: [], hard: [] }
+  for (const q of SHORT_ANSWER_QUESTIONS) {
+    const qb = await db.questionBank.create({
+      data: {
+        question: q.question,
+        questionType: 'SHORT_ANSWER',
+        optionA: null,
+        optionB: null,
+        optionC: null,
+        optionD: null,
+        correctAnswer: q.correctAnswer,
+        acceptableAnswers: JSON.stringify(q.acceptableAnswers),
+        explanation: q.explanation,
+        category: q.category,
+        difficulty: q.difficulty,
+      }
+    })
+    saByDifficulty[q.difficulty].push(qb)
   }
 
-  // Create QuestionBank entries for SHORT_ANSWER questions
-  const shortAnswerBanks: Record<string, any[]> = {}
-  for (const [key, questions] of Object.entries(shortAnswerData)) {
-    if (!shortAnswerBanks[key]) shortAnswerBanks[key] = []
-    for (const q of questions) {
-      const qb = await db.questionBank.create({
-        data: {
-          question: q.q,
-          questionType: 'SHORT_ANSWER',
-          optionA: null,
-          optionB: null,
-          optionC: null,
-          optionD: null,
-          correctAnswer: q.ans,
-          acceptableAnswers: JSON.stringify([q.ans, ...q.ans.split(' ').filter((w: string) => w.length > 3).slice(0, 3)]),
-          explanation: q.expl,
-          category: q.cat,
-          difficulty: q.diff,
-        }
-      })
-      shortAnswerBanks[key].push(qb)
-    }
+
+  // Distribute questions across exams by difficulty:
+  // PRE stage = easy, MID stage = medium, HARD/EXTRA_HARD = hard
+  // Both INBOUND and FIELD sales share the same question pool per stage
+  const stageDifficultyMap: Record<string, string[]> = {
+    'PRE': ['easy'],
+    'MID': ['medium'],
+    'HARD': ['hard'],
+    'EXTRA_HARD': ['hard', 'medium'], // mix of hard + medium for expert level
   }
 
   // Create Exams for both types and all 4 stages
   const examConfigs = [
-    { examType: 'INBOUND_SALES' as const, stage: 'PRE' as const, title: 'Inbound Sales - Pre Stage', description: 'Foundation exam covering LAXREE organization, product basics, and inbound sales fundamentals.', duration: 60, passingScore: 70, timeGateDays: 7 },
-    { examType: 'INBOUND_SALES' as const, stage: 'MID' as const, title: 'Inbound Sales - Mid Stage', description: 'Intermediate exam covering advanced product features, objection handling, and negotiation skills.', duration: 60, passingScore: 70, timeGateDays: 30 },
-    { examType: 'INBOUND_SALES' as const, stage: 'HARD' as const, title: 'Inbound Sales - Hard Stage', description: 'Advanced exam covering complex sales scenarios, competitive intelligence, and strategic selling.', duration: 75, passingScore: 75, timeGateDays: 45 },
-    { examType: 'INBOUND_SALES' as const, stage: 'EXTRA_HARD' as const, title: 'Inbound Sales - Extra Hard Stage', description: 'Expert exam covering mastery-level sales strategy, high-value deals, and leadership.', duration: 90, passingScore: 80, timeGateDays: 60 },
-    { examType: 'FIELD_SALES' as const, stage: 'PRE' as const, title: 'Field Sales - Pre Stage', description: 'Foundation exam for field sales covering on-site selling basics and product demonstration.', duration: 60, passingScore: 70, timeGateDays: 7 },
-    { examType: 'FIELD_SALES' as const, stage: 'MID' as const, title: 'Field Sales - Mid Stage', description: 'Intermediate field sales exam covering relationship building, territory management, and advanced demos.', duration: 60, passingScore: 70, timeGateDays: 30 },
-    { examType: 'FIELD_SALES' as const, stage: 'HARD' as const, title: 'Field Sales - Hard Stage', description: 'Advanced field sales exam covering complex deal structures, key account management, and strategic partnerships.', duration: 75, passingScore: 75, timeGateDays: 45 },
-    { examType: 'FIELD_SALES' as const, stage: 'EXTRA_HARD' as const, title: 'Field Sales - Extra Hard Stage', description: 'Expert field sales exam covering enterprise deals, C-suite engagement, and market expansion strategy.', duration: 90, passingScore: 80, timeGateDays: 60 },
+    { examType: 'INBOUND_SALES' as const, stage: 'PRE' as const, title: 'Inbound Sales - Pre Stage', description: 'Foundation exam covering LAXREE organization, product basics, and inbound sales fundamentals. 50 MCQ + Short Answer questions.', duration: 90, passingScore: 70, timeGateDays: 7 },
+    { examType: 'INBOUND_SALES' as const, stage: 'MID' as const, title: 'Inbound Sales - Mid Stage', description: 'Intermediate exam covering advanced product features, objection handling, and negotiation skills. 50 MCQ + Short Answer questions.', duration: 90, passingScore: 70, timeGateDays: 30 },
+    { examType: 'INBOUND_SALES' as const, stage: 'HARD' as const, title: 'Inbound Sales - Hard Stage', description: 'Advanced exam covering complex sales scenarios, competitive intelligence, and strategic selling. 50 MCQ + Short Answer questions.', duration: 90, passingScore: 75, timeGateDays: 45 },
+    { examType: 'INBOUND_SALES' as const, stage: 'EXTRA_HARD' as const, title: 'Inbound Sales - Extra Hard Stage', description: 'Expert exam covering mastery-level sales strategy, high-value deals, and leadership. 50 MCQ + Short Answer questions.', duration: 120, passingScore: 80, timeGateDays: 60 },
+    { examType: 'FIELD_SALES' as const, stage: 'PRE' as const, title: 'Field Sales - Pre Stage', description: 'Foundation exam for field sales covering on-site selling basics and product demonstration. 50 MCQ + Short Answer questions.', duration: 90, passingScore: 70, timeGateDays: 7 },
+    { examType: 'FIELD_SALES' as const, stage: 'MID' as const, title: 'Field Sales - Mid Stage', description: 'Intermediate field sales exam covering relationship building, territory management, and advanced demos. 50 MCQ + Short Answer questions.', duration: 90, passingScore: 70, timeGateDays: 30 },
+    { examType: 'FIELD_SALES' as const, stage: 'HARD' as const, title: 'Field Sales - Hard Stage', description: 'Advanced field sales exam covering complex deal structures, key account management, and strategic partnerships. 50 MCQ + Short Answer questions.', duration: 90, passingScore: 75, timeGateDays: 45 },
+    { examType: 'FIELD_SALES' as const, stage: 'EXTRA_HARD' as const, title: 'Field Sales - Extra Hard Stage', description: 'Expert field sales exam covering enterprise deals, C-suite engagement, and market expansion strategy. 50 MCQ + Short Answer questions.', duration: 120, passingScore: 80, timeGateDays: 60 },
   ]
 
   let totalExamQuestions = 0
@@ -3245,19 +3419,14 @@ export async function seedDatabase() {
       }
     })
 
-    // Get MCQ questions for this exam type and stage
-    const mcqKey = `${config.examType}_${config.stage}`
-    const mcqQuestions = mcqQuestionBanks[mcqKey] || []
-    // Also include questions from the broader key (both types)
-    const bothMcqQuestions = mcqQuestionBanks[`BOTH_${config.stage}`] || []
-    const allMcqForExam = [...mcqQuestions, ...bothMcqQuestions.filter(q => !mcqQuestions.includes(q))]
-
-    // Get SHORT_ANSWER questions for this exam type and stage
-    const saQuestions = shortAnswerBanks[mcqKey] || []
+    // Get MCQ and SA questions matching the difficulty for this stage
+    const difficulties = stageDifficultyMap[config.stage] || ['easy']
+    const mcqForExam = difficulties.flatMap(d => mcqByDifficulty[d] || [])
+    const saForExam = difficulties.flatMap(d => saByDifficulty[d] || [])
 
     // Assign MCQ questions
     let order = 1
-    for (const qb of allMcqForExam) {
+    for (const qb of mcqForExam) {
       await db.examQuestion.create({
         data: {
           examId: exam.id,
@@ -3269,7 +3438,7 @@ export async function seedDatabase() {
     }
 
     // Assign SHORT_ANSWER questions
-    for (const qb of saQuestions) {
+    for (const qb of saForExam) {
       await db.examQuestion.create({
         data: {
           examId: exam.id,
@@ -3280,7 +3449,7 @@ export async function seedDatabase() {
       })
     }
 
-    totalExamQuestions += allMcqForExam.length + saQuestions.length
+    totalExamQuestions += mcqForExam.length + saForExam.length
   }
 
   return { users: 1 + 1 + 2 + employees.length, departments: 5, courses: allCourses.length, questionBanks: questionBanks.length + totalExamQuestions, assessments: moduleAssessments.length + 3 }
@@ -3291,6 +3460,32 @@ export async function POST(request: NextRequest) {
     // Check if force=true is passed to force reseed
     const { searchParams } = new URL(request.url)
     const force = searchParams.get('force') === 'true'
+
+    // If force=true, require admin authentication
+    if (force) {
+      let adminId: string | null = null
+      try {
+        const body = await request.json()
+        adminId = body?.adminId || null
+      } catch {
+        adminId = searchParams.get('adminId')
+      }
+
+      if (!adminId) {
+        return NextResponse.json(
+          { error: 'Admin authentication required for force seed. Provide adminId in request body.' },
+          { status: 401 }
+        )
+      }
+
+      const admin = await db.user.findUnique({ where: { id: adminId } })
+      if (!admin || admin.role !== 'SUPER_ADMIN') {
+        return NextResponse.json(
+          { error: 'Only SUPER_ADMIN users can force seed the database.' },
+          { status: 403 }
+        )
+      }
+    }
 
     const userCount = await db.user.count()
     const deptCount = await db.department.count()
@@ -3310,6 +3505,7 @@ export async function POST(request: NextRequest) {
       })
     }
 
+    // For initial seed (empty database), allow without auth so first-time setup works
     const result = await seedDatabase()
 
     return NextResponse.json({ message: 'Database seeded successfully', data: result })

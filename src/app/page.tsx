@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect } from 'react'
 import { useAuthStore } from '@/stores/auth-store'
 import { LoginPage } from '@/components/login/login-page'
 import { AppShell } from '@/components/shared/app-shell'
@@ -10,23 +9,11 @@ export default function Home() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
   const user = useAuthStore((s) => s.user)
 
-  // One-time seed check - only runs once per browser, never re-runs after initial setup
-  // This prevents deleted users from being re-created on page refresh
-  useEffect(() => {
-    const hasSeeded = localStorage.getItem('laxree-seeded')
-    if (!hasSeeded) {
-      fetch('/api/seed', { method: 'POST' })
-        .then(res => res.json())
-        .then(data => {
-          if (data.message?.includes('already seeded') || data.userCount) {
-            localStorage.setItem('laxree-seeded', 'true')
-          } else if (data.users) {
-            localStorage.setItem('laxree-seeded', 'true')
-          }
-        })
-        .catch(() => {})
-    }
-  }, [])
+  // REMOVED: Auto-seed on page load was causing deleted users to reappear.
+  // Seeding should only be done explicitly via /api/reseed (admin-only).
+  // The previous implementation relied on localStorage which could be cleared
+  // (new browser, incognito, clear data), triggering /api/seed on every visit
+  // and potentially recreating deleted users.
 
   // Not authenticated - show login
   if (!isAuthenticated) {

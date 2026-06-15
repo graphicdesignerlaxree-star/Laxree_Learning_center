@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { seedDatabase } from '../seed/route'
 
@@ -12,8 +12,34 @@ async function safeDeleteMany(model: any, label: string) {
   }
 }
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
+    // Admin auth check: require adminId in body, verify SUPER_ADMIN role
+    let adminId: string | null = null
+    try {
+      const body = await request.json()
+      adminId = body?.adminId || null
+    } catch {
+      // If no body, check query params
+      const { searchParams } = new URL(request.url)
+      adminId = searchParams.get('adminId')
+    }
+
+    if (!adminId) {
+      return NextResponse.json(
+        { error: 'Admin authentication required. Provide adminId in request body.' },
+        { status: 401 }
+      )
+    }
+
+    const admin = await db.user.findUnique({ where: { id: adminId } })
+    if (!admin || admin.role !== 'SUPER_ADMIN') {
+      return NextResponse.json(
+        { error: 'Only SUPER_ADMIN users can reseed the database.' },
+        { status: 403 }
+      )
+    }
+
     console.log('[Reseed] Starting database reset...')
 
     // Delete all data in correct order (child tables first, respecting foreign keys)

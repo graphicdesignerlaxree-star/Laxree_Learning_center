@@ -462,99 +462,233 @@ const PROFESSIONAL_CONTENT_STYLES = `
   }
 `
 
-// ==================== VIDEO PLAYER COMPONENT ====================
+// ==================== PRODUCT IMAGE MAPPING ====================
 
-function VideoPlayer({ url, title }: { url: string; title: string }) {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [videoError, setVideoError] = useState(false)
+const PRODUCT_IMAGES: { keywords: string[]; url: string; label: string }[] = [
+  { keywords: ['minibar', 'mini bar', 'mini-bar'], url: 'https://sfile.chatglm.cn/images-ppt/650c00aeb47d.png', label: 'Minibar' },
+  { keywords: ['safe'], url: 'https://sfile.chatglm.cn/images-ppt/f896588e4161.jpg', label: 'Safe Box' },
+  { keywords: ['lock', 'rfid'], url: 'https://sfile.chatglm.cn/images-ppt/5e822e3c57c5.png', label: 'RFID Lock' },
+  { keywords: ['kettle'], url: 'https://sfile.chatglm.cn/images-ppt/2eece29f9d02.jpg', label: 'Kettle' },
+  { keywords: ['mirror', 'hair', 'dryer'], url: 'https://sfile.chatglm.cn/images-ppt/683a45ce407a.jpg', label: 'Hair Dryer & Mirror' },
+  { keywords: ['signage', 'digital'], url: 'https://sfile.chatglm.cn/images-ppt/2619e87ae6aa.jpg', label: 'Digital Signage' },
+  { keywords: ['dispenser'], url: 'https://sfile.chatglm.cn/images-ppt/f275fdaffe40.jpg', label: 'Dispenser' },
+  { keywords: ['housekeeping', 'trolley'], url: 'https://sfile.chatglm.cn/images-ppt/2619e87ae6aa.jpg', label: 'Housekeeping' },
+]
 
-  const togglePlay = () => {
-    if (!videoRef.current) return
-    if (videoRef.current.paused) {
-      videoRef.current.play()
-      setIsPlaying(true)
-    } else {
-      videoRef.current.pause()
-      setIsPlaying(false)
+const DEFAULT_PRODUCT_IMAGE = 'https://sfile.chatglm.cn/images-ppt/2619e87ae6aa.jpg'
+
+function getProductImage(title: string): { url: string; label: string } {
+  const lower = title.toLowerCase()
+  for (const mapping of PRODUCT_IMAGES) {
+    if (mapping.keywords.some(kw => lower.includes(kw))) {
+      return { url: mapping.url, label: mapping.label }
     }
   }
+  return { url: DEFAULT_PRODUCT_IMAGE, label: 'Product' }
+}
 
-  if (videoError) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-gray-900 to-gray-800 group"
-      >
-        <div className="w-full aspect-video flex flex-col items-center justify-center text-center p-8">
-          <div className="w-20 h-20 rounded-full bg-amber-500/20 flex items-center justify-center mb-4">
-            <Video className="w-10 h-10 text-amber-400" />
-          </div>
-          <h3 className="text-white text-lg font-semibold mb-2">Video Not Available</h3>
-          <p className="text-gray-400 text-sm max-w-md mb-4">The video for this lesson is currently being processed. Please study the text content and PDF materials below.</p>
-          <div className="flex items-center gap-2 text-amber-400 text-xs">
-            <Sparkles className="w-4 h-4" />
-            <span>Text content and PDF are still available for this module</span>
-          </div>
-        </div>
-      </motion.div>
+// ==================== INTERACTIVE LESSON PLAYER COMPONENT ====================
+
+function InteractiveLessonPlayer({ title, content, moduleDescription }: { title: string; content: string; moduleDescription?: string }) {
+  const [readSections, setReadSections] = useState<Set<string>>(() => new Set<string>())
+  const contentRef = useRef<HTMLDivElement>(null)
+  const productImage = getProductImage(title)
+
+  // Extract key takeaways from content by finding <strong> or <b> text within HTML
+  const keyTakeaways = useMemo(() => {
+    if (!content) return []
+    const takeawayRegex = /<(?:strong|b)[^>]*>(.*?)<\/(?:strong|b)>/gi
+    const matches: string[] = []
+    let match
+    while ((match = takeawayRegex.exec(content)) !== null) {
+      const text = match[1].replace(/<[^>]+>/g, '').trim()
+      if (text.length > 10 && text.length < 200 && matches.length < 5) {
+        matches.push(text)
+      }
+    }
+    return matches
+  }, [content])
+
+  // Count total sections (h2, h3 headings)
+  const totalSections = useMemo(() => {
+    if (!content) return 0
+    const headingRegex = /<h[23][^>]*>/gi
+    return (content.match(headingRegex) || []).length
+  }, [content])
+
+  // Track reading progress with IntersectionObserver
+  useEffect(() => {
+    if (!contentRef.current) return
+    const headings = contentRef.current.querySelectorAll('h2, h3')
+    if (headings.length === 0) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.textContent || ''
+            setReadSections((prev) => new Set(prev).add(id))
+          }
+        })
+      },
+      { threshold: 0.5, rootMargin: '0px 0px -20% 0px' }
     )
-  }
+
+    headings.forEach((h) => observer.observe(h))
+    return () => observer.disconnect()
+  }, [content])
+
+  const progressPercent = totalSections > 0 ? Math.round((readSections.size / totalSections) * 100) : 0
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative rounded-2xl overflow-hidden shadow-2xl bg-black group"
+      className="space-y-0"
     >
-      {/* Red VIDEO LESSON Badge - Top Left */}
-      <div className="absolute top-3 left-3 z-10">
-        <div className="flex items-center gap-2 bg-red-500/95 backdrop-blur-sm text-white px-3 py-1.5 rounded-lg shadow-lg">
-          <MonitorPlay className="w-4 h-4" />
-          <span className="text-xs font-bold uppercase tracking-wider">Video Lesson</span>
-          <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
-        </div>
-      </div>
+      {/* ===== Hero Product Image with Overlay ===== */}
+      <div className="relative rounded-2xl overflow-hidden shadow-2xl group">
+        {/* Product Image */}
+        <div className="w-full aspect-[16/9] sm:aspect-video relative bg-gradient-to-br from-gray-900 to-gray-800">
+          <img
+            src={productImage.url}
+            alt={`${productImage.label} - ${title}`}
+            className="w-full h-full object-cover"
+            loading="eager"
+          />
+          {/* Dark gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent" />
 
-      {/* Title Overlay - Top Right */}
-      <div className="absolute top-3 right-3 z-10 max-w-[50%]">
-        <div className="bg-black/60 backdrop-blur-md text-white px-3 py-1.5 rounded-lg">
-          <p className="text-xs font-semibold truncate">{title}</p>
-        </div>
-      </div>
-
-      {/* Video Element */}
-      <video
-        ref={videoRef}
-        src={url}
-        className="w-full aspect-video object-contain bg-black"
-        controls
-        playsInline
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-        onError={() => setVideoError(true)}
-      >
-        Your browser does not support the video tag.
-      </video>
-
-      {/* Play overlay for initial state */}
-      {!isPlaying && (
-        <div
-          className="absolute inset-0 flex items-center justify-center bg-black/40 cursor-pointer transition-opacity group-hover:bg-black/50"
-          onClick={togglePlay}
-        >
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white/40 hover:bg-white/30 transition-all hover:scale-105 transform">
-              <Play className="w-8 h-8 text-white ml-1" />
+          {/* Top-left Badge */}
+          <div className="absolute top-3 left-3 z-10">
+            <div className="flex items-center gap-2 bg-emerald-500/95 backdrop-blur-sm text-white px-3 py-1.5 rounded-lg shadow-lg">
+              <MonitorPlay className="w-4 h-4" />
+              <span className="text-xs font-bold uppercase tracking-wider">Interactive Video Lesson</span>
+              <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
             </div>
-            <span className="text-white/80 text-sm font-medium">Click to Play</span>
+          </div>
+
+          {/* Top-right Product Label */}
+          <div className="absolute top-3 right-3 z-10">
+            <div className="bg-black/60 backdrop-blur-md text-white px-3 py-1.5 rounded-lg">
+              <p className="text-xs font-semibold">{productImage.label}</p>
+            </div>
+          </div>
+
+          {/* Center Play Icon Visual */}
+          <div className="absolute inset-0 flex items-center justify-center z-10">
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white/40">
+                <Play className="w-8 h-8 text-white ml-1" />
+              </div>
+              <span className="text-white/80 text-sm font-medium">Scroll to Explore Lesson</span>
+            </div>
+          </div>
+
+          {/* Bottom Title + Description */}
+          <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 z-10">
+            <h2 className="text-white text-lg sm:text-2xl font-bold leading-tight mb-1 drop-shadow-lg">
+              {title}
+            </h2>
+            {moduleDescription && (
+              <p className="text-white/70 text-xs sm:text-sm line-clamp-2 max-w-2xl">
+                {moduleDescription}
+              </p>
+            )}
           </div>
         </div>
+      </div>
+
+      {/* ===== Reading Progress Bar ===== */}
+      <div className="bg-white rounded-b-2xl border border-t-0 border-gray-200 px-4 py-3 flex items-center gap-3 shadow-sm">
+        <div className="flex items-center gap-2 text-emerald-600">
+          <Zap className="w-4 h-4" />
+          <span className="text-xs font-bold">Progress</span>
+        </div>
+        <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+          <motion.div
+            className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full"
+            initial={{ width: 0 }}
+            animate={{ width: `${progressPercent}%` }}
+            transition={{ duration: 0.5 }}
+          />
+        </div>
+        <span className="text-xs font-semibold text-gray-500">{readSections.size}/{totalSections} sections</span>
+      </div>
+
+      {/* ===== Key Takeaways Card ===== */}
+      {keyTakeaways.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="bg-gradient-to-r from-amber-50 via-yellow-50 to-orange-50 border border-amber-200 rounded-2xl p-5 sm:p-6 shadow-sm"
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md">
+              <Lightbulb className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-amber-900 flex items-center gap-2">
+                Key Takeaways
+                <Badge className="bg-amber-100 text-amber-700 text-[10px] border-amber-200 font-semibold">MUST KNOW</Badge>
+              </h3>
+              <p className="text-xs text-amber-600">Focus on these points for your quiz</p>
+            </div>
+          </div>
+          <div className="space-y-2.5">
+            {keyTakeaways.map((takeaway, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.15 + idx * 0.05 }}
+                className="flex items-start gap-3 bg-white/80 rounded-xl px-4 py-3 border border-amber-100"
+              >
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="text-white text-[10px] font-bold">{idx + 1}</span>
+                </div>
+                <p className="text-sm text-amber-800 leading-relaxed font-medium">{takeaway}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       )}
 
-      {/* Bottom gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
+      {/* ===== Transcript / Content Section ===== */}
+      {content && (
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
+        >
+          {/* Content header */}
+          <div className="bg-gradient-to-r from-gray-50 to-white px-6 sm:px-8 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-sm">
+                <BookOpen className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-800 text-sm">Lesson Transcript</h3>
+                <p className="text-xs text-gray-400">Read carefully to master this topic</p>
+              </div>
+            </div>
+            <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200 text-[10px] gap-1 font-semibold">
+              <Video className="w-3 h-3" /> Video + Reading
+            </Badge>
+          </div>
+
+          {/* Transcript Content */}
+          <div ref={contentRef} className="px-6 sm:px-10 py-6 sm:py-8">
+            <div
+              className="pro-mnc max-w-none"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+          </div>
+        </motion.div>
+      )}
     </motion.div>
   )
 }
@@ -710,16 +844,13 @@ export function LessonViewer({
   const [contactsOpen, setContactsOpen] = useState(false)
   const user = useAuthStore((s) => s.user)
 
-  // Proper URLs for video and PDF
-  const videoUrl = module.contentUrl ? getProperUrl(module.contentUrl) : ''
-  const pdfUrl = module.pdfUrl ? getProperUrl(module.pdfUrl) : ''
-
   // Content tab state - smart default based on content type
-  const isVideo = module.contentType === 'video' && module.contentUrl
+  const isVideo = module.contentType === 'video'
   const hasPdf = !!module.pdfUrl
+  const hasContent = !!module.content
   const getDefaultTab = (): 'watch' | 'pdf' | 'read' => {
     if (isVideo) return 'watch'
-    if (hasPdf) return 'pdf'
+    if (hasPdf || hasContent) return 'pdf'
     return 'read'
   }
   const [activeContentTab, setActiveContentTab] = useState<'watch' | 'pdf' | 'read'>(getDefaultTab)
@@ -898,7 +1029,11 @@ export function LessonViewer({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.05 }}
               >
-                <VideoPlayer url={videoUrl} title={module.title} />
+                <InteractiveLessonPlayer
+                  title={module.title}
+                  content={module.content || ''}
+                  moduleDescription={module.description}
+                />
               </motion.div>
             )}
 
@@ -918,10 +1053,10 @@ export function LessonViewer({
                     </div>
                     <div>
                       <h3 className="text-base font-bold text-gray-800">
-                        {module.pdfUrl ? 'Lesson PDF' : 'Download Lesson PDF'}
+                        {module.content ? 'Lesson Document' : 'Download Lesson PDF'}
                       </h3>
                       <p className="text-xs text-gray-500">
-                        {module.pdfUrl ? 'View and download the lesson document' : 'Save this lesson for offline reading & quick reference'}
+                        {module.content ? 'View the formatted lesson document' : 'Save this lesson for offline reading & quick reference'}
                       </p>
                     </div>
                   </div>
@@ -935,14 +1070,266 @@ export function LessonViewer({
                   </Button>
                 </div>
 
-                {/* Embedded PDF Viewer or Download Card */}
-                {module.pdfUrl ? (
-                  <div className="rounded-2xl overflow-hidden border border-gray-200 shadow-lg bg-gray-50">
+                {/* Embedded HTML Document Viewer or Download Card */}
+                {module.content ? (
+                  <div className="rounded-2xl overflow-hidden border border-gray-200 shadow-lg bg-white">
                     <iframe
-                      src={pdfUrl}
+                      srcDoc={`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>${module.title}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #374151;
+    line-height: 1.8;
+    font-size: 15px;
+    background: white;
+  }
+  .doc-header {
+    background: linear-gradient(135deg, #064e3b, #065f46, #047857);
+    color: white;
+    padding: 40px 48px;
+    border-bottom: 4px solid #10b981;
+  }
+  .doc-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .doc-header p {
+    font-size: 0.875rem;
+    opacity: 0.8;
+    line-height: 1.5;
+  }
+  .doc-header .meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 12px;
+    font-size: 0.75rem;
+    opacity: 0.7;
+  }
+  .doc-header .meta span { display: flex; align-items: center; gap: 4px; }
+  .doc-body {
+    padding: 32px 48px;
+    max-width: none;
+  }
+  .doc-body h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #064e3b;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-left: 4px solid #10b981;
+    padding-left: 1rem;
+    border-bottom: 1px solid #d1fae5;
+  }
+  .doc-body h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #0f766e;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    padding-left: 0.75rem;
+    border-left: 3px solid #14b8a6;
+  }
+  .doc-body h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #374151;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .doc-body p {
+    color: #4b5563;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+    font-size: 15px;
+  }
+  .doc-body strong, .doc-body b { color: #065f46; font-weight: 600; }
+  .doc-body ul { list-style: none; padding-left: 0; margin-bottom: 1rem; }
+  .doc-body ul li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #4b5563;
+    line-height: 1.7;
+  }
+  .doc-body ul li::before {
+    content: '';
+    position: absolute;
+    left: 0.25rem;
+    top: 0.6em;
+    width: 8px;
+    height: 8px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-radius: 50%;
+  }
+  .doc-body ol { list-style: none; counter-reset: counter; padding-left: 0; margin-bottom: 1rem; }
+  .doc-body ol li {
+    position: relative;
+    padding-left: 2.25rem;
+    margin-bottom: 0.5rem;
+    color: #4b5563;
+    line-height: 1.7;
+    counter-increment: counter;
+  }
+  .doc-body ol li::before {
+    content: counter(counter);
+    position: absolute;
+    left: 0;
+    top: 0.15em;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .doc-body table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 1.5rem 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #d1fae5;
+  }
+  .doc-body thead { background: linear-gradient(135deg, #064e3b, #065f46); }
+  .doc-body thead th {
+    color: white;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 12px 16px;
+    text-align: left;
+  }
+  .doc-body tbody td {
+    padding: 10px 16px;
+    border-bottom: 1px solid #ecfdf5;
+    font-size: 14px;
+    color: #374151;
+  }
+  .doc-body tbody tr:nth-child(even) { background-color: #ecfdf5; }
+  .doc-body tbody tr:hover { background-color: #d1fae5; }
+  .doc-body blockquote {
+    border-left: 4px solid #10b981;
+    background: linear-gradient(135deg, #ecfdf5, #f0fdfa);
+    margin: 1.25rem 0;
+    padding: 1rem 1.25rem;
+    border-radius: 0 12px 12px 0;
+    font-style: italic;
+    color: #065f46;
+  }
+  .doc-body blockquote p { color: #065f46; margin-bottom: 0; }
+  .doc-body .key-point, .doc-body .important, .doc-body [class*="key-point"], .doc-body [class*="important"] {
+    background: linear-gradient(135deg, #fef3c7, #fffbeb);
+    border: 1px solid #f59e0b;
+    border-left: 4px solid #f59e0b;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+  }
+  .doc-body .tip, .doc-body [class*="tip"] {
+    background: linear-gradient(135deg, #ecfdf5, #f0fdfa);
+    border: 1px solid #10b981;
+    border-left: 4px solid #10b981;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+  }
+  .doc-body .warning, .doc-body [class*="warning"] {
+    background: linear-gradient(135deg, #fef2f2, #fff1f2);
+    border: 1px solid #ef4444;
+    border-left: 4px solid #ef4444;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+  }
+  .doc-body img {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin: 1rem 0;
+    max-width: 100%;
+  }
+  .doc-body hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #10b981, transparent);
+    margin: 2rem 0;
+  }
+  .doc-body a {
+    color: #059669;
+    text-decoration: none;
+    border-bottom: 1px dashed #6ee7b7;
+  }
+  .doc-body a:hover { color: #047857; border-bottom-style: solid; }
+  .doc-body code {
+    background: #ecfdf5;
+    color: #065f46;
+    padding: 0.15rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    border: 1px solid #d1fae5;
+  }
+  .doc-footer {
+    margin-top: 48px;
+    padding: 20px 48px;
+    border-top: 2px solid #e5e7eb;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 12px;
+  }
+  .doc-footer .brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    color: #6b7280;
+    font-weight: 600;
+  }
+  @media print {
+    .doc-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+  <div class="doc-header">
+    <h1>${module.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</h1>
+    ${module.description ? `<p>${module.description.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>` : ''}
+    <div class="meta">
+      <span>📚 LAXREE Sales University</span>
+      <span>📖 Module ${module.order}</span>
+      ${module.duration ? `<span>⏱ ${module.duration} min read</span>` : ''}
+    </div>
+  </div>
+  <div class="doc-body">
+    ${module.content}
+  </div>
+  <div class="doc-footer">
+    <div class="brand">
+      <span>🏢</span>
+      <span>LAXREE Sales University</span>
+    </div>
+    <p>Empowering Hospitality Excellence &mdash; Confidential Training Material</p>
+  </div>
+</body>
+</html>`}
                       className="w-full border-0 rounded-xl"
                       style={{ height: '80vh' }}
-                      title={`PDF: ${module.title}`}
+                      title={`Document: ${module.title}`}
                     />
                   </div>
                 ) : (
