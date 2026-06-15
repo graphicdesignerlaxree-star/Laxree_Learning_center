@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
 // Shared seeding logic - used by both /api/seed and /api/reseed
@@ -3039,14 +3039,49 @@ export async function seedDatabase() {
       { q: 'What information should you collect during an inbound inquiry?', ans: 'hotel name contact person room count current supplier timeline', cat: 'Sales Process', diff: 'easy', expl: 'Collect hotel name, contact person, room count, current supplier, and decision timeline.' },
       { q: 'Describe the default master code for LAXREE electronic safe boxes.', ans: '1234', cat: 'Product Features', diff: 'easy', expl: 'The default master code is 1234, which should be changed during installation.' },
       { q: 'What technology do LAXREE RFID door locks use?', ans: '13.56MHz Mifare RFID', cat: 'Product Features', diff: 'easy', expl: 'LAXREE RFID locks use 13.56MHz Mifare technology for secure contactless room access.' },
-      { q: 'Name the silent cooling technology used in LAXREE hotel mini bars.', ans: 'absorption cooling thermoelectric', cat: 'Product Features', diff: 'easy', expl: 'LAXREE uses absorption and thermoelectric cooling technologies for silent operation.' },
-      { q: 'What is LAXREE\'s standard warranty period for products?', ans: '3 years', cat: 'Organization', diff: 'easy', expl: 'LAXREE offers a standard 3-year warranty, significantly longer than the industry average of 1-2 years.' },
-      { q: 'What should you do first when a hotel guest reports a malfunctioning mini bar?', ans: 'apologize and log the complaint', cat: 'Real-time Case', diff: 'easy', expl: 'First apologize for the inconvenience and log the complaint with all relevant details.' },
-      { q: 'What type of hotels are the primary target for LAXREE products?', ans: '5 star luxury hotels', cat: 'Customer Discovery', diff: 'easy', expl: '5-star and luxury hotels are the primary target market for LAXREE\'s premium products.' },
-      { q: 'Name the eco-friendly refrigerant used in LAXREE mini bars.', ans: 'R600a', cat: 'Product Features', diff: 'easy', expl: 'All LAXREE mini bars use eco-friendly R600a refrigerant with low Global Warming Potential.' },
-      { q: 'What is the typical room count of a 5-star hotel in India?', ans: '200 to 400 rooms', cat: 'Real-time Case', diff: 'easy', expl: 'A typical 5-star hotel in India has 200-400 rooms, each potentially needing amenities.' },
-      { q: 'What safety feature prevents an electric kettle from operating without water?', ans: 'boil dry protection', cat: 'Product Features', diff: 'easy', expl: 'Boil-Dry Protection automatically switches off the kettle when water level is too low.' },
-      { q: 'What does the term key account mean in LAXREE sales?', ans: 'high value client requiring dedicated relationship management', cat: 'Organization', diff: 'medium', expl: 'A key account is a high-value client requiring dedicated relationship management and strategic engagement.' },
+      { q: 'Name the three types of minibar cooling technology offered by LAXREE.', ans: 'thermoelectric absorption compressor', cat: 'Product Features', diff: 'easy', expl: 'LAXREE offers thermoelectric, absorption, and compressor minibar technologies.' },
+      { q: 'What is the standard warranty period for LAXREE products?', ans: '3 years', cat: 'Organization', diff: 'easy', expl: 'LAXREE offers a 3-year standard warranty, longer than the industry average of 1-2 years.' },
+      { q: 'How many electric kettle models does LAXREE offer?', ans: '5 models', cat: 'Product Features', diff: 'easy', expl: 'LAXREE offers 5 kettle models: LRWT-143, LRWT-145, LRWT-155, LRWT-150, LRWT-156.' },
+      { q: 'What is the lowest SSP kettle model and its price?', ans: 'LRWT-145 at 488 rupees', cat: 'Product Features', diff: 'easy', expl: 'LRWT-145 (0.8L, 800W, SS 201 Matte) is priced at ₹488, the lowest in the kettle range.' },
+      { q: 'Which kettle model has double wall insulation?', ans: 'LRWT-155', cat: 'Product Features', diff: 'easy', expl: 'LRWT-155 features SS 304 Double Layer construction with double-wall insulation.' },
+      { q: 'What safety feature prevents a kettle from boiling dry?', ans: 'boil dry protection', cat: 'Product Features', diff: 'easy', expl: 'Boil-dry protection automatically switches off the kettle when water level is too low.' },
+      { q: 'Name the card hierarchy in LAXREE RFID lock system from highest to lowest.', ans: 'Master Card Building Card Floor Card Guest Card Emergency Card', cat: 'Product Features', diff: 'easy', expl: 'Card hierarchy: Master, Building, Floor, Guest, and Emergency cards.' },
+      { q: 'What is the battery life of LAXREE RFID door locks?', ans: '12 to 18 months', cat: 'Product Features', diff: 'easy', expl: 'RFID lock batteries last 12-18 months, supporting approximately 50,000 operations.' },
+      { q: 'What refrigerant do LAXREE minibars use?', ans: 'R600a', cat: 'Product Features', diff: 'easy', expl: 'All LAXREE minibars use eco-friendly R600a refrigerant.' },
+      { q: 'What is the temperature range of compressor minibars?', ans: '2 to 8 degrees celsius', cat: 'Product Features', diff: 'easy', expl: 'Compressor minibars maintain 2-8°C range.' },
+      { q: 'What is the temperature range of absorption minibars?', ans: '5 to 12 degrees celsius', cat: 'Product Features', diff: 'easy', expl: 'Absorption minibars maintain 5-12°C range.' },
+      { q: 'Describe how to reset a safe box code.', ans: 'press star then enter new code then press hash then confirm', cat: 'Product Features', diff: 'easy', expl: 'Press *, enter new code, press #, re-enter to confirm the new code.' },
+      { q: 'What happens after 3 incorrect safe box code attempts?', ans: 'auto lockout for 5 minutes', cat: 'Product Features', diff: 'easy', expl: 'The safe auto-locks for 5 minutes after 3 incorrect attempts.' },
+      { q: 'What PMS systems are compatible with LAXREE RFID locks?', ans: 'Opera Protel IDS', cat: 'Technical', diff: 'easy', expl: 'LAXREE locks integrate with Opera, Protel, and IDS PMS systems.' },
+      { q: 'How many access records can an RFID lock store?', ans: '300 records', cat: 'Product Features', diff: 'easy', expl: 'Each LAXREE RFID lock stores up to 300 recent access records.' },
+      { q: 'What is the capacity range of LAXREE minibars?', ans: '20 liters to 60 liters', cat: 'Product Features', diff: 'easy', expl: 'LAXREE minibars are available in 20L to 60L capacities.' },
+      { q: 'Name the safe box model designed for laptops.', ans: 'LRSB-209 Orbita', cat: 'Product Features', diff: 'easy', expl: 'LRSB-209 Orbita Laptop Safe features LED interior light and USB charging port.' },
+      { q: 'What does the low battery indicator show on a safe box?', ans: 'LO-BAT display and 3 beeps', cat: 'Product Features', diff: 'easy', expl: 'Display shows "LO-BAT" and beeps 3 times per operation.' },
+      { q: 'How many override keys come with each safe box?', ans: '2 keys', cat: 'Product Features', diff: 'easy', expl: 'Each safe box includes 2 override keys for emergency access.' },
+      { q: 'What is the LAXREE minibar energy efficiency class?', ans: 'Class A plus', cat: 'Product Features', diff: 'easy', expl: 'All LAXREE minibars meet energy efficiency Class A+ standards.' },
+      { q: 'What is the weight capacity of LAXREE rollaway beds?', ans: '120 kilograms', cat: 'Product Features', diff: 'easy', expl: 'Rollaway beds support up to 120kg weight capacity.' },
+      { q: 'What is the par level standard for minibar stocking?', ans: '8 to 12 items per room', cat: 'Product Features', diff: 'easy', expl: 'Each room is stocked with 8-12 items as the standard par level.' },
+      { q: 'Describe the anti-panic exit feature of LAXREE RFID locks.', ans: 'inside handle always allows free egress', cat: 'Product Features', diff: 'easy', expl: 'The inside handle always allows free egress for guest safety, even when locked from outside.' },
+      { q: 'What is the power consumption of thermoelectric minibars?', ans: '45 watts', cat: 'Product Features', diff: 'easy', expl: 'Thermoelectric minibars consume just 45W, the most energy-efficient option.' },
+      { q: 'What material are LAXREE kettle interiors made of?', ans: 'BPA free food grade stainless steel', cat: 'Product Features', diff: 'easy', expl: 'All interior surfaces that contact water are BPA-free and food-grade.' },
+      { q: 'How should a kettle be descaled?', ans: 'vinegar and water solution boil sit 30 minutes rinse', cat: 'Product Features', diff: 'easy', expl: 'Use 1:1 water-vinegar solution, boil, let sit 30 minutes, then rinse thoroughly.' },
+      { q: 'What is the SSP of the LRSB-201 safe box?', ans: '3200 rupees', cat: 'Product Features', diff: 'easy', expl: 'LRSB-201 Compact safe is priced at ₹3,200 SSP.' },
+      { q: 'What is the SSP of the LRSB-209 Orbita laptop safe?', ans: '6500 rupees', cat: 'Product Features', diff: 'easy', expl: 'LRSB-209 Orbita Laptop Safe is priced at ₹6,500 SSP.' },
+      { q: 'How many chambers do LAXREE dispenser systems have?', ans: '2 chamber and 3 chamber systems', cat: 'Product Features', diff: 'easy', expl: 'LAXREE offers 2-chamber and 3-chamber dispenser systems, each holding 400ml per chamber.' },
+      { q: 'What is the saving from switching to dispensers vs individual bottles?', ans: '8 to 12 lakhs per year for 150 room hotel', cat: 'Calculation', diff: 'easy', expl: 'A 150-room hotel saves ₹8-12 lakhs annually by switching from individual bottles to dispensers.' },
+      { q: 'What mounting options are available for LAXREE hair dryers?', ans: 'wall mounted and foldable portable', cat: 'Product Features', diff: 'easy', expl: 'Wall-mounted models save counter space; portable models for premium suites.' },
+      { q: 'What is the cross-sell bundle discount for 5+ product categories?', ans: '8 percent discount', cat: 'Sales Process', diff: 'easy', expl: '5+ product categories get 8% discount; full room package gets 12%.' },
+      { q: 'Name three hanger types offered by LAXREE.', ans: 'wooden velvet tubular', cat: 'Product Features', diff: 'easy', expl: 'LAXREE offers wooden (premium), velvet (space-saving), and tubular (budget) hangers.' },
+      { q: 'What is the minimum wall clearance for absorption minibars?', ans: '10 centimeters', cat: 'Product Features', diff: 'easy', expl: 'Ensure minimum 10cm clearance from walls for proper ventilation on absorption models.' },
+      { q: 'How many AA batteries power the RFID lock?', ans: '4 AA batteries', cat: 'Product Features', diff: 'easy', expl: 'Each RFID lock is powered by 4× AA batteries.' },
+      { q: 'What does the emergency card do in the RFID system?', ans: 'opens all locks and overrides privacy settings', cat: 'Product Features', diff: 'easy', expl: 'The Emergency Card overrides all locks and privacy settings for emergency situations.' },
+      { q: 'What is the noise level of compressor minibars?', ans: 'less than 39 decibels', cat: 'Product Features', diff: 'easy', expl: 'Compressor minibars operate at <39 dB, suitable for hotel environments.' },
+      { q: 'What is the noise level of absorption minibars?', ans: '0 decibels completely silent', cat: 'Product Features', diff: 'easy', expl: 'Absorption minibars operate at 0 dB — completely silent.' },
+      { q: 'What finish options are available for LAXREE minibars?', ans: 'mirror wooden painted glass', cat: 'Product Features', diff: 'easy', expl: 'Available in mirror glass, wooden panel, and painted glass finishes.' },
+      { q: 'What is the SSP of the LRWT-155 kettle?', ans: '1104 rupees', cat: 'Product Features', diff: 'easy', expl: 'LRWT-155 (1.0L, SS 304 Double Wall) is priced at ₹1,104.' },
+      { q: 'What is the full room package bundle discount?', ans: '12 percent discount', cat: 'Sales Process', diff: 'easy', expl: 'Full room package including all products gets 12% discount.' },
+      { q: 'What is the recommended descaling frequency for kettles?', ans: 'every 2 to 3 months', cat: 'Product Features', diff: 'easy', expl: 'Descale kettles every 2-3 months using vinegar solution.' },
+      { q: 'What is the override key location on a safe box?', ans: 'hidden behind the front panel badge', cat: 'Product Features', diff: 'easy', expl: 'The override keyhole is concealed behind a removable badge on the front panel.' },
     ],
     'INBOUND_SALES_MID': [
       { q: 'What does LACE stand for in LAXREE\'s objection handling framework?', ans: 'Listen Acknowledge Counter Engage', cat: 'Sales Process', diff: 'medium', expl: 'LACE is LAXREE\'s framework: Listen to the objection, Acknowledge it, Counter with value, Engage the client.' },
@@ -3251,11 +3286,28 @@ export async function seedDatabase() {
   return { users: 1 + 1 + 2 + employees.length, departments: 5, courses: allCourses.length, questionBanks: questionBanks.length + totalExamQuestions, assessments: moduleAssessments.length + 3 }
 }
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
+    // Check if force=true is passed to force reseed
+    const { searchParams } = new URL(request.url)
+    const force = searchParams.get('force') === 'true'
+
     const userCount = await db.user.count()
-    if (userCount > 0) {
+    const deptCount = await db.department.count()
+    const courseCount = await db.course.count()
+
+    // If users exist, never auto-seed (unless force=true)
+    if (userCount > 0 && !force) {
       return NextResponse.json({ message: 'Database already seeded', userCount })
+    }
+
+    // If no users but departments/courses exist, the DB was seeded before
+    // and users were deliberately deleted - don't auto-recreate unless force=true
+    if (!force && userCount === 0 && (deptCount > 0 || courseCount > 0)) {
+      return NextResponse.json({ 
+        message: 'Database was previously seeded. Users were removed. Use /api/reseed to reset or /api/seed?force=true to add seed users back.',
+        userCount, deptCount, courseCount 
+      })
     }
 
     const result = await seedDatabase()

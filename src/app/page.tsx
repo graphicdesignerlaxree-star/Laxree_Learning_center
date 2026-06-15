@@ -10,9 +10,22 @@ export default function Home() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
   const user = useAuthStore((s) => s.user)
 
-  // One-time seed check in background - only seeds if DB is empty
+  // One-time seed check - only runs once per browser, never re-runs after initial setup
+  // This prevents deleted users from being re-created on page refresh
   useEffect(() => {
-    fetch('/api/seed', { method: 'POST' }).catch(() => {})
+    const hasSeeded = localStorage.getItem('laxree-seeded')
+    if (!hasSeeded) {
+      fetch('/api/seed', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          if (data.message?.includes('already seeded') || data.userCount) {
+            localStorage.setItem('laxree-seeded', 'true')
+          } else if (data.users) {
+            localStorage.setItem('laxree-seeded', 'true')
+          }
+        })
+        .catch(() => {})
+    }
   }, [])
 
   // Not authenticated - show login

@@ -295,20 +295,300 @@ const STUDY_CHAPTERS: StudyChapter[] = [
   },
 ]
 
-const VIDEO_CHAPTERS = [
-  { title: 'Safe Box Installation & Operation', duration: '5:30', category: 'Safe Box', videoUrl: '/api/uploads?file=Safe_box.mp4' },
-  { title: 'RFID Door Lock — Complete Guide', duration: '4:45', category: 'Door Lock', videoUrl: '/api/uploads?file=Rfid.mp4' },
-  { title: 'Minibar — Setup & Management', duration: '6:15', category: 'Minibar', videoUrl: '/api/uploads?file=Minibar%20(1).mp4' },
-  { title: 'Electric Kettle — Demo', duration: '3:20', category: 'Kettle', videoUrl: '/api/uploads?file=kettle%20(1).mp4' },
-  { title: 'Mirror & Hair Dryer Guide', duration: '5:00', category: 'Mirror', videoUrl: '/api/uploads?file=mirror%20%26%20hair%20drayer.mp4' },
-  { title: 'Digital Signage Solutions', duration: '4:30', category: 'Signage', videoUrl: '/api/uploads?file=Digital%20Signage_1.mp4' },
-  { title: 'Housekeeping Trolley Setup', duration: '3:45', category: 'Housekeeping', videoUrl: '/api/uploads?file=Housekeeping.mp4' },
-  { title: 'Dispenser Installation', duration: '4:00', category: 'Dispenser', videoUrl: '/api/uploads?file=dispencer.mp4' },
-  { title: 'Luggage Rack & Accessories', duration: '3:30', category: 'Luggage', videoUrl: '/api/uploads?file=Luggage.mp4' },
-  { title: 'Hotel Hangers Guide', duration: '2:45', category: 'Hangers', videoUrl: '/api/uploads?file=hanger%20(1).mp4' },
-  { title: 'Dustbin Solutions', duration: '3:15', category: 'Dustbin', videoUrl: '/api/uploads?file=Dustbin.mp4' },
-  { title: 'Rollaway Bed Setup', duration: '4:00', category: 'Bed', videoUrl: '/api/uploads?file=Rollaway%20Bed.mp4' },
-  { title: 'Add-on Products', duration: '3:30', category: 'Add-ons', videoUrl: '/api/uploads?file=Add-ons.mp4' },
+interface VideoLesson {
+  id: string
+  title: string
+  duration: string
+  category: string
+  image: string
+  description: string
+  transcript: string[]
+  keyPoints: string[]
+  youtubeId: string
+}
+
+const VIDEO_LESSONS: VideoLesson[] = [
+  {
+    id: 'v1',
+    title: 'Safe Box Installation & Operation',
+    duration: '15:30',
+    category: 'Safe Box',
+    image: 'https://sfile.chatglm.cn/images-ppt/f896588e4161.jpg',
+    description: 'Complete installation guide for LAXREE electronic safe boxes including wall mounting, programming, and troubleshooting procedures.',
+    transcript: [
+      'Welcome to the LAXREE Safe Box Installation and Operation training module. In this comprehensive guide, we will walk through the entire installation process, from unboxing to full operational status, ensuring your hotel guests enjoy secure and reliable in-room storage.',
+      'UNBOXING & PRE-INSTALLATION CHECK: Upon receiving your LAXREE safe boxes, carefully inspect each unit for transit damage. Verify the package contents: safe unit, 4× AA batteries, 2 override keys, 4 anchor bolts with wall plugs, and the user manual. Check the model number on the packaging matches your order — LAXREE offers three sizes: Compact (LER-20), Standard (LER-30), and Laptop (LER-40).',
+      'MOUNTING PROCEDURE: Position the safe inside the wardrobe cabinet or on a designated shelf at a height accessible to standing guests. Mark the anchor points through the pre-drilled holes in the bottom of the safe. Use a 10mm masonry drill bit for concrete walls or a 6mm bit for wooden surfaces. Insert wall plugs and secure with the provided anchor bolts. The safe must not wobble or tilt — test by applying 15kg of downward pressure.',
+      'POWER & PROGRAMMING: Open the battery compartment on the inside of the door. Insert 4× AA batteries ensuring correct polarity. The LED display will flash indicating power-up. Press the reset button once. Enter the master code (default: 1-2-3-4) and press #. The display will show "OPEN" confirming successful initialization. Now set a new master code: press *, enter new 3-8 digit code, press #, re-enter to confirm.',
+      'GUEST OPERATION: To lock — close the door, enter any 3-8 digit code, press #. The display shows "CLOSED" and the motorized bolt engages. To open — enter the same code and press #. The display shows "OPEN" and the bolt retracts. The safe auto-locks after 3 incorrect attempts for 5 minutes as a security measure.',
+      'EMERGENCY ACCESS: If a guest forgets their code, use the master code or the override key. The override keyhole is concealed behind the front panel badge — insert a flathead screwdriver to gently pry off the badge. Insert the override key and turn clockwise to unlock. After access, help the guest set a new personal code.',
+      'TROUBLESHOOTING: Low battery indicator — display shows "LO-BAT" and beeps 3 times per operation. Replace batteries within 48 hours. Keypad not responding — remove and reinsert batteries, check polarity. Door won\'t close — check for obstructions in the bolt channel and ensure the hinge pins are seated correctly.',
+    ],
+    keyPoints: [
+      'Always anchor the safe to a solid surface using all 4 bolts',
+      'Change the default master code during every installation',
+      'Replace batteries at the first low-battery warning',
+      'Keep override keys in a secure location accessible only to management',
+      'Test the safe with at least 3 lock/unlock cycles after installation',
+    ],
+    youtubeId: '',
+  },
+  {
+    id: 'v2',
+    title: 'RFID Door Lock — Complete Guide',
+    duration: '18:45',
+    category: 'Door Lock',
+    image: 'https://sfile.chatglm.cn/images-ppt/5e822e3c57c5.png',
+    description: 'Comprehensive training on LAXREE RFID door lock systems including installation, card programming, PMS integration, and maintenance.',
+    transcript: [
+      'Welcome to the LAXREE RFID Door Lock training module. This comprehensive guide covers everything from mechanical installation to software integration with your hotel\'s Property Management System.',
+      'TECHNOLOGY OVERVIEW: LAXREE RFID locks use 13.56MHz Mifare technology — the industry standard for contactless hotel room access. Each lock stores up to 300 recent access records, providing a complete audit trail. The system supports five card types in a strict hierarchy: Master Card, Building Card, Floor Card, Guest Card, and Emergency Card.',
+      'INSTALLATION PROCESS: Begin with the door preparation — standard doors require a 60mm backset mortise cutout. Install the lock body into the door edge first, then attach the exterior reader plate and interior battery cover. Connect the cable harness between the reader and lock body. The entire installation takes approximately 20-25 minutes per door with proper tools.',
+      'CARD ENCODING: Using the LAXREE Encoder Software, connect the USB encoder to your front desk computer. The software integrates with major PMS systems (Opera, Protel, IDS) via TCP/IP interface. When a guest checks in, the PMS automatically sends the room number and check-out date to the encoder, which writes this data to the RFID card.',
+      'BATTERY MANAGEMENT: Each lock is powered by 4× AA batteries with 12-18 month average lifespan. The low battery warning gives approximately 200 more operations. For large properties, implement a scheduled battery replacement program every 12 months to prevent guest-facing lockouts.',
+      'EMERGENCY PROCEDURES: Every lock has a mechanical key override hidden behind the interior cover plate. The Emergency Card opens all locks and overrides any guest privacy settings. In case of total electronic failure, the mechanical key is the fail-safe access method.',
+    ],
+    keyPoints: [
+      'RFID 13.56MHz Mifare technology — industry standard for hotel access',
+      '5-level card hierarchy from Master to Emergency',
+      'PMS integration via TCP/IP with Opera, Protel, and IDS',
+      '300-record audit trail stored in each lock',
+      'Anti-panic exit function — inside handle always allows free egress',
+    ],
+    youtubeId: '',
+  },
+  {
+    id: 'v3',
+    title: 'Minibar — Setup & Management',
+    duration: '20:15',
+    category: 'Minibar',
+    image: 'https://sfile.chatglm.cn/images-ppt/650c00aeb47d.png',
+    description: 'Detailed guide to LAXREE minibar products including absorption, compressor, and thermoelectric models with setup, par level management, and maintenance procedures.',
+    transcript: [
+      'Welcome to the LAXREE Minibar Setup and Management training. LAXREE offers three minibar technologies — each designed for specific hotel requirements. Understanding these differences is crucial for recommending the right product to your clients.',
+      'THERMOELECTRIC MINIBARS: These use solid-state Peltier cooling technology with no moving parts, making them completely silent and lightweight. Ideal for budget and mid-range hotels. Capacity ranges from 20L to 40L. Temperature range: 8-15°C. Power consumption: just 45W. The trade-off is slower cooling and higher minimum temperature compared to compressor models.',
+      'ABSORPTION MINIBARS: Using a heat-driven absorption cycle, these operate at 0 dB noise level — making them the preferred choice for luxury hotels and 5-star properties. The absorption process uses a ammonia/water/hydrogen gas mixture with no compressor, ensuring absolutely silent operation. Temperature range: 5-12°C. Power: 60W. Available in mirror, wooden, and painted glass finishes.',
+      'COMPRESSOR MINIBARS: Featuring the same technology as home refrigerators, compressor models offer the fastest cooling and lowest temperatures. Temperature range: 2-8°C. Power: 70-90W with inverter technology. Some noise (<39 dB) but superior cooling performance, especially in tropical climates. Ideal for high-demand rooms and suites.',
+      'PAR LEVEL MANAGEMENT: Each room should be stocked with 8-12 items based on the property\'s standard. Place beverages on the top shelf, snacks on the middle shelf, and complementary items on the bottom shelf. Smart minibars with weight sensors automatically detect consumption and sync with the PMS for automatic billing.',
+      'MAINTENANCE: Clean interior surfaces monthly with mild detergent. Check door seals quarterly. Ensure minimum 10cm clearance from walls for absorption model ventilation. All LAXREE minibars use eco-friendly R600a refrigerant and meet energy efficiency Class A+ standards.',
+    ],
+    keyPoints: [
+      'Absorption = 0 dB silence for luxury; Compressor = fastest cooling; Thermoelectric = budget-friendly',
+      'Par level: 8-12 items per room with standard arrangement',
+      'Smart minibars auto-detect consumption and sync with PMS',
+      'Monthly cleaning, quarterly seal checks, 10cm wall clearance',
+      'All models use eco-friendly R600a refrigerant, Class A+ efficiency',
+    ],
+    youtubeId: '',
+  },
+  {
+    id: 'v4',
+    title: 'Electric Kettle — Product Demo',
+    duration: '12:20',
+    category: 'Kettle',
+    image: 'https://sfile.chatglm.cn/images-ppt/2eece29f9d02.jpg',
+    description: 'Complete product demonstration of LAXREE electric kettles including all models, safety features, and maintenance procedures.',
+    transcript: [
+      'Welcome to the LAXREE Electric Kettle product training. LAXREE offers 5 kettle models designed specifically for hotel environments, with safety and guest convenience as top priorities.',
+      'MODEL RANGE: LRWT-143 (0.6L, 1000W, SS 201, ₹560) — Compact for single guests. LRWT-145 (0.8L, 800W, SS 201 Matte, ₹488) — Best value. LRWT-155 (1.0L, 1000W, SS 304 Double Wall, ₹1,104) — Premium with insulation. LRWT-150 (0.8L, 900W, SS 201, ₹660) — Standard. LRWT-156 (1.0L, 1000W, SS 304, ₹1,320) — Luxury finish.',
+      'SAFETY FEATURES: Every LAXREE kettle includes three critical safety systems: (1) Auto shut-off when water reaches boiling point, (2) Boil-dry protection that cuts power if the kettle operates with insufficient water, and (3) A secure locking lid that prevents hot water spills even if the kettle is knocked over.',
+      'MAINTENANCE: Descale every 2-3 months using a 1:1 water-vinegar solution. Boil the mixture, let sit 30 minutes, then rinse thoroughly. Wipe exterior with a damp cloth only — never immerse in water. The concealed heating element makes interior cleaning easy.',
+    ],
+    keyPoints: [
+      '5 models from ₹488 to ₹1,320 covering all hotel segments',
+      'Triple safety: auto shut-off, boil-dry protection, locking lid',
+      '360° rotational base and concealed heating element',
+      'BPA-free interior surfaces, food-grade stainless steel',
+      'Descale every 2-3 months with vinegar solution',
+    ],
+    youtubeId: '',
+  },
+  {
+    id: 'v5',
+    title: 'Mirror & Hair Dryer Guide',
+    duration: '14:00',
+    category: 'Mirror',
+    image: 'https://sfile.chatglm.cn/images-ppt/683a45ce407a.jpg',
+    description: 'Complete guide to LAXREE bathroom mirrors and hair dryers including wall-mounted and foldable models with installation procedures.',
+    transcript: [
+      'Welcome to the LAXREE Mirror and Hair Dryer training module. These bathroom essentials are often overlooked in hotel procurement but play a critical role in guest satisfaction scores.',
+      'MIRRORS: LAXREE offers LED-backlit mirrors with anti-fog technology, standard frameless mirrors, and magnifying vanity mirrors. The LED mirrors feature touch-sensitive controls, adjustable color temperature (warm 3000K to cool 6500K), and energy-efficient LEDs rated for 50,000 hours. The anti-fog heating pad activates automatically when the bathroom light is turned on.',
+      'HAIR DRYERS: Two mounting options — wall-mounted (saves counter space, prevents theft) and foldable portable (for premium suites). Wall-mounted models feature 1200W-1600W motors with 2 heat/speed settings. All models include auto-shutoff if overheated and a 1.5m power cord for guest convenience.',
+      'INSTALLATION: Wall-mounted hair dryers should be installed near the bathroom vanity at 120cm height. Use the provided mounting bracket and secure to wall studs or use appropriate anchors. The power connection should be made by a licensed electrician with GFCI protection.',
+    ],
+    keyPoints: [
+      'LED mirrors with anti-fog tech and 50,000-hour rated LEDs',
+      'Wall-mounted dryers prevent theft, portable for suites',
+      'GFCI protection required for bathroom installations',
+      'Touch-sensitive controls with adjustable color temperature',
+    ],
+    youtubeId: '',
+  },
+  {
+    id: 'v6',
+    title: 'Digital Signage Solutions',
+    duration: '16:30',
+    category: 'Signage',
+    image: 'https://sfile.chatglm.cn/images-ppt/2619e87ae6aa.jpg',
+    description: 'Training on LAXREE digital signage products for hotel lobbies, conference rooms, and wayfinding systems.',
+    transcript: [
+      'Welcome to the LAXREE Digital Signage training. Modern hotels are replacing static signs with dynamic digital displays that enhance guest experience and create new revenue opportunities.',
+      'PRODUCT RANGE: LAXREE offers three signage categories: (1) Lobby Displays — 43" to 65" 4K screens for welcome messages, hotel maps, and promotional content. (2) Room Door Signs — 10" e-ink or LCD displays outside each room showing guest name, privacy status, and housekeeping status. (3) Wayfinding Kiosks — Touch-screen interactive directories for large properties.',
+      'CONTENT MANAGEMENT: The LAXREE Signage Cloud Platform allows centralized content management across all displays. Schedule content by time of day (breakfast buffet hours, evening restaurant specials), by day of week, or by season. The platform supports images, videos, live weather, and PMS-integrated guest welcome messages.',
+      'ROI ANALYSIS: Digital signage typically pays for itself within 18-24 months through: reduced printing costs, increased F&B revenue from in-lobby promotions, and improved guest satisfaction scores. Hotels report 15-25% increase in restaurant reservations when promoted on lobby displays.',
+    ],
+    keyPoints: [
+      'Three categories: Lobby Displays, Room Door Signs, Wayfinding Kiosks',
+      'Cloud-based content management with scheduling',
+      'PMS integration for personalized guest welcome messages',
+      'ROI in 18-24 months through printing savings and F&B promotion',
+    ],
+    youtubeId: '',
+  },
+  {
+    id: 'v7',
+    title: 'Dispenser Installation & Setup',
+    duration: '10:45',
+    category: 'Dispenser',
+    image: 'https://sfile.chatglm.cn/images-ppt/f275fdaffe40.jpg',
+    description: 'Step-by-step guide to installing and maintaining LAXREE soap and shampoo dispensers in hotel bathrooms.',
+    transcript: [
+      'Welcome to the LAXREE Dispenser training. Wall-mounted dispensers are rapidly replacing single-use amenity bottles in hotels worldwide due to sustainability mandates and cost savings.',
+      'PRODUCT RANGE: LAXREE offers 3-chamber and 2-chamber dispenser systems. Each chamber holds 400ml of product. The 3-chamber system typically dispenses shampoo, body wash, and lotion. The 2-chamber system dispenses shampoo and body wash. All models feature tamper-proof locking mechanisms and easy-fill designs.',
+      'INSTALLATION: Mount dispensers on the shower wall at 120cm height for standing showers or 80cm for bathtubs. Use silicone adhesive for tile surfaces (no drilling required) or wall anchors for concrete. The dispenser bracket snaps onto the mounting plate for easy removal during cleaning.',
+      'COST SAVINGS: A typical 150-room hotel saves ₹8-12 lakhs annually by switching from individual bottles to dispensers. Each refill costs approximately ₹15-20 per room versus ₹60-80 for individual amenity bottles. The environmental benefit: eliminating 50,000+ single-use plastic bottles per year.',
+    ],
+    keyPoints: [
+      '2-chamber and 3-chamber systems, 400ml per chamber',
+      'No-drill silicone adhesive mounting for tile surfaces',
+      'Tamper-proof locking and easy-fill design',
+      'Save ₹8-12 lakhs/year for a 150-room hotel vs individual bottles',
+    ],
+    youtubeId: '',
+  },
+  {
+    id: 'v8',
+    title: 'Housekeeping Trolley Setup',
+    duration: '8:30',
+    category: 'Housekeeping',
+    image: 'https://sfile.chatglm.cn/images-ppt/2619e87ae6aa.jpg',
+    description: 'Guide to LAXREE housekeeping trolleys including assembly, stocking procedures, and maintenance for efficient room service.',
+    transcript: [
+      'Welcome to the LAXREE Housekeeping Trolley training. An organized trolley is the backbone of efficient room service and directly impacts housekeeping productivity.',
+      'ASSEMBLY: LAXREE trolleys ship flat-pack and require approximately 20 minutes for assembly. The aluminum frame is lightweight yet supports up to 80kg. The 4-wheel system includes 2 locking casters for stability when parked. Assemble the frame first, then attach the bag supports and shelf brackets.',
+      'STOCKING LAYOUT: Top shelf — clean linens (2 sheets, 2 pillowcases, 1 duvet cover per room). Middle shelf — towels (2 bath towels, 2 hand towels, 2 face towels per room). Bottom shelf — amenities and cleaning supplies. Side bag — trash bag, soiled linen bag. Rear organizer — cleaning sprays, gloves, dusters.',
+      'MAINTENANCE: Wipe down the frame weekly with disinfectant. Check wheel casters monthly and lubricate if sticking. Replace soiled linen bags when torn. The trolley should be parked in the corridor on the same side as the room being serviced, never blocking the hallway.',
+    ],
+    keyPoints: [
+      'Aluminum frame supports 80kg, 2 locking casters',
+      'Standard stocking: linens on top, towels in middle, supplies on bottom',
+      'Weekly disinfection and monthly caster maintenance',
+      'Park on same side as room being serviced',
+    ],
+    youtubeId: '',
+  },
+  {
+    id: 'v9',
+    title: 'Luggage Rack & Accessories',
+    duration: '7:00',
+    category: 'Luggage',
+    image: 'https://sfile.chatglm.cn/images-ppt/2619e87ae6aa.jpg',
+    description: 'Overview of LAXREE luggage racks, shoe shine machines, weighing scales, and other room accessories.',
+    transcript: [
+      'Welcome to the LAXREE Luggage Rack and Accessories training. These finishing touches in a hotel room may seem minor but significantly impact guest comfort and the overall room impression.',
+      'LUGGAGE RACKS: LAXREE offers folding and fixed luggage racks in solid wood and metal finishes. Standard dimensions: 65cm × 45cm × 45cm (W×D×H). Weight capacity: 50kg. The folding model is ideal for rooms with limited storage space, while the fixed model adds a premium look to suites.',
+      'WEIGHING SCALES: Digital scales with tempered glass top, auto-on when stepped on, and LCD display. Battery-powered (2× CR2032) with 18-month lifespan. Capacity: 180kg with 100g accuracy. These are a popular add-on item when selling minibars or kettles.',
+      'SHOE SHINE MACHINES: Compact wall-mounted or freestanding units. Features include automatic brush rotation and optional polish dispensing. Popular in business hotels and airport properties.',
+    ],
+    keyPoints: [
+      'Folding and fixed luggage racks, 50kg capacity',
+      'Digital scales — great add-on sale with minibars/kettles',
+      'Shoe shine machines popular in business hotels',
+      'All accessories available in matching finishes',
+    ],
+    youtubeId: '',
+  },
+  {
+    id: 'v10',
+    title: 'Hotel Hangers & Wardrobe Solutions',
+    duration: '6:15',
+    category: 'Hangers',
+    image: 'https://sfile.chatglm.cn/images-ppt/2619e87ae6aa.jpg',
+    description: 'Training on LAXREE hotel hangers, wardrobe accessories, and complete closet solutions for guest rooms.',
+    transcript: [
+      'Welcome to the LAXREE Hotel Hangers training. Quality hangers are a small detail that guests notice immediately — flimsy wire hangers create a negative impression while sturdy wooden hangers signal quality.',
+      'PRODUCT RANGE: LAXREE offers three hanger types: (1) Wooden Hangers — Solid beechwood with chrome hook, available in natural and walnut finishes. These are the premium option for 4-5 star properties. (2) Velvet Hangers — Slim-profile non-slip design in black or gray. These save closet space and prevent garments from slipping off. (3) Tubular Hangers — Cost-effective plastic option for budget and mid-range hotels.',
+      'WARDROBE ACCESSORIES: Complete your wardrobe solution with LAXREE\'s matching shelf dividers, tie/belt racks, and valet hooks. The anti-theft hook system uses a fixed-ring design that prevents hangers from being removed from the closet rod — a common hotel requirement.',
+    ],
+    keyPoints: [
+      'Wooden (premium), Velvet (space-saving), Tubular (budget) options',
+      'Anti-theft fixed-ring hook system available',
+      'Matching shelf dividers, tie racks, and valet hooks',
+      '4-6 hangers per room standard for business hotels',
+    ],
+    youtubeId: '',
+  },
+  {
+    id: 'v11',
+    title: 'Dustbin & Waste Management Solutions',
+    duration: '5:30',
+    category: 'Dustbin',
+    image: 'https://sfile.chatglm.cn/images-ppt/2619e87ae6aa.jpg',
+    description: 'Overview of LAXREE waste management products including room dustbins, lobby bins, and sensor-operated models.',
+    transcript: [
+      'Welcome to the LAXREE Dustbin Solutions training. Proper waste management in hotel rooms and public areas is essential for hygiene, guest comfort, and housekeeping efficiency.',
+      'ROOM DUSTBINS: LAXREE room dustbins come in 12L and 20L capacities with pedal-operated and sensor-operated options. The sensor model uses infrared technology to open the lid when a hand approaches — a hygienic touchless solution that\'s increasingly popular post-pandemic. Materials include stainless steel, ABS plastic, and bamboo.',
+      'LOBBY & PUBLIC AREA BINS: Larger capacity bins (40L-80L) with dual-compartment recycling options. The slim-profile lobby bin fits neatly against walls without obstructing walkways. Available with custom branding and color options to match hotel interiors.',
+    ],
+    keyPoints: [
+      'Room bins: 12L-20L, pedal or sensor-operated',
+      'Touchless sensor models popular post-pandemic',
+      'Lobby bins: 40L-80L with dual-compartment recycling',
+      'Custom branding and color options available',
+    ],
+    youtubeId: '',
+  },
+  {
+    id: 'v12',
+    title: 'Rollaway Bed & Mattress Solutions',
+    duration: '9:00',
+    category: 'Bed',
+    image: 'https://sfile.chatglm.cn/images-ppt/2619e87ae6aa.jpg',
+    description: 'Complete guide to LAXREE rollaway beds, hotel mattresses, and bed base solutions for all room types.',
+    transcript: [
+      'Welcome to the LAXREE Rollaway Bed and Mattress training. Quality sleep is the #1 factor in guest satisfaction, making these products critical to any hotel\'s success.',
+      'ROLLAWAY BEDS: LAXREE rollaway beds feature a steel frame with folding mechanism, 12cm thick high-density foam mattress, and 4 caster wheels (2 with brakes). Open dimensions: 190cm × 90cm × 45cm. Folded: 90cm × 25cm × 120cm — compact enough for standard wardrobe storage. Weight capacity: 120kg. The quick-fold mechanism allows housekeeping to set up or fold down in under 30 seconds.',
+      'HOTEL MATTRESSES: Available in three comfort levels: Firm (orthopedic, popular in business hotels), Medium (universal comfort, best-seller), and Plush (luxury, 5-star properties). All models feature pocket spring systems with foam encasement for edge support. Sizes: Single, Double, Queen, King. Custom firmness available for bulk orders of 50+ units.',
+    ],
+    keyPoints: [
+      'Rollaway: steel frame, 12cm foam, folds in 30 seconds, 120kg capacity',
+      'Mattresses in Firm, Medium, Plush comfort levels',
+      'Pocket spring with foam encasement for edge support',
+      'Custom firmness available for 50+ unit orders',
+    ],
+    youtubeId: '',
+  },
+  {
+    id: 'v13',
+    title: 'Add-on Products & Cross-Selling',
+    duration: '11:00',
+    category: 'Add-ons',
+    image: 'https://sfile.chatglm.cn/images-ppt/2619e87ae6aa.jpg',
+    description: 'Overview of LAXREE add-on products and cross-selling strategies to maximize order value.',
+    transcript: [
+      'Welcome to the LAXREE Add-on Products and Cross-Selling training. As a LAXREE sales professional, understanding how to bundle products and maximize order value is key to your success.',
+      'ADD-ON PRODUCTS: LAXREE offers numerous complementary items: Room Trays (water glasses, tray, and coaster sets), Iron & Ironing Boards (wall-mounted or freestanding), Bathroom Scales, Door Knobs & Handles (matching RFID lock finishes), Bed Runners and Cushions, and Guest Room Directories (leather-bound information folders).',
+      'CROSS-SELLING STRATEGY: When a client orders minibars, suggest: safe boxes (same wardrobe space), kettles (same room), and dispensers (same bathroom). When selling RFID locks, suggest: digital signage (same technology platform) and safe boxes (shared audit trail capability). The goal is to position LAXREE as a single-source vendor — every additional product in the order increases your commission and the client\'s integration efficiency.',
+      'BUNDLE DISCOUNTS: Offer tiered pricing — 3 product categories: 5% discount. 5+ categories: 8% discount. Full room package: 12% discount. These margins are built into LAXREE\'s pricing structure, so you never sell at a loss while the client perceives great value.',
+    ],
+    keyPoints: [
+      'Room trays, irons, scales, directories as easy add-ons',
+      'Cross-sell related products: minibar + safe + kettle as a room package',
+      'Position LAXREE as single-source vendor for maximum efficiency',
+      'Bundle discounts: 3 categories=5%, 5+=8%, full room=12%',
+    ],
+    youtubeId: '',
+  },
 ]
 
 const FAQ_ITEMS = [
@@ -343,6 +623,172 @@ const FAQ_ITEMS = [
   {
     q: 'What are the key differentiators of LAXREE vs competitors?',
     a: 'Key LAXREE differentiators: (1) One-Stop Solution — Complete hotel amenities range from a single supplier, eliminating multi-vendor complexity. (2) Integrated Technology — Locks, safes, and minibars share a unified management platform. (3) Premium Value Positioning — 15-25% more affordable than European luxury brands with comparable quality. (4) Superior Warranty — 3-year standard vs. 1-2 year industry average. (5) 24/7 Support — Round-the-clock technical hotline. (6) Customization — Brand-specific finishes, colors, and logo engraving available.',
+  },
+]
+
+interface DocumentResource {
+  id: string
+  title: string
+  description: string
+  category: string
+  pages: number
+  icon: typeof FileText
+  color: string
+  bgColor: string
+  content: string
+}
+
+const DOCUMENT_RESOURCES: DocumentResource[] = [
+  {
+    id: 'doc1',
+    title: 'LAXREE Product Catalogue',
+    description: 'Complete product listing with specifications, pricing, and model numbers for all LAXREE hospitality products.',
+    category: 'Catalog',
+    pages: 24,
+    icon: Package,
+    color: 'text-teal-600',
+    bgColor: 'bg-teal-50',
+    content: `<h2 style="color:#059669;border-bottom:2px solid #059669;padding-bottom:8px;">LAXREE Product Catalogue</h2>
+<h3>Mini Bars</h3>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;"><tr style="background:#f0fdf4;"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left;">Model</th><th style="padding:8px;border:1px solid #e5e7eb;">Capacity</th><th style="padding:8px;border:1px solid #e5e7eb;">Technology</th><th style="padding:8px;border:1px solid #e5e7eb;">Temp Range</th><th style="padding:8px;border:1px solid #e5e7eb;">SSP (₹)</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">LMMB-20T</td><td style="padding:8px;border:1px solid #e5e7eb;">20L</td><td style="padding:8px;border:1px solid #e5e7eb;">Thermoelectric</td><td style="padding:8px;border:1px solid #e5e7eb;">8-15°C</td><td style="padding:8px;border:1px solid #e5e7eb;">4,200</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">LMMB-40A</td><td style="padding:8px;border:1px solid #e5e7eb;">40L</td><td style="padding:8px;border:1px solid #e5e7eb;">Absorption</td><td style="padding:8px;border:1px solid #e5e7eb;">5-12°C</td><td style="padding:8px;border:1px solid #e5e7eb;">8,500</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">LMMB-45C</td><td style="padding:8px;border:1px solid #e5e7eb;">45L</td><td style="padding:8px;border:1px solid #e5e7eb;">Compressor</td><td style="padding:8px;border:1px solid #e5e7eb;">2-8°C</td><td style="padding:8px;border:1px solid #e5e7eb;">12,500</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">LMMB-60C</td><td style="padding:8px;border:1px solid #e5e7eb;">60L</td><td style="padding:8px;border:1px solid #e5e7eb;">Compressor</td><td style="padding:8px;border:1px solid #e5e7eb;">2-8°C</td><td style="padding:8px;border:1px solid #e5e7eb;">15,800</td></tr></table>
+<h3>Safe Boxes</h3>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;"><tr style="background:#f0fdf4;"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left;">Model</th><th style="padding:8px;border:1px solid #e5e7eb;">Size</th><th style="padding:8px;border:1px solid #e5e7eb;">Features</th><th style="padding:8px;border:1px solid #e5e7eb;">SSP (₹)</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">LRSB-201</td><td style="padding:8px;border:1px solid #e5e7eb;">Compact</td><td style="padding:8px;border:1px solid #e5e7eb;">LED, Digital Keypad</td><td style="padding:8px;border:1px solid #e5e7eb;">3,200</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">LRSB-205</td><td style="padding:8px;border:1px solid #e5e7eb;">Standard</td><td style="padding:8px;border:1px solid #e5e7eb;">LED, Audit Trail</td><td style="padding:8px;border:1px solid #e5e7eb;">4,800</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">LRSB-209</td><td style="padding:8px;border:1px solid #e5e7eb;">Laptop/Orbita</td><td style="padding:8px;border:1px solid #e5e7eb;">LED, Interior Light, USB</td><td style="padding:8px;border:1px solid #e5e7eb;">6,500</td></tr></table>
+<h3>RFID Door Locks</h3>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;"><tr style="background:#f0fdf4;"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left;">Model</th><th style="padding:8px;border:1px solid #e5e7eb;">Technology</th><th style="padding:8px;border:1px solid #e5e7eb;">Finish</th><th style="padding:8px;border:1px solid #e5e7eb;">SSP (₹)</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">LRDL-100</td><td style="padding:8px;border:1px solid #e5e7eb;">Mifare 13.56MHz</td><td style="padding:8px;border:1px solid #e5e7eb;">SS304 Satin</td><td style="padding:8px;border:1px solid #e5e7eb;">5,800</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">LRDL-200</td><td style="padding:8px;border:1px solid #e5e7eb;">Mifare + Bluetooth</td><td style="padding:8px;border:1px solid #e5e7eb;">SS304 Gold</td><td style="padding:8px;border:1px solid #e5e7eb;">7,500</td></tr></table>
+<h3>Electric Kettles</h3>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;"><tr style="background:#f0fdf4;"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left;">Model</th><th style="padding:8px;border:1px solid #e5e7eb;">Capacity</th><th style="padding:8px;border:1px solid #e5e7eb;">Power</th><th style="padding:8px;border:1px solid #e5e7eb;">Material</th><th style="padding:8px;border:1px solid #e5e7eb;">SSP (₹)</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">LRWT-143</td><td style="padding:8px;border:1px solid #e5e7eb;">0.6L</td><td style="padding:8px;border:1px solid #e5e7eb;">1000W</td><td style="padding:8px;border:1px solid #e5e7eb;">SS 201</td><td style="padding:8px;border:1px solid #e5e7eb;">560</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">LRWT-145</td><td style="padding:8px;border:1px solid #e5e7eb;">0.8L</td><td style="padding:8px;border:1px solid #e5e7eb;">800W</td><td style="padding:8px;border:1px solid #e5e7eb;">SS 201 Matte</td><td style="padding:8px;border:1px solid #e5e7eb;">488</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">LRWT-155</td><td style="padding:8px;border:1px solid #e5e7eb;">1.0L</td><td style="padding:8px;border:1px solid #e5e7eb;">1000W</td><td style="padding:8px;border:1px solid #e5e7eb;">SS 304 Double</td><td style="padding:8px;border:1px solid #e5e7eb;">1,104</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">LRWT-150</td><td style="padding:8px;border:1px solid #e5e7eb;">0.8L</td><td style="padding:8px;border:1px solid #e5e7eb;">900W</td><td style="padding:8px;border:1px solid #e5e7eb;">SS 201</td><td style="padding:8px;border:1px solid #e5e7eb;">660</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">LRWT-156</td><td style="padding:8px;border:1px solid #e5e7eb;">1.0L</td><td style="padding:8px;border:1px solid #e5e7eb;">1000W</td><td style="padding:8px;border:1px solid #e5e7eb;">SS 304</td><td style="padding:8px;border:1px solid #e5e7eb;">1,320</td></tr></table>
+<p style="color:#6b7280;font-size:12px;margin-top:20px;">LAXREE Hospitality Solutions | Product Catalogue | Generated: ${new Date().toLocaleDateString()}</p>`,
+  },
+  {
+    id: 'doc2',
+    title: 'Safe Box Installation Manual',
+    description: 'Step-by-step installation guide for LAXREE electronic safe boxes with diagrams and troubleshooting flowcharts.',
+    category: 'Manual',
+    pages: 12,
+    icon: Shield,
+    color: 'text-blue-600',
+    bgColor: 'bg-blue-50',
+    content: `<h2 style="color:#2563eb;border-bottom:2px solid #2563eb;padding-bottom:8px;">Safe Box Installation Manual</h2>
+<h3>1. Pre-Installation Requirements</h3>
+<ul><li>Mounting surface: Solid concrete wall, wooden shelf, or wardrobe cabinet floor</li><li>Tools required: 10mm masonry drill bit, spirit level, Phillips screwdriver, measuring tape</li><li>Clearance: Minimum 5cm on each side, 10cm above for ventilation</li><li>Weight: Safe weighs 8-15kg depending on model — ensure mounting surface can support 3× the safe weight</li></ul>
+<h3>2. Mounting Procedure</h3>
+<ol><li>Position the safe at the desired location and mark anchor points through the pre-drilled bottom holes</li><li>Using a spirit level, ensure the safe sits perfectly horizontal</li><li>Drill anchor holes using appropriate bit for the surface material</li><li>Insert wall plugs (concrete) or use lag bolts (wood)</li><li>Secure the safe with all 4 anchor bolts, tightening in a cross pattern</li><li>Test stability by applying 15kg downward pressure — the safe must not shift or wobble</li></ol>
+<h3>3. Power & Initialization</h3>
+<ol><li>Open battery compartment on inside of door</li><li>Insert 4× AA batteries (included) with correct polarity</li><li>LED display flashes — press reset button once</li><li>Enter default master code: 1-2-3-4 then press #</li><li>Display shows "OPEN" — initialization complete</li><li>Set new master code: Press * → enter new 3-8 digit code → press # → re-enter to confirm</li></ol>
+<h3>4. Troubleshooting Flowchart</h3>
+<ul><li><strong>Safe won't open:</strong> Check batteries → Try master code → Use override key → Contact support</li><li><strong>Display blank:</strong> Replace batteries → Check polarity → Check battery contacts for corrosion</li><li><strong>Code not accepted:</strong> Use master code → If master fails, use override key → Reset code after access</li><li><strong>Door won't close:</strong> Check bolt channel for obstructions → Check hinge pins → Verify door alignment</li></ul>
+<p style="color:#6b7280;font-size:12px;margin-top:20px;">LAXREE Hospitality Solutions | Installation Manual | v2.1</p>`,
+  },
+  {
+    id: 'doc3',
+    title: 'RFID Lock Configuration Guide',
+    description: 'Software setup guide for LAXREE RFID lock systems including card encoding, PMS integration, and system configuration.',
+    category: 'Guide',
+    pages: 16,
+    icon: KeyRound,
+    color: 'text-violet-600',
+    bgColor: 'bg-violet-50',
+    content: `<h2 style="color:#7c3aed;border-bottom:2px solid #7c3aed;padding-bottom:8px;">RFID Lock Configuration Guide</h2>
+<h3>1. System Requirements</h3>
+<ul><li>Windows 10+ or macOS 12+ for encoder software</li><li>USB 2.0+ port for card encoder</li><li>TCP/IP network connection to PMS server</li><li>LAXREE Encoder Software v4.0+ (download from partner portal)</li></ul>
+<h3>2. Card Hierarchy Setup</h3>
+<ol><li><strong>Master Card:</strong> Opens ALL locks. Issued to GM and Security Director only. Encode by selecting "Master" in software and scanning an empty card.</li><li><strong>Building Card:</strong> Opens all rooms in a building. Useful for maintenance staff.</li><li><strong>Floor Card:</strong> Opens all rooms on a specific floor. Issued to housekeeping supervisors.</li><li><strong>Guest Card:</strong> Opens assigned room only, valid during stay period. Auto-encoded during PMS check-in.</li><li><strong>Emergency Card:</strong> Overrides all locks, bypasses privacy settings. Kept in secure location.</li></ol>
+<h3>3. PMS Integration</h3>
+<ul><li><strong>Opera PMS:</strong> Configure LAXREE interface via OHI (Oracle Hospitality Integration) using TCP/IP on port 8080</li><li><strong>Protel:</strong> Use the LAXREE SOAP API connector with WSDL endpoint</li><li><strong>IDS:</strong> Direct database integration via ODBC connection</li><li>Test integration by performing a test check-in and verifying the guest card opens the assigned room</li></ul>
+<h3>4. Battery Management Schedule</h3>
+<p>For properties with 100+ rooms, implement a proactive battery replacement schedule: Replace all lock batteries every 12 months during low-occupancy periods. Track battery replacements in the LAXREE management software.</p>
+<p style="color:#6b7280;font-size:12px;margin-top:20px;">LAXREE Hospitality Solutions | Configuration Guide | v4.0</p>`,
+  },
+  {
+    id: 'doc4',
+    title: 'Sales Playbook',
+    description: 'Complete LAXREE sales methodology including prospecting scripts, objection handling, closing techniques, and follow-up templates.',
+    category: 'Training',
+    pages: 32,
+    icon: TrendingUp,
+    color: 'text-amber-600',
+    bgColor: 'bg-amber-50',
+    content: `<h2 style="color:#d97706;border-bottom:2px solid #d97706;padding-bottom:8px;">LAXREE Sales Playbook</h2>
+<h3>Sales Process — 8 Steps to Close</h3>
+<h4>Step 1: Prospecting</h4>
+<p>Identify potential clients through: (a) Hotel industry directories (HVS, STR), (b) Trade shows (HOTELEX, ATM, ITB), (c) LinkedIn searches for "procurement manager hotel", (d) Referrals from existing clients. Target: 20 new prospects per week.</p>
+<h4>Step 2: Research & Qualification</h4>
+<p>Before first contact, research: Property name, room count, star rating, current supplier, recent renovations, and decision-maker contact info. Score each lead: A (100+ rooms, renovation planned), B (50-99 rooms), C (under 50 rooms). Focus on A and B leads.</p>
+<h4>Step 3: Initial Contact Script</h4>
+<p>"Good morning [Name], I'm calling from LAXREE Hospitality Solutions. We help hotels like [similar property] upgrade their in-room amenities while reducing procurement costs by up to 25%. I'd love 15 minutes to show you how — would Tuesday or Thursday work better for a quick call?"</p>
+<h4>Step 4: Discovery Meeting</h4>
+<p>Ask these 6 key questions: (1) How many rooms? (2) What's the renovation timeline? (3) Who's the current supplier? (4) What's the budget range? (5) Any brand standards to meet? (6) What's the biggest pain point with current amenities?</p>
+<h4>Step 5: Product Demonstration</h4>
+<p>Bring physical samples for safe boxes and RFID locks. Show video demos for minibars and digital signage. Always demonstrate 3+ products to enable cross-selling. Highlight the "one vendor" advantage throughout.</p>
+<h4>Step 6: Objection Handling</h4>
+<ul><li><strong>"Too expensive":</strong> Show TCO comparison over 5 years including warranty, maintenance, and energy costs</li><li><strong>"Happy with current supplier":</strong> Offer pilot program for 5-10 rooms at no commitment</li><li><strong>"Need to test first":</strong> Provide demo units for 2-week trial period</li><li><strong>"Board needs to approve":</strong> Provide ROI calculation document and reference letters</li></ul>
+<h4>Step 7: Proposal & Quotation</h4>
+<p>Include: Product specs, unit pricing, volume discounts, delivery timeline, installation services, warranty terms, and payment options. Always present 3 options: Standard, Premium, and Full Package.</p>
+<h4>Step 8: Close & Follow-Up</h4>
+<p>Identify all stakeholders (GM, Housekeeping, IT, Finance). Address each concern individually. Offer 2-year warranty extension as closing incentive. Post-close: Schedule installation, send thank-you, set 30-day follow-up.</p>
+<p style="color:#6b7280;font-size:12px;margin-top:20px;">LAXREE Hospitality Solutions | Sales Playbook | Confidential</p>`,
+  },
+  {
+    id: 'doc5',
+    title: 'Warranty & Service Agreement',
+    description: 'Complete warranty terms, service level agreements, and support procedures for all LAXREE products.',
+    category: 'Legal',
+    pages: 8,
+    icon: ShieldCheck,
+    color: 'text-emerald-600',
+    bgColor: 'bg-emerald-50',
+    content: `<h2 style="color:#059669;border-bottom:2px solid #059669;padding-bottom:8px;">LAXREE Warranty & Service Agreement</h2>
+<h3>1. Standard Warranty Terms</h3>
+<p>All LAXREE products carry a <strong>3-year standard warranty</strong> from the date of delivery, covering manufacturing defects and component failures under normal use. This is significantly longer than the industry average of 1-2 years.</p>
+<h3>2. What's Covered</h3>
+<ul><li>Manufacturing defects in materials and workmanship</li><li>Electronic component failures (PCBs, sensors, motors)</li><li>Mechanical failures under normal operation</li><li>Software updates for lock systems and digital signage</li><li>Free replacement of defective parts with shipping covered by LAXREE</li></ul>
+<h3>3. What's Not Covered</h3>
+<ul><li>Damage caused by misuse, unauthorized modification, or improper installation</li><li>Normal wear and tear (cosmetic scratches, paint fading)</li><li>Battery replacement (considered consumable)</li><li>Damage from natural disasters, power surges, or water immersion</li></ul>
+<h3>4. Extended Warranty Options</h3>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;"><tr style="background:#f0fdf4;"><th style="padding:8px;border:1px solid #e5e7eb;">Period</th><th style="padding:8px;border:1px solid #e5e7eb;">Cost (% of product value)</th><th style="padding:8px;border:1px solid #e5e7eb;">Additional Coverage</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">4th Year</td><td style="padding:8px;border:1px solid #e5e7eb;">8%</td><td style="padding:8px;border:1px solid #e5e7eb;">Same as standard</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">5th Year</td><td style="padding:8px;border:1px solid #e5e7eb;">6%</td><td style="padding:8px;border:1px solid #e5e7eb;">Same as standard</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Lifetime</td><td style="padding:8px;border:1px solid #e5e7eb;">15%</td><td style="padding:8px;border:1px solid #e5e7eb;">Includes annual maintenance visit</td></tr></table>
+<h3>5. Support Channels</h3>
+<ul><li><strong>24/7 Technical Hotline:</strong> +91-XXXX-XXXXXX</li><li><strong>Email:</strong> support@laxree.com (4-hour response SLA)</li><li><strong>On-site Service:</strong> Available for 100+ room installations (48-hour response)</li></ul>
+<p style="color:#6b7280;font-size:12px;margin-top:20px;">LAXREE Hospitality Solutions | Warranty Terms | Effective: January 2025</p>`,
+  },
+  {
+    id: 'doc6',
+    title: 'Quick Reference Card',
+    description: 'Product specifications at a glance — handy reference for sales calls and client meetings.',
+    category: 'Reference',
+    pages: 4,
+    icon: BookOpen,
+    color: 'text-rose-600',
+    bgColor: 'bg-rose-50',
+    content: `<h2 style="color:#e11d48;border-bottom:2px solid #e11d48;padding-bottom:8px;">LAXREE Quick Reference Card</h2>
+<h3>Mini Bars — Key Specs</h3>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;"><tr style="background:#fff1f2;"><th style="padding:6px;border:1px solid #e5e7eb;">Type</th><th style="padding:6px;border:1px solid #e5e7eb;">Noise</th><th style="padding:6px;border:1px solid #e5e7eb;">Temp</th><th style="padding:6px;border:1px solid #e5e7eb;">Power</th><th style="padding:6px;border:1px solid #e5e7eb;">Best For</th></tr>
+<tr><td style="padding:6px;border:1px solid #e5e7eb;">Thermoelectric</td><td style="padding:6px;border:1px solid #e5e7eb;">Silent</td><td style="padding:6px;border:1px solid #e5e7eb;">8-15°C</td><td style="padding:6px;border:1px solid #e5e7eb;">45W</td><td style="padding:6px;border:1px solid #e5e7eb;">Budget</td></tr>
+<tr><td style="padding:6px;border:1px solid #e5e7eb;">Absorption</td><td style="padding:6px;border:1px solid #e5e7eb;">0 dB</td><td style="padding:6px;border:1px solid #e5e7eb;">5-12°C</td><td style="padding:6px;border:1px solid #e5e7eb;">60W</td><td style="padding:6px;border:1px solid #e5e7eb;">5-Star</td></tr>
+<tr><td style="padding:6px;border:1px solid #e5e7eb;">Compressor</td><td style="padding:6px;border:1px solid #e5e7eb;">&lt;39 dB</td><td style="padding:6px;border:1px solid #e5e7eb;">2-8°C</td><td style="padding:6px;border:1px solid #e5e7eb;">70-90W</td><td style="padding:6px;border:1px solid #e5e7eb;">Tropical</td></tr></table>
+<h3>Safe Boxes — Key Specs</h3>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;"><tr style="background:#fff1f2;"><th style="padding:6px;border:1px solid #e5e7eb;">Model</th><th style="padding:6px;border:1px solid #e5e7eb;">Size</th><th style="padding:6px;border:1px solid #e5e7eb;">Power</th><th style="padding:6px;border:1px solid #e5e7eb;">SSP</th></tr>
+<tr><td style="padding:6px;border:1px solid #e5e7eb;">LRSB-201</td><td style="padding:6px;border:1px solid #e5e7eb;">Compact</td><td style="padding:6px;border:1px solid #e5e7eb;">4×AA</td><td style="padding:6px;border:1px solid #e5e7eb;">₹3,200</td></tr>
+<tr><td style="padding:6px;border:1px solid #e5e7eb;">LRSB-205</td><td style="padding:6px;border:1px solid #e5e7eb;">Standard</td><td style="padding:6px;border:1px solid #e5e7eb;">4×AA</td><td style="padding:6px;border:1px solid #e5e7eb;">₹4,800</td></tr>
+<tr><td style="padding:6px;border:1px solid #e5e7eb;">LRSB-209</td><td style="padding:6px;border:1px solid #e5e7eb;">Laptop</td><td style="padding:6px;border:1px solid #e5e7eb;">4×AA</td><td style="padding:6px;border:1px solid #e5e7eb;">₹6,500</td></tr></table>
+<h3>Key Selling Points</h3>
+<ul><li>3-year warranty (vs 1-2 year industry avg)</li><li>One-stop vendor: 15+ product categories</li><li>15-25% lower TCO vs European brands</li><li>24/7 technical support hotline</li><li>PMS integration: Opera, Protel, IDS</li></ul>`,
   },
 ]
 
@@ -478,19 +924,33 @@ function LearningSkeleton() {
 
 function StudyMaterialsSection() {
   const [videoDialogOpen, setVideoDialogOpen] = useState(false)
-  const [selectedVideo, setSelectedVideo] = useState<typeof VIDEO_CHAPTERS[0] | null>(null)
-  const [videoLoading, setVideoLoading] = useState(true)
-  const [videoError, setVideoError] = useState(false)
+  const [selectedVideo, setSelectedVideo] = useState<VideoLesson | null>(null)
   const [practiceIdx, setPracticeIdx] = useState(0)
   const [practiceAnswer, setPracticeAnswer] = useState<number | null>(null)
   const [practiceRevealed, setPracticeRevealed] = useState(false)
   const [practiceScore, setPracticeScore] = useState({ correct: 0, total: 0 })
+  const [docViewerOpen, setDocViewerOpen] = useState(false)
+  const [selectedDoc, setSelectedDoc] = useState<DocumentResource | null>(null)
 
-  const openVideo = (video: typeof VIDEO_CHAPTERS[0]) => {
+  const openVideo = (video: VideoLesson) => {
     setSelectedVideo(video)
-    setVideoLoading(true)
-    setVideoError(false)
     setVideoDialogOpen(true)
+  }
+
+  const openDoc = (doc: DocumentResource) => {
+    setSelectedDoc(doc)
+    setDocViewerOpen(true)
+  }
+
+  const downloadDoc = (doc: DocumentResource) => {
+    const htmlContent = `<!DOCTYPE html><html><head><title>${doc.title}</title><style>body{font-family:'Segoe UI',Tahoma,sans-serif;padding:40px;max-width:900px;margin:0 auto;color:#333;line-height:1.6}h2{color:#059669;border-bottom:2px solid #059669;padding-bottom:8px}h3{color:#0d9488;margin-top:24px}h4{color:#047857;margin-top:16px}table{width:100%;border-collapse:collapse;margin:12px 0}th,td{padding:8px;border:1px solid #e5e7eb;text-align:left}th{background:#f0fdf4}ul,ol{padding-left:24px}li{margin-bottom:6px}@media print{body{padding:20px}}</style></head><body>${doc.content}<div style="text-align:center;margin-top:40px;padding-top:20px;border-top:1px solid #e5e7eb;color:#9ca3af;font-size:12px">LAXREE Hospitality Solutions | ${doc.title} | Generated: ${new Date().toLocaleDateString()}</div></body></html>`
+    const blob = new Blob([htmlContent], { type: 'text/html' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${doc.title.replace(/\s+/g, '_')}.html`
+    a.click()
+    URL.revokeObjectURL(url)
   }
 
   const handlePracticeAnswer = (optionIdx: number) => {
@@ -559,6 +1019,11 @@ function StudyMaterialsSection() {
                   <HelpCircle className="w-3.5 h-3.5" />
                   FAQ
                 </TabsTrigger>
+                <TabsTrigger value="documents" className="gap-1.5 text-xs sm:text-sm">
+                  <FileText className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Documents</span>
+                  <span className="sm:hidden">Docs</span>
+                </TabsTrigger>
                 <TabsTrigger value="practice-quiz" className="gap-1.5 text-xs sm:text-sm">
                   <Brain className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Practice Quiz</span>
@@ -623,21 +1088,21 @@ function StudyMaterialsSection() {
               </Accordion>
             </TabsContent>
 
-            {/* Tab: Video Chapters */}
+            {/* Tab: Video Lessons */}
             <TabsContent value="video-chapters" className="p-4 mt-0">
               <div className="mb-4">
                 <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
                   <Video className="w-4 h-4 text-teal-600" />
-                  Product Video Tutorials
+                  Product Video Lessons
                 </h3>
-                <p className="text-sm text-gray-500 mt-1">Watch product demos and installation guides</p>
+                <p className="text-sm text-gray-500 mt-1">Watch product training lessons with detailed transcripts and key learning points</p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {VIDEO_CHAPTERS.map((video, idx) => {
+                {VIDEO_LESSONS.map((video, idx) => {
                   const catColor = VIDEO_CATEGORY_COLORS[video.category] || { bg: 'bg-gray-100', text: 'text-gray-700' }
                   return (
                     <motion.button
-                      key={idx}
+                      key={video.id}
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.04 }}
@@ -646,11 +1111,22 @@ function StudyMaterialsSection() {
                       onClick={() => openVideo(video)}
                       className="text-left rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow group"
                     >
-                      {/* Video Thumbnail Placeholder */}
-                      <div className="relative h-28 bg-gradient-to-br from-teal-800 to-emerald-900 flex items-center justify-center overflow-hidden">
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(255,255,255,0.1),transparent_60%)]" />
-                        <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/30 transition-colors">
-                          <CirclePlay className="w-6 h-6 text-white" />
+                      {/* Video Thumbnail with product image */}
+                      <div className="relative h-32 overflow-hidden">
+                        <img
+                          src={video.image}
+                          alt={video.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none'
+                            ;(e.target as HTMLImageElement).parentElement!.classList.add('bg-gradient-to-br', 'from-teal-800', 'to-emerald-900')
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors" />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/50 transition-colors">
+                            <CirclePlay className="w-6 h-6 text-white" />
+                          </div>
                         </div>
                         {/* Duration Badge */}
                         <div className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-sm rounded-md px-2 py-0.5 flex items-center gap-1">
@@ -668,9 +1144,10 @@ function StudyMaterialsSection() {
                         <h4 className="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-teal-700 transition-colors">
                           {video.title}
                         </h4>
+                        <p className="text-[11px] text-gray-500 mt-1 line-clamp-2">{video.description}</p>
                         <div className="flex items-center gap-1.5 mt-1.5">
                           <Volume2 className="w-3 h-3 text-gray-400" />
-                          <span className="text-[11px] text-gray-400">Video Tutorial</span>
+                          <span className="text-[11px] text-gray-400">Video Lesson</span>
                         </div>
                       </div>
                     </motion.button>
@@ -711,6 +1188,69 @@ function StudyMaterialsSection() {
                   </AccordionItem>
                 ))}
               </Accordion>
+            </TabsContent>
+
+            {/* Tab: Documents & Resources */}
+            <TabsContent value="documents" className="p-4 mt-0">
+              <div className="mb-4">
+                <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-teal-600" />
+                  Documents & Resources
+                </h3>
+                <p className="text-sm text-gray-500 mt-1">Download product manuals, guides, and reference documents</p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {DOCUMENT_RESOURCES.map((doc, idx) => {
+                  const Icon = doc.icon
+                  return (
+                    <motion.div
+                      key={doc.id}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      className="rounded-xl border border-gray-200 bg-white p-4 hover:shadow-md transition-shadow group"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className={`w-10 h-10 rounded-lg ${doc.bgColor} flex items-center justify-center shrink-0`}>
+                          <Icon className={`w-5 h-5 ${doc.color}`} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-sm font-semibold text-gray-900 group-hover:text-teal-700 transition-colors">
+                            {doc.title}
+                          </h4>
+                          <p className="text-xs text-gray-500 mt-1 line-clamp-2">{doc.description}</p>
+                          <div className="flex items-center gap-2 mt-2">
+                            <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                              {doc.category}
+                            </Badge>
+                            <span className="text-[10px] text-gray-400">{doc.pages} pages</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1 h-8 text-xs border-teal-200 text-teal-700 hover:bg-teal-50"
+                          onClick={() => openDoc(doc)}
+                        >
+                          <Eye className="w-3 h-3 mr-1" />
+                          View
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1 h-8 text-xs border-gray-200 text-gray-600 hover:bg-gray-50"
+                          onClick={() => downloadDoc(doc)}
+                        >
+                          <Download className="w-3 h-3 mr-1" />
+                          Download
+                        </Button>
+                      </div>
+                    </motion.div>
+                  )
+                })}
+              </div>
             </TabsContent>
 
             {/* Tab: Practice Quiz */}
@@ -867,66 +1407,141 @@ function StudyMaterialsSection() {
         </CardContent>
       </Card>
 
-      {/* Video Player Dialog */}
+      {/* Video Lesson Dialog */}
       <Dialog open={videoDialogOpen} onOpenChange={setVideoDialogOpen}>
-        <DialogContent className="max-w-3xl p-0 overflow-hidden">
-          <DialogHeader className="p-4 pb-0">
+        <DialogContent className="max-w-4xl max-h-[90vh] p-0 overflow-hidden">
+          <DialogHeader className="p-4 pb-2">
             <DialogTitle className="flex items-center gap-2 text-base">
               <Video className="w-4 h-4 text-teal-600" />
               {selectedVideo?.title}
             </DialogTitle>
             <DialogDescription className="text-sm">
-              {selectedVideo?.category} • {selectedVideo?.duration}
+              {selectedVideo?.category} • {selectedVideo?.duration} • Video Lesson
             </DialogDescription>
           </DialogHeader>
-          <div className="p-4 pt-2">
-            <div className="rounded-xl overflow-hidden bg-black aspect-video relative">
-              {videoLoading && !videoError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-10">
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-10 h-10 border-3 border-teal-500 border-t-transparent rounded-full animate-spin" />
-                    <p className="text-gray-400 text-sm">Loading video...</p>
+          <div className="px-4 pb-4 overflow-y-auto max-h-[calc(90vh-80px)]">
+            {selectedVideo && (
+              <>
+                {/* YouTube Embed or Product Image */}
+                {selectedVideo.youtubeId ? (
+                  <div className="rounded-xl overflow-hidden aspect-video mb-4">
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      src={`https://www.youtube.com/embed/${selectedVideo.youtubeId}`}
+                      title={selectedVideo.title}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="w-full h-full"
+                    />
+                  </div>
+                ) : (
+                  <div className="rounded-xl overflow-hidden mb-4 relative">
+                    <img
+                      src={selectedVideo.image}
+                      alt={selectedVideo.title}
+                      className="w-full h-48 sm:h-64 object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center">
+                          <Play className="w-5 h-5 text-white ml-0.5" />
+                        </div>
+                        <div>
+                          <p className="text-white text-sm font-semibold">{selectedVideo.title}</p>
+                          <p className="text-white/70 text-xs">{selectedVideo.category} • {selectedVideo.duration}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Description */}
+                <p className="text-sm text-gray-600 mb-4 leading-relaxed">{selectedVideo.description}</p>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                  {/* Transcript */}
+                  <div className="lg:col-span-2">
+                    <div className="rounded-xl border border-gray-200 p-4">
+                      <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-3">
+                        <BookOpen className="w-4 h-4 text-teal-600" />
+                        Lesson Transcript
+                      </h3>
+                      <div className="space-y-3 max-h-64 overflow-y-auto pr-2">
+                        {selectedVideo.transcript.map((para, idx) => (
+                          <div key={idx} className="flex items-start gap-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-teal-400 mt-2 shrink-0" />
+                            <p className="text-sm text-gray-700 leading-relaxed">{para}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Key Points */}
+                  <div>
+                    <div className="rounded-xl border border-teal-200 bg-teal-50/50 p-4">
+                      <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-3">
+                        <Lightbulb className="w-4 h-4 text-teal-600" />
+                        Key Takeaways
+                      </h3>
+                      <div className="space-y-2">
+                        {selectedVideo.keyPoints.map((point, idx) => (
+                          <div key={idx} className="flex items-start gap-2">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-teal-600 mt-0.5 shrink-0" />
+                            <p className="text-xs text-gray-700 leading-relaxed">{point}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              )}
-              {videoError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-10">
-                  <div className="flex flex-col items-center gap-3 text-center px-6">
-                    <XCircle className="w-10 h-10 text-red-400" />
-                    <p className="text-gray-300 text-sm font-medium">Failed to load video</p>
-                    <p className="text-gray-500 text-xs">The video file could not be played. Please try again later.</p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="mt-2 border-gray-600 text-gray-300 hover:bg-gray-800"
-                      onClick={() => {
-                        setVideoError(false)
-                        setVideoLoading(true)
-                      }}
-                    >
-                      <RotateCcw className="w-3 h-3 mr-1" />
-                      Retry
-                    </Button>
-                  </div>
-                </div>
-              )}
-              {selectedVideo && (
-                <video
-                  key={selectedVideo.videoUrl}
-                  controls
-                  playsInline
-                  autoPlay
-                  className="w-full h-full object-contain"
-                  onCanPlay={() => setVideoLoading(false)}
-                  onWaiting={() => setVideoLoading(true)}
-                  onPlaying={() => setVideoLoading(false)}
-                  onError={() => { setVideoLoading(false); setVideoError(true) }}
+              </>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Document Viewer Dialog */}
+      <Dialog open={docViewerOpen} onOpenChange={setDocViewerOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] p-0 overflow-hidden">
+          <DialogHeader className="p-4 pb-2 border-b">
+            <div className="flex items-center justify-between">
+              <div>
+                <DialogTitle className="flex items-center gap-2 text-base">
+                  <FileText className="w-4 h-4 text-teal-600" />
+                  {selectedDoc?.title}
+                </DialogTitle>
+                <DialogDescription className="text-sm">
+                  {selectedDoc?.category} • {selectedDoc?.pages} pages
+                </DialogDescription>
+              </div>
+              {selectedDoc && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-teal-200 text-teal-700 hover:bg-teal-50"
+                  onClick={() => downloadDoc(selectedDoc)}
                 >
-                  <source src={selectedVideo.videoUrl} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
+                  <Download className="w-3 h-3 mr-1" />
+                  Download
+                </Button>
               )}
             </div>
+          </DialogHeader>
+          <div className="p-4 overflow-y-auto max-h-[calc(90vh-100px)]">
+            {selectedDoc && (
+              <div className="bg-white rounded-lg border shadow-sm p-6" style={{ minHeight: '400px' }}>
+                <iframe
+                  srcDoc={`<!DOCTYPE html><html><head><style>body{font-family:'Segoe UI',Tahoma,sans-serif;padding:20px;max-width:900px;margin:0 auto;color:#333;line-height:1.6;font-size:14px}h2{color:#059669;border-bottom:2px solid #059669;padding-bottom:8px;margin-top:24px}h3{color:#0d9488;margin-top:20px}h4{color:#047857;margin-top:16px}table{width:100%;border-collapse:collapse;margin:12px 0}th,td{padding:8px;border:1px solid #e5e7eb;text-align:left}th{background:#f0fdf4}ul,ol{padding-left:24px}li{margin-bottom:6px}p{margin-bottom:8px}strong{color:#047857}</style></head><body>${selectedDoc.content}</body></html>`}
+                  className="w-full border-0"
+                  style={{ minHeight: '500px', height: '70vh' }}
+                  title={selectedDoc.title}
+                />
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
