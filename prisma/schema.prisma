@@ -1,0 +1,567 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ==================== CORE USER & AUTH ====================
+
+enum Role {
+  SUPER_ADMIN
+  TRAINING_MANAGER
+  TEAM_LEADER
+  EMPLOYEE
+}
+
+model User {
+  id                    String    @id @default(cuid())
+  email                 String    @unique
+  password              String
+  role                  Role      @default(EMPLOYEE)
+  
+  // Profile fields
+  fullName              String?
+  employeeId            String?   @unique
+  designation           String?
+  departmentId          String?
+  location              String?
+  reportingManagerId    String?
+  joiningDate           DateTime?
+  mobileNumber          String?
+  profilePhoto          String?
+  experienceLevel       String?
+  previousIndustryExp   String?
+  salesExperience       String?
+  technicalExperience   String?
+  preferredLanguage     String?   @default("English")
+  
+  // Status
+  isActive              Boolean   @default(true)
+  isFirstLogin          Boolean   @default(true)
+  isSuspended           Boolean   @default(false)
+  
+  // AI & Readiness
+  aiReadinessScore      Float     @default(0)
+  fieldReady            Boolean   @default(false)
+  inboundReady          Boolean   @default(false)
+  currentLevel          String?   @default("Beginner")
+  leaderboardPosition   Int       @default(0)
+  
+  // Timestamps
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  lastLoginAt           DateTime?
+  
+  // Relations
+  department            Department?                  @relation("DepartmentUsers", fields: [departmentId], references: [id])
+  headedDepartment      Department?                  @relation("DepartmentHead")
+  reportingManager      User?                        @relation("ManagerTeam", fields: [reportingManagerId], references: [id])
+  teamMembers           User[]                       @relation("ManagerTeam")
+  enrollments           Enrollment[]
+  assessmentAttempts    AssessmentAttempt[]
+  certificationAttempts CertificationAttempt[]
+  scorecards            Scorecard[]
+  approvalActions       ApprovalLog[]                @relation("Approver")
+  approvalsReceived     ApprovalLog[]                @relation("ApprovedEmployee")
+  auditLogs             AuditLog[]                   @relation("AuditUser")
+  activities            Activity[]
+  moduleCompletions     ModuleCompletion[]
+  mockSimulations       MockSimulationAttempt[]
+  improvementPlans      ImprovementPlan[]            @relation("PlanEmployee")
+  assignedPlans         ImprovementPlan[]            @relation("PlanAssigner")
+  notifications         Notification[]
+  badges                UserBadge[]
+  loginHistory          LoginHistory[]
+  examAttempts          ExamAttempt[]
+}
+
+// ==================== ORGANIZATION ====================
+
+model Department {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  headId      String?   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  head        User?    @relation("DepartmentHead", fields: [headId], references: [id])
+  users       User[]   @relation("DepartmentUsers")
+  courses     Course[]
+}
+
+model ProductCategory {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  icon        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  modules     Module[]
+}
+
+// ==================== LEARNING CONTENT ====================
+
+enum ModuleType {
+  ORIENTATION
+  PRODUCT_ACADEMY
+  TECHNICAL
+  SALES_ACADEMY
+  HOSPITALITY
+  CUSTOMER_DISCOVERY
+  NEGOTIATION
+  COMPETITIVE_INTELLIGENCE
+  FIELD_SALES
+  INBOUND_SALES
+  CERTIFICATION_PREP
+  MOCK_SIMULATOR
+  AI_COACH
+  CROSS_SELLING
+}
+
+model LearningPath {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  targetRole  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  courses     Course[]
+}
+
+model Course {
+  id             String       @id @default(cuid())
+  title          String
+  description    String?
+  moduleType     ModuleType   @default(ORIENTATION)
+  departmentId   String?
+  learningPathId String?
+  duration       Int?         // in minutes
+  thumbnail      String?
+  order          Int          @default(0)
+  isRequired     Boolean      @default(true)
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  
+  department     Department?  @relation(fields: [departmentId], references: [id])
+  learningPath   LearningPath? @relation(fields: [learningPathId], references: [id])
+  modules        Module[]
+  enrollments    Enrollment[]
+}
+
+model Module {
+  id              String          @id @default(cuid())
+  title           String
+  description     String?
+  content         String?         // Rich text / HTML content
+  contentType     String?         // video, pdf, text, interactive
+  contentUrl      String?         // URL to resource (video, etc.)
+  pdfUrl          String?         // URL to uploaded PDF file
+  order           Int             @default(0)
+  duration        Int?            // in minutes
+  courseId        String
+  productCategoryId String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  
+  course          Course          @relation(fields: [courseId], references: [id])
+  productCategory ProductCategory? @relation(fields: [productCategoryId], references: [id])
+  completions     ModuleCompletion[]
+}
+
+model ModuleCompletion {
+  id         String   @id @default(cuid())
+  userId     String
+  moduleId   String
+  completed  Boolean  @default(false)
+  score      Float?   
+  timeSpent  Int?     // in seconds
+  completedAt DateTime?
+  createdAt  DateTime @default(now())
+  
+  user       User     @relation(fields: [userId], references: [id])
+  module     Module   @relation(fields: [moduleId], references: [id])
+  
+  @@unique([userId, moduleId])
+}
+
+model Enrollment {
+  id          String    @id @default(cuid())
+  userId      String
+  courseId    String
+  progress    Float     @default(0)
+  status      String    @default("enrolled") // enrolled, in_progress, completed
+  enrolledAt  DateTime  @default(now())
+  completedAt DateTime?
+  
+  user        User      @relation(fields: [userId], references: [id])
+  course      Course    @relation(fields: [courseId], references: [id])
+  
+  @@unique([userId, courseId])
+}
+
+// ==================== ASSESSMENTS & CERTIFICATIONS ====================
+
+enum QuestionType {
+  MCQ
+  SHORT_ANSWER
+}
+
+enum ExamType {
+  INBOUND_SALES
+  FIELD_SALES
+}
+
+enum ExamStage {
+  PRE
+  MID
+  HARD
+  EXTRA_HARD
+}
+
+model QuestionBank {
+  id                String       @id @default(cuid())
+  question          String
+  questionType      QuestionType @default(MCQ)
+  optionA           String?
+  optionB           String?
+  optionC           String?
+  optionD           String?
+  correctAnswer     String       // A, B, C, D for MCQ; text answer for SHORT_ANSWER
+  acceptableAnswers String?      // JSON array of acceptable short answers
+  explanation       String?
+  category          String?
+  difficulty        String?      @default("medium")
+  moduleType        ModuleType?
+  createdAt         DateTime     @default(now())
+  
+  assessmentQuestions AssessmentQuestion[]
+  examQuestions       ExamQuestion[]
+}
+
+model Assessment {
+  id              String   @id @default(cuid())
+  title           String
+  description     String?
+  moduleType      ModuleType?
+  duration        Int?     // in minutes
+  passingScore    Float    @default(70)
+  totalQuestions  Int      @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  questions       AssessmentQuestion[]
+  attempts        AssessmentAttempt[]
+}
+
+model AssessmentQuestion {
+  id              String        @id @default(cuid())
+  assessmentId    String
+  questionBankId  String
+  order           Int           @default(0)
+  marks           Float         @default(1)
+  
+  assessment      Assessment    @relation(fields: [assessmentId], references: [id])
+  question        QuestionBank  @relation(fields: [questionBankId], references: [id])
+}
+
+model AssessmentAttempt {
+  id              String     @id @default(cuid())
+  userId          String
+  assessmentId    String
+  score           Float      @default(0)
+  totalMarks      Float
+  correctAnswers  Int        @default(0)
+  wrongAnswers    Int        @default(0)
+  percentage      Float      @default(0)
+  passed          Boolean    @default(false)
+  answers         String?    // JSON string of answers
+  startedAt       DateTime   @default(now())
+  completedAt     DateTime?
+  
+  user            User       @relation(fields: [userId], references: [id])
+  assessment      Assessment @relation(fields: [assessmentId], references: [id])
+  scorecard       Scorecard?
+}
+
+model Certification {
+  id              String    @id @default(cuid())
+  name            String
+  description     String?
+  moduleType      ModuleType?
+  requiredScore   Float     @default(70)
+  validityPeriod  Int?      // in months
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  attempts        CertificationAttempt[]
+}
+
+model CertificationAttempt {
+  id              String        @id @default(cuid())
+  userId          String
+  certificationId String
+  status          String        @default("pending") // pending, approved, rejected, needs_training, needs_review, needs_technical, needs_sales
+  score           Float         @default(0)
+  issuedAt        DateTime?
+  expiresAt       DateTime?
+  attemptedAt     DateTime      @default(now())
+  aiReadinessReport String?     // AI-generated report
+  
+  user            User          @relation(fields: [userId], references: [id])
+  certification   Certification @relation(fields: [certificationId], references: [id])
+  approvalLog     ApprovalLog[]
+}
+
+// ==================== SCORECARD ====================
+
+model Scorecard {
+  id                   String            @id @default(cuid())
+  userId               String
+  assessmentAttemptId  String?  @unique
+  examAttemptId        String?  @unique
+  examName             String
+  date                 DateTime          @default(now())
+  totalQuestions       Int
+  correctAnswers       Int
+  wrongAnswers         Int
+  scorePercentage      Float
+  rank                 Int?
+  departmentRank       Int?
+  companyRank          Int?
+  passStatus           Boolean
+  certificationStatus  String?           @default("pending")
+  improvementSuggestions String?
+  managerFeedback      String?
+  aiFeedback           String?
+  
+  user                 User              @relation(fields: [userId], references: [id])
+  assessmentAttempt    AssessmentAttempt? @relation(fields: [assessmentAttemptId], references: [id], onDelete: SetNull)
+  examAttempt          ExamAttempt?      @relation(fields: [examAttemptId], references: [id], onDelete: SetNull)
+}
+
+// ==================== EXAM CENTER ====================
+
+model Exam {
+  id              String     @id @default(cuid())
+  examType        ExamType
+  stage           ExamStage
+  title           String
+  description     String?
+  duration        Int        @default(60)  // in minutes
+  passingScore    Float      @default(70)
+  timeGateDays    Int        @default(7)   // days before this stage unlocks
+  totalQuestions  Int        @default(0)
+  isActive        Boolean    @default(true)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  
+  questions       ExamQuestion[]
+  attempts        ExamAttempt[]
+  
+  @@unique([examType, stage])
+}
+
+model ExamQuestion {
+  id              String       @id @default(cuid())
+  examId          String
+  questionBankId  String
+  order           Int          @default(0)
+  marks           Float        @default(1)
+  
+  exam            Exam         @relation(fields: [examId], references: [id])
+  question        QuestionBank @relation(fields: [questionBankId], references: [id])
+}
+
+model ExamAttempt {
+  id              String     @id @default(cuid())
+  userId          String
+  examId          String
+  examType        ExamType
+  stage           ExamStage
+  score           Float      @default(0)
+  totalMarks      Float
+  correctAnswers  Int        @default(0)
+  wrongAnswers    Int        @default(0)
+  percentage      Float      @default(0)
+  passed          Boolean    @default(false)
+  adminApproved   Boolean    @default(false)  // admin decides continuation
+  answers         String?    // JSON string of answers
+  shortAnswerGrades String?  // JSON of short answer grading details
+  startedAt       DateTime   @default(now())
+  completedAt     DateTime?
+  
+  user            User       @relation(fields: [userId], references: [id])
+  exam            Exam       @relation(fields: [examId], references: [id])
+  scorecard       Scorecard?
+}
+
+// ==================== MOCK SIMULATION ====================
+
+model MockSimulation {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  type        String?  // field_sales, inbound_sales, negotiation, customer_discovery
+  scenario    String?  // JSON scenario data
+  scoringCriteria String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  
+  attempts    MockSimulationAttempt[]
+}
+
+model MockSimulationAttempt {
+  id                String          @id @default(cuid())
+  userId            String
+  mockSimulationId  String
+  score             Float           @default(0)
+  communicationScore Float          @default(0)
+  technicalScore    Float           @default(0)
+  productKnowledgeScore Float       @default(0)
+  salesScore        Float           @default(0)
+  feedback          String?
+  aiFeedback        String?
+  completedAt       DateTime        @default(now())
+  
+  user              User            @relation(fields: [userId], references: [id])
+  simulation        MockSimulation  @relation(fields: [mockSimulationId], references: [id])
+}
+
+// ==================== APPROVALS ====================
+
+model ApprovalLog {
+  id                    String               @id @default(cuid())
+  certificationAttemptId String?
+  approverId            String
+  employeeId            String
+  action                String               // approved, rejected, retraining, additional_mock, additional_product
+  comment               String?
+  createdAt             DateTime             @default(now())
+  
+  approver              User                 @relation("Approver", fields: [approverId], references: [id])
+  employee              User                 @relation("ApprovedEmployee", fields: [employeeId], references: [id])
+  certificationAttempt  CertificationAttempt? @relation(fields: [certificationAttemptId], references: [id])
+}
+
+model ImprovementPlan {
+  id              String   @id @default(cuid())
+  employeeId      String
+  assignedBy      String
+  title           String
+  description     String?
+  type            String?  // retraining, mock_practice, product_learning
+  status          String   @default("assigned") // assigned, in_progress, completed
+  dueDate         DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  employee        User     @relation("PlanEmployee", fields: [employeeId], references: [id])
+  assigner        User     @relation("PlanAssigner", fields: [assignedBy], references: [id])
+}
+
+// ==================== ACTIVITY & AUDIT ====================
+
+model Activity {
+  id          String   @id @default(cuid())
+  userId      String
+  type        String   // login, course_start, course_complete, assessment_taken, certification_earned, etc.
+  description String
+  metadata    String?  // JSON
+  createdAt   DateTime @default(now())
+  
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String
+  action      String
+  targetType  String?  // user, assessment, certification, course, document
+  targetId    String?
+  details     String?
+  createdAt   DateTime @default(now())
+  
+  user        User     @relation("AuditUser", fields: [userId], references: [id])
+}
+
+model LoginHistory {
+  id          String   @id @default(cuid())
+  userId      String
+  ipAddress   String?
+  userAgent   String?
+  loginAt     DateTime @default(now())
+  
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+// ==================== NOTIFICATIONS & GAMIFICATION ====================
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String?  // info, warning, success, approval
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Badge {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  icon        String?
+  criteria    String?
+  createdAt   DateTime @default(now())
+  
+  userBadges  UserBadge[]
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  userId    String
+  badgeId   String
+  earnedAt  DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id])
+  badge     Badge    @relation(fields: [badgeId], references: [id])
+  
+  @@unique([userId, badgeId])
+}
+
+// ==================== CUSTOMIZATION ====================
+
+model PlatformSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   // JSON string for complex settings
+  category  String?  // theme, branding, navigation, certification, scoring, leaderboard, gamification
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ==================== DOCUMENTS ====================
+
+model Document {
+  id          String   @id @default(cuid())
+  title       String
+  type        String   // pdf, sop, video, catalog, module
+  fileUrl     String
+  fileName    String
+  fileSize    Int?
+  category    String?
+  uploadedBy  String?
+  createdAt   DateTime @default(now())
+}
