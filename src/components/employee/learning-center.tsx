@@ -376,7 +376,7 @@ const VIDEO_LESSONS: VideoLesson[] = [
       'Keep override keys in a secure location accessible only to management',
       'Test the safe with at least 3 lock/unlock cycles after installation',
     ],
-    youtubeId: '',
+    youtubeId: 'St815eDtI5c',
   },
   {
     id: 'v2',
@@ -400,7 +400,7 @@ const VIDEO_LESSONS: VideoLesson[] = [
       '300-record audit trail stored in each lock',
       'Anti-panic exit function — inside handle always allows free egress',
     ],
-    youtubeId: '',
+    youtubeId: 'ltARwWOPn6Q',
   },
   {
     id: 'v3',
@@ -424,7 +424,7 @@ const VIDEO_LESSONS: VideoLesson[] = [
       'Monthly cleaning, quarterly seal checks, 10cm wall clearance',
       'All models use eco-friendly R600a refrigerant, Class A+ efficiency',
     ],
-    youtubeId: '',
+    youtubeId: 'Z-eOuzqM0ns',
   },
   {
     id: 'v4',
@@ -446,7 +446,28 @@ const VIDEO_LESSONS: VideoLesson[] = [
       'BPA-free interior surfaces, food-grade stainless steel',
       'Descale every 2-3 months with vinegar solution',
     ],
-    youtubeId: '',
+    youtubeId: '6OwThbSHUzE',
+  },
+  {
+    id: 'v4b',
+    title: 'Kettle Tray & Tea Coffee Maker Set',
+    duration: '8:00',
+    category: 'Kettle',
+    image: 'https://sfile.chatglm.cn/images-ppt/2eece29f9d02.jpg',
+    description: 'Complete guide to LAXREE tea and coffee maker tray sets including tray setup, pairing with kettles, and room presentation standards.',
+    transcript: [
+      'Welcome to the LAXREE Kettle Tray and Tea Coffee Maker Set training. The tray set is a critical companion product to the electric kettle, completing the in-room beverage experience for hotel guests.',
+      'PRODUCT RANGE: LAXREE offers standard and premium tray sets. The Standard Tray Set includes: stainless steel tray, 2 ceramic cups with saucers, 2 spoons, sugar bowl, and creamer. The Premium Tray Set adds: a glass carafe, tea infuser, and branded coasters. Both sets are designed to fit perfectly alongside LAXREE kettles on the room vanity or desk.',
+      'TRAY PRESENTATION: Proper tray setup enhances the guest experience. Place the kettle on the left side of the tray, cups and saucers on the right. The tea/coffee sachets should be arranged in a small basket or holder beside the tray. Ensure the tray is placed on a flat, stable surface near a power outlet. The tray should be cleaned and polished daily during housekeeping.',
+      'CROSS-SELLING: The kettle tray set is a natural add-on when selling kettles. Bundle the kettle + tray set for a complete room beverage solution. Many hotels also add the LAXREE water bottle set for a comprehensive hydration package.',
+    ],
+    keyPoints: [
+      'Standard and Premium tray sets available',
+      'Designed to pair perfectly with LAXREE kettles',
+      'Proper presentation enhances guest experience',
+      'Natural cross-sell with kettles and water bottle sets',
+    ],
+    youtubeId: '4aBfypkw-oY',
   },
   {
     id: 'v5',
@@ -467,7 +488,28 @@ const VIDEO_LESSONS: VideoLesson[] = [
       'GFCI protection required for bathroom installations',
       'Touch-sensitive controls with adjustable color temperature',
     ],
-    youtubeId: '',
+    youtubeId: '97RFXSbjqyk',
+  },
+  {
+    id: 'v5b',
+    title: 'Washroom Amenities Complete Guide',
+    duration: '12:00',
+    category: 'Washroom',
+    image: 'https://sfile.chatglm.cn/images-ppt/683a45ce407a.jpg',
+    description: 'Complete overview of LAXREE washroom amenities including dispensers, towel racks, bathroom accessories, and presentation standards.',
+    transcript: [
+      'Welcome to the LAXREE Washroom Amenities training. A well-appointed bathroom is one of the most important factors in guest satisfaction, and LAXREE provides a complete range of washroom products to create a premium experience.',
+      'PRODUCT RANGE: LAXREE washroom amenities include: soap dispensers (2 and 3 chamber), towel racks and rings, toilet brush holders, bathroom shelves, toothbrush holders, shower caddies, and bathroom weigh scales. All products are available in matching finishes — chrome, brushed nickel, and matte black.',
+      'PRESENTATION STANDARDS: The bathroom should follow a consistent layout: dispenser on the shower wall at shoulder height, towel rack within arm\'s reach of the shower, scale stored under the vanity, and toiletry tray on the countertop. Premium hotels should include a folded towel art display on the bed or bathroom counter.',
+      'QUALITY BENCHMARKS: All LAXREE bathroom hardware undergoes salt spray testing for 96+ hours to ensure corrosion resistance in humid environments. Chrome finishes must maintain their appearance after 10,000 cleaning cycles with standard hotel-grade disinfectants.',
+    ],
+    keyPoints: [
+      'Complete washroom product range with matching finishes',
+      'Consistent layout standards for guest comfort',
+      '96+ hour salt spray corrosion testing on all hardware',
+      'Available in chrome, brushed nickel, and matte black finishes',
+    ],
+    youtubeId: 'DCbGeH-rF7U',
   },
   {
     id: 'v6',
@@ -488,7 +530,7 @@ const VIDEO_LESSONS: VideoLesson[] = [
       'PMS integration for personalized guest welcome messages',
       'ROI in 18-24 months through printing savings and F&B promotion',
     ],
-    youtubeId: '',
+    youtubeId: 'qwdpnZ-5rRE',
   },
   {
     id: 'v7',
@@ -509,7 +551,7 @@ const VIDEO_LESSONS: VideoLesson[] = [
       'Tamper-proof locking and easy-fill design',
       'Save ₹8-12 lakhs/year for a 150-room hotel vs individual bottles',
     ],
-    youtubeId: '',
+    youtubeId: '4PYairCeKE4',
   },
   {
     id: 'v8',
@@ -530,7 +572,7 @@ const VIDEO_LESSONS: VideoLesson[] = [
       'Weekly disinfection and monthly caster maintenance',
       'Park on same side as room being serviced',
     ],
-    youtubeId: '',
+    youtubeId: 'yVTyegoHfHY',
   },
   {
     id: 'v9',
@@ -551,7 +593,7 @@ const VIDEO_LESSONS: VideoLesson[] = [
       'Shoe shine machines popular in business hotels',
       'All accessories available in matching finishes',
     ],
-    youtubeId: '',
+    youtubeId: '16vDMEt2BY8',
   },
   {
     id: 'v10',
@@ -571,7 +613,7 @@ const VIDEO_LESSONS: VideoLesson[] = [
       'Matching shelf dividers, tie racks, and valet hooks',
       '4-6 hangers per room standard for business hotels',
     ],
-    youtubeId: '',
+    youtubeId: 'WDh4zOJjarE',
   },
   {
     id: 'v11',
@@ -591,7 +633,7 @@ const VIDEO_LESSONS: VideoLesson[] = [
       'Lobby bins: 40L-80L with dual-compartment recycling',
       'Custom branding and color options available',
     ],
-    youtubeId: '',
+    youtubeId: 'dbf6BYPRxYE',
   },
   {
     id: 'v12',
@@ -611,7 +653,7 @@ const VIDEO_LESSONS: VideoLesson[] = [
       'Pocket spring with foam encasement for edge support',
       'Custom firmness available for 50+ unit orders',
     ],
-    youtubeId: '',
+    youtubeId: 'G7a4zQITXTU',
   },
   {
     id: 'v13',
@@ -632,7 +674,7 @@ const VIDEO_LESSONS: VideoLesson[] = [
       'Position LAXREE as single-source vendor for maximum efficiency',
       'Bundle discounts: 3 categories=5%, 5+=8%, full room=12%',
     ],
-    youtubeId: '',
+    youtubeId: 'Ppk4OoV7hnU',
   },
 ]
 
@@ -913,6 +955,7 @@ const VIDEO_CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
   'Minibar': { bg: 'bg-teal-100', text: 'text-teal-700' },
   'Kettle': { bg: 'bg-orange-100', text: 'text-orange-700' },
   'Mirror': { bg: 'bg-pink-100', text: 'text-pink-700' },
+  'Washroom': { bg: 'bg-cyan-100', text: 'text-cyan-700' },
   'Signage': { bg: 'bg-cyan-100', text: 'text-cyan-700' },
   'Housekeeping': { bg: 'bg-emerald-100', text: 'text-emerald-700' },
   'Dispenser': { bg: 'bg-amber-100', text: 'text-amber-700' },
@@ -1614,6 +1657,8 @@ export function LearningCenter() {
   const [pdfViewerOpen, setPdfViewerOpen] = useState(false)
   const [pdfViewerUrl, setPdfViewerUrl] = useState('')
   const [pdfViewerTitle, setPdfViewerTitle] = useState('')
+  const [selectedDoc, setSelectedDoc] = useState<DocumentResource | null>(null)
+  const [docViewerOpen, setDocViewerOpen] = useState(false)
   const user = useAuthStore((s) => s.user)
 
   // Fetch courses
@@ -1734,11 +1779,19 @@ export function LearningCenter() {
 
   // Download PDF for module
   const downloadPDF = useCallback(async (mod: ModuleData) => {
-    // If there's an uploaded PDF, open it in the viewer dialog
+    // If there's an uploaded PDF, check if it exists first
     if (mod.pdfUrl) {
       const properUrl = getProperUrl(mod.pdfUrl)
-      openPdfViewer(properUrl, mod.title)
-      return
+      // Try to fetch the PDF to check if it exists
+      try {
+        const checkRes = await fetch(properUrl, { method: 'HEAD' })
+        if (checkRes.ok) {
+          openPdfViewer(properUrl, mod.title)
+          return
+        }
+      } catch {
+        // File doesn't exist, fall through to generate HTML content
+      }
     }
     
     setPdfGenerating(true)
@@ -2275,7 +2328,35 @@ export function LearningCenter() {
                     </TabsContent>
 
                     <TabsContent value="catalogues" className="mt-4">
-                      {catalogs.length === 0 ? (
+                      {catalogs.length === 0 && DOCUMENT_RESOURCES.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {DOCUMENT_RESOURCES.map((doc) => {
+                            const IconComp = doc.icon
+                            return (
+                              <Card key={doc.id} className="hover:shadow-md transition-shadow cursor-pointer group" onClick={() => { setSelectedDoc(doc); setDocViewerOpen(true) }}>
+                                <CardContent className="p-4">
+                                  <div className="flex items-center gap-3 mb-3">
+                                    <div className={`w-12 h-12 ${doc.bgColor} rounded-lg flex items-center justify-center shrink-0`}>
+                                      <IconComp className={`w-6 h-6 ${doc.color}`} />
+                                    </div>
+                                    <div>
+                                      <p className="font-medium text-gray-700 text-sm group-hover:text-teal-700 transition-colors">{doc.title}</p>
+                                      <div className="flex items-center gap-2 mt-1">
+                                        <Badge variant="outline" className="text-[10px] px-1.5 py-0">{doc.category}</Badge>
+                                        <span className="text-[10px] text-gray-400">{doc.pages} pages</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <p className="text-xs text-gray-500 line-clamp-2 mb-3">{doc.description}</p>
+                                  <Button size="sm" variant="outline" className="w-full h-8 text-xs border-teal-200 text-teal-700 hover:bg-teal-50">
+                                    <BookOpen className="w-3 h-3 mr-1" /> View Document
+                                  </Button>
+                                </CardContent>
+                              </Card>
+                            )
+                          })}
+                        </div>
+                      ) : catalogs.length === 0 ? (
                         <Card className="border-dashed">
                           <CardContent className="py-12 text-center">
                             <FolderOpen className="w-12 h-12 text-gray-300 mx-auto mb-3" />
@@ -2341,6 +2422,58 @@ export function LearningCenter() {
           onComplete={handleQuizComplete}
         />
       )}
+
+      {/* ==================== DOCUMENT VIEWER DIALOG ==================== */}
+      <Dialog open={docViewerOpen} onOpenChange={setDocViewerOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] p-0 overflow-hidden">
+          <DialogHeader className="p-4 pb-2 border-b">
+            <div className="flex items-center justify-between">
+              <div>
+                <DialogTitle className="flex items-center gap-2 text-base">
+                  <FileText className="w-4 h-4 text-teal-600" />
+                  {selectedDoc?.title}
+                </DialogTitle>
+                <DialogDescription className="text-sm">
+                  {selectedDoc?.category} • {selectedDoc?.pages} pages
+                </DialogDescription>
+              </div>
+              {selectedDoc && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-teal-200 text-teal-700 hover:bg-teal-50"
+                  onClick={() => {
+                    if (!selectedDoc) return
+                    const htmlContent = `<!DOCTYPE html><html><head><style>body{font-family:'Segoe UI',Tahoma,sans-serif;padding:20px;max-width:900px;margin:0 auto;color:#333;line-height:1.6;font-size:14px}h2{color:#059669;border-bottom:2px solid #059669;padding-bottom:8px;margin-top:24px}h3{color:#0d9488;margin-top:20px}h4{color:#047857;margin-top:16px}table{width:100%;border-collapse:collapse;margin:12px 0}th,td{padding:8px;border:1px solid #e5e7eb;text-align:left}th{background:#f0fdf4}ul,ol{padding-left:24px}li{margin-bottom:6px}p{margin-bottom:8px}strong{color:#047857}</style></head><body>${selectedDoc.content}</body></html>`
+                    const blob = new Blob([htmlContent], { type: 'text/html' })
+                    const url = URL.createObjectURL(blob)
+                    const a = document.createElement('a')
+                    a.href = url
+                    a.download = `${selectedDoc.title}.html`
+                    a.click()
+                    URL.revokeObjectURL(url)
+                  }}
+                >
+                  <Download className="w-3 h-3 mr-1" />
+                  Download
+                </Button>
+              )}
+            </div>
+          </DialogHeader>
+          <div className="p-4 overflow-y-auto max-h-[calc(90vh-100px)]">
+            {selectedDoc && (
+              <div className="bg-white rounded-lg border shadow-sm p-6" style={{ minHeight: '400px' }}>
+                <iframe
+                  srcDoc={`<!DOCTYPE html><html><head><style>body{font-family:'Segoe UI',Tahoma,sans-serif;padding:20px;max-width:900px;margin:0 auto;color:#333;line-height:1.6;font-size:14px}h2{color:#059669;border-bottom:2px solid #059669;padding-bottom:8px;margin-top:24px}h3{color:#0d9488;margin-top:20px}h4{color:#047857;margin-top:16px}table{width:100%;border-collapse:collapse;margin:12px 0}th,td{padding:8px;border:1px solid #e5e7eb;text-align:left}th{background:#f0fdf4}ul,ol{padding-left:24px}li{margin-bottom:6px}p{margin-bottom:8px}strong{color:#047857}</style></head><body>${selectedDoc.content}</body></html>`}
+                  className="w-full border-0"
+                  style={{ minHeight: '500px', height: '70vh' }}
+                  title={selectedDoc.title}
+                />
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* ==================== PDF VIEWER DIALOG ==================== */}
       <Dialog open={pdfViewerOpen} onOpenChange={setPdfViewerOpen}>
