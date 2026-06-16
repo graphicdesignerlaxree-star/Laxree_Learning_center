@@ -489,7 +489,7 @@ function getProductImage(title: string): { url: string; label: string } {
 
 // ==================== INTERACTIVE LESSON PLAYER COMPONENT ====================
 
-function InteractiveLessonPlayer({ title, content, moduleDescription }: { title: string; content: string; moduleDescription?: string }) {
+function InteractiveLessonPlayer({ title, content, moduleDescription, hideHero = false }: { title: string; content: string; moduleDescription?: string; hideHero?: boolean }) {
   const [readSections, setReadSections] = useState<Set<string>>(() => new Set<string>())
   const contentRef = useRef<HTMLDivElement>(null)
   const productImage = getProductImage(title)
@@ -546,7 +546,8 @@ function InteractiveLessonPlayer({ title, content, moduleDescription }: { title:
       animate={{ opacity: 1, y: 0 }}
       className="space-y-0"
     >
-      {/* ===== Hero Product Image with Overlay ===== */}
+      {/* ===== Hero Product Image with Overlay (hidden when hideHero is true) ===== */}
+      {!hideHero && (
       <div className="relative rounded-2xl overflow-hidden shadow-2xl group">
         {/* Product Image */}
         <div className="w-full aspect-[16/9] sm:aspect-video relative bg-gradient-to-br from-gray-900 to-gray-800">
@@ -599,8 +600,10 @@ function InteractiveLessonPlayer({ title, content, moduleDescription }: { title:
           </div>
         </div>
       </div>
+      )}
 
       {/* ===== Reading Progress Bar ===== */}
+      {!hideHero && (
       <div className="bg-white rounded-b-2xl border border-t-0 border-gray-200 px-4 py-3 flex items-center gap-3 shadow-sm">
         <div className="flex items-center gap-2 text-emerald-600">
           <Zap className="w-4 h-4" />
@@ -616,6 +619,7 @@ function InteractiveLessonPlayer({ title, content, moduleDescription }: { title:
         </div>
         <span className="text-xs font-semibold text-gray-500">{readSections.size}/{totalSections} sections</span>
       </div>
+      )}
 
       {/* ===== Key Takeaways Card ===== */}
       {keyTakeaways.length > 0 && (
@@ -1030,7 +1034,7 @@ export function LessonViewer({
                 transition={{ delay: 0.05 }}
                 className="space-y-6"
               >
-                {/* YouTube Video Embed */}
+                {/* YouTube Video Embed - clean, no duplicate title banner */}
                 {module.contentUrl && (
                   <div className="rounded-2xl overflow-hidden shadow-2xl border border-gray-200">
                     <div className="relative bg-black">
@@ -1047,23 +1051,15 @@ export function LessonViewer({
                         />
                       </div>
                     </div>
-                    <div className="bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <Video className="w-4 h-4 text-white" />
-                        <span className="text-white font-semibold text-sm">{module.title}</span>
-                      </div>
-                      {module.description && (
-                        <p className="text-white/80 text-xs mt-1">{module.description}</p>
-                      )}
-                    </div>
                   </div>
                 )}
 
-                {/* Interactive Lesson Content below video */}
+                {/* Lesson Content below video (no hero image, no duplicate title) */}
                 <InteractiveLessonPlayer
                   title={module.title}
                   content={module.content || ''}
                   moduleDescription={module.description}
+                  hideHero={true}
                 />
               </motion.div>
             )}
