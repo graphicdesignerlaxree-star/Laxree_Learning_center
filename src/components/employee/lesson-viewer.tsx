@@ -1034,8 +1034,8 @@ export function LessonViewer({
                 transition={{ delay: 0.05 }}
                 className="space-y-6"
               >
-                {/* YouTube Video Embed - clean, no duplicate title banner */}
-                {module.contentUrl && (
+                {/* YouTube Video Embed ONLY - no extra text, no content below */}
+                {module.contentUrl ? (
                   <div className="rounded-2xl overflow-hidden shadow-2xl border border-gray-200">
                     <div className="relative bg-black">
                       <div className="aspect-video">
@@ -1052,15 +1052,11 @@ export function LessonViewer({
                       </div>
                     </div>
                   </div>
+                ) : (
+                  <div className="rounded-2xl overflow-hidden shadow-2xl border border-gray-200 bg-gray-900 aspect-video flex items-center justify-center">
+                    <p className="text-white/70 text-sm">Video not available</p>
+                  </div>
                 )}
-
-                {/* Lesson Content below video (no hero image, no duplicate title) */}
-                <InteractiveLessonPlayer
-                  title={module.title}
-                  content={module.content || ''}
-                  moduleDescription={module.description}
-                  hideHero={true}
-                />
               </motion.div>
             )}
 
