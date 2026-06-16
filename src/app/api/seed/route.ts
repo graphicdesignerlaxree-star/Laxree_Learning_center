@@ -204,6 +204,7 @@ export async function seedDatabase() {
 <p>When selling mini bars, recommend complementary products: <strong>Electric Kettles</strong> (LRWT-145 for budget, LRWT-156 for premium) for the in-room beverage station, <strong>Safe Boxes</strong> (LRSB-211 for standard, LRSB-209 Orbita for premium) as a natural room-security bundle, and <strong>TCM Trays</strong> to complete the hospitality refreshment corner.</p>
 </div>`,
       contentType: 'video',
+      contentUrl: 'https://www.youtube.com/embed/Z-eOuzqM0ns',
       order: 2,
       duration: 20,
       courseId: productAcademyCourse.id,
@@ -275,6 +276,7 @@ export async function seedDatabase() {
 <p>Every mini bar order is an opportunity to bundle <strong>TCM Trays</strong> (LRWT-158 for budget, LRWT-163 for premium) to complete the in-room refreshment station. Pair with <strong>Electric Kettles</strong> for the full beverage setup, and recommend <strong>Safe Boxes</strong> as a room-security package deal.</p>
 </div>`,
       contentType: 'video',
+      contentUrl: 'https://www.youtube.com/embed/Z-eOuzqM0ns',
       order: 3,
       duration: 20,
       courseId: productAcademyCourse.id,
@@ -344,6 +346,7 @@ export async function seedDatabase() {
 </ul>
 </div>`,
       contentType: 'video',
+      contentUrl: 'https://www.youtube.com/embed/Z-eOuzqM0ns',
       order: 4,
       duration: 20,
       courseId: productAcademyCourse.id,
@@ -431,6 +434,7 @@ export async function seedDatabase() {
 <p>Safe boxes pair naturally with <strong>RFID Door Locks</strong> for a complete room security package. For premium rooms, combine the Laptop or Orbita safe with <strong>Mini Bars</strong> (lock-option models) for VIP-level inventory protection. Also recommend <strong>Hair Dryers</strong> with wall-mount and shaver socket to complete the premium room setup.</p>
 </div>`,
       contentType: 'video',
+      contentUrl: 'https://www.youtube.com/embed/St815eDtI5c',
       order: 5,
       duration: 20,
       courseId: productAcademyCourse.id,
@@ -515,6 +519,7 @@ export async function seedDatabase() {
 </ul>
 </div>`,
       contentType: 'video',
+      contentUrl: 'https://www.youtube.com/embed/St815eDtI5c',
       order: 6,
       duration: 15,
       courseId: productAcademyCourse.id,
@@ -594,6 +599,7 @@ export async function seedDatabase() {
 <p>RFID locks are the anchor product for a complete room security package. Always bundle with <strong>Safe Boxes</strong> (Orbita series for 5-star, Medium for 3-star) for in-room valuables security. Recommend <strong>Digital Signages</strong> for lobby wayfinding that uses the same RFID infrastructure. For new builds, propose the full LAXREE room package including <strong>Mini Bars</strong>, <strong>Hair Dryers</strong>, and <strong>Kettles</strong> for maximum single-vendor convenience.</p>
 </div>`,
       contentType: 'video',
+      contentUrl: 'https://www.youtube.com/embed/ltARwWOPn6Q',
       order: 7,
       duration: 20,
       courseId: productAcademyCourse.id,
@@ -674,6 +680,7 @@ export async function seedDatabase() {
 <p>Every kettle order is an opportunity to sell the complete in-room beverage station: pair with <strong>TCM Trays</strong> and <strong>Mini Bars</strong> for the full refreshment setup. For new builds, recommend kettles alongside <strong>Hair Dryers</strong> and <strong>Magnifying Mirrors</strong> for a complete bathroom vanity package.</p>
 </div>`,
       contentType: 'video',
+      contentUrl: 'https://www.youtube.com/embed/4aBfypkw-oY',
       order: 8,
       duration: 15,
       courseId: productAcademyCourse.id,
@@ -748,6 +755,7 @@ export async function seedDatabase() {
 <p>Bathroom products naturally bundle together: pair <strong>Hair Dryers</strong> with <strong>Magnifying Mirrors</strong> for the vanity area, add <strong>Dispensers</strong> for the shower, and complete the room package with <strong>Kettles</strong> and <strong>Mini Bars</strong>. For new builds, propose the full LAXREE bathroom and in-room package for single-vendor convenience.</p>
 </div>`,
       contentType: 'video',
+      contentUrl: 'https://www.youtube.com/embed/97RFXSbjqyk',
       order: 9,
       duration: 15,
       courseId: productAcademyCourse.id,
@@ -823,6 +831,7 @@ export async function seedDatabase() {
 <p>When selling mattresses, recommend <strong>Rollaway Beds</strong> for flexible capacity. When selling housekeeping trolleys, suggest <strong>Soap Dispensers</strong> for the bathroom amenity program. Digital signages pair well with <strong>RFID Locks</strong> for a complete modernization pitch. For new hotel projects, propose the full LAXREE product suite for unified procurement and service.</p>
 </div>`,
       contentType: 'video',
+      contentUrl: 'https://www.youtube.com/embed/yVTyegoHfHY',
       order: 10,
       duration: 20,
       courseId: productAcademyCourse.id,

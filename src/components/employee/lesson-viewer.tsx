@@ -1028,7 +1028,38 @@ export function LessonViewer({
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.05 }}
+                className="space-y-6"
               >
+                {/* YouTube Video Embed */}
+                {module.contentUrl && (
+                  <div className="rounded-2xl overflow-hidden shadow-2xl border border-gray-200">
+                    <div className="relative bg-black">
+                      <div className="aspect-video">
+                        <iframe
+                          width="100%"
+                          height="100%"
+                          src={module.contentUrl}
+                          title={module.title}
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          allowFullScreen
+                          className="w-full h-full"
+                        />
+                      </div>
+                    </div>
+                    <div className="bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <Video className="w-4 h-4 text-white" />
+                        <span className="text-white font-semibold text-sm">{module.title}</span>
+                      </div>
+                      {module.description && (
+                        <p className="text-white/80 text-xs mt-1">{module.description}</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Interactive Lesson Content below video */}
                 <InteractiveLessonPlayer
                   title={module.title}
                   content={module.content || ''}
