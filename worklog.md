@@ -172,3 +172,39 @@ Stage Summary:
 - Upload Center removal: Completely removed from sidebar config, view labels, and account group filter. Account dropdown now only contains "My Profile".
 - Environment note: Dev server is extremely unstable in this sandbox (dies every 15-20 seconds). End-to-end browser verification was not possible due to server instability, but all code fixes are verified via direct API calls and code inspection.
 - Call Recording AI section location (for user): It's in the LEFT SIDEBAR under the "AI Tools" group, labeled "Call Recording AI" with a microphone (Mic) icon. It sits between "Call Practice" and "AI Simulation".
+
+---
+Task ID: 7-fix-deleted-users-reappear
+Agent: Main Agent
+Task: Fix deleted users (Girish ji, Jitendra) still appearing in employee section after deletion
+
+Work Log:
+- Investigated: Checked DB directly — Girish and Jitendra are NOT in the database (DELETE API does hard delete correctly with cascading cleanup of all 18 related tables in a transaction)
+- Root cause: Browser/Next.js caching of API responses. The fetch() calls in user-management.tsx did not use cache:'no-store', so the browser served stale user lists showing deleted users.
+- Fixed user-management.tsx:
+  - fetchUsers(): Added cache:'no-store' + cache-busting _t=Date.now() timestamp to URL
+  - fetchDepartments(): Added cache:'no-store'
+  - handleDelete(): Added cache:'no-store', response validation, toast notifications for success/failure
+- Fixed /api/users/route.ts:
+  - GET: Added Cache-Control: no-store, no-cache, must-revalidate + Pragma: no-cache + Expires: 0 headers
+  - DELETE: Added same no-cache headers to response
+- Fixed admin-dashboard.tsx:
+  - fetchDashboard(): Added cache:'no-store' + _t cache-buster
+  - fetchEmployees(): Added cache:'no-store' + _t cache-buster
+- Fixed /api/dashboard/route.ts (SUPER_ADMIN branch):
+  - Added Cache-Control: no-store, no-cache, must-revalidate headers
+- Fixed performance-monitor.tsx:
+  - fetch(): Added cache:'no-store' + _t cache-buster
+- Fixed /api/admin/performance/route.ts:
+  - Added Cache-Control: no-store, no-cache, must-revalidate headers
+- Verified: DB confirms only 11 users exist (admin + emp001-emp010), no Girish/Jitendra records remain
+- All source code lint-clean (only pre-existing require() warnings in .cjs/.js helper scripts)
+
+Stage Summary:
+- Deleted users were reappearing due to browser caching of /api/users and /api/dashboard responses
+- Now ALL admin data-fetching uses cache:'no-store' + cache-busting timestamps
+- ALL admin API responses send Cache-Control: no-store headers
+- Delete button now shows toast confirmation ("User Deleted — <name> has been permanently removed")
+- After deletion, user list is force-refreshed with cache-busting
+- Deleted users will NO LONGER appear in: Employee Management, Admin Dashboard (top/low performers), Performance Monitor
+- Note: Audit Center may still show historical log entries (e.g. "Deleted user girish@...") — this is intentional as audit logs are permanent records

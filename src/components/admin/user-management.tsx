@@ -106,8 +106,10 @@ export function UserManagement() {
     if (search) params.set('search', search)
     if (roleFilter !== 'all') params.set('role', roleFilter)
     if (deptFilter !== 'all') params.set('departmentId', deptFilter)
+    // Cache-busting timestamp to always get fresh data (fixes deleted users reappearing)
+    params.set('_t', String(Date.now()))
     try {
-      const res = await fetch(`/api/users?${params.toString()}`)
+      const res = await fetch(`/api/users?${params.toString()}`, { cache: 'no-store' })
       const data = await res.json()
       if (data.users) {
         startTransition(() => {
@@ -121,7 +123,7 @@ export function UserManagement() {
 
   const fetchDepartments = useCallback(async () => {
     try {
-      const res = await fetch('/api/departments')
+      const res = await fetch('/api/departments', { cache: 'no-store' })
       const data = await res.json()
       if (data.departments) {
         startTransition(() => {
@@ -226,11 +228,21 @@ export function UserManagement() {
     if (!selectedUser) return
     setSaving(true)
     try {
-      await fetch(`/api/users?id=${selectedUser.id}&adminId=${user?.id}`, { method: 'DELETE' })
+      const res = await fetch(`/api/users?id=${selectedUser.id}&adminId=${user?.id}`, { method: 'DELETE', cache: 'no-store' })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        toast({ title: 'Delete Failed', description: data.error || 'Could not delete user', variant: 'destructive' })
+        setSaving(false)
+        return
+      }
+      toast({ title: 'User Deleted', description: `${selectedUser.fullName || selectedUser.email} has been permanently removed.` })
       setShowDelete(false)
       setSelectedUser(null)
+      // Force fresh fetch (cache-busting handled in fetchUsers)
       fetchUsers()
-    } catch { /* ignore */ }
+    } catch {
+      toast({ title: 'Delete Failed', description: 'Network error while deleting user', variant: 'destructive' })
+    }
     setSaving(false)
   }
 

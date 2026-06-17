@@ -87,7 +87,7 @@ export function AdminDashboard() {
 
   const fetchDashboard = useCallback(async () => {
     try {
-      const res = await fetch(`/api/dashboard?userId=${user?.id}&role=${user?.role}`)
+      const res = await fetch(`/api/dashboard?userId=${user?.id}&role=${user?.role}&_t=${Date.now()}`, { cache: 'no-store' })
       if (res.ok) {
         const d = await res.json()
         setData(d)
@@ -97,7 +97,7 @@ export function AdminDashboard() {
 
   const fetchEmployees = useCallback(async () => {
     try {
-      const res = await fetch('/api/admin/ai-deployment?batch=true')
+      const res = await fetch(`/api/admin/ai-deployment?batch=true&_t=${Date.now()}`, { cache: 'no-store' })
       if (res.ok) {
         const d = await res.json()
         const mapped = (d.employees || []).map((e: any) => ({

@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     const role = searchParams.get('role')
     const departmentId = searchParams.get('departmentId')
     const search = searchParams.get('search')
-    
+
     const where: any = {}
     if (role) where.role = role
     if (departmentId) where.departmentId = departmentId
@@ -37,7 +37,12 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: 'desc' },
     })
 
-    return NextResponse.json({ users })
+    const response = NextResponse.json({ users })
+    // Prevent browser/CDN caching so deleted users never reappear
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+    response.headers.set('Pragma', 'no-cache')
+    response.headers.set('Expires', '0')
+    return response
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
@@ -249,7 +254,11 @@ export async function DELETE(request: NextRequest) {
       }
     })
     
-    return NextResponse.json({ success: true })
+    const response = NextResponse.json({ success: true })
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+    response.headers.set('Pragma', 'no-cache')
+    response.headers.set('Expires', '0')
+    return response
   } catch (error: any) {
     console.error('User deletion error:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })

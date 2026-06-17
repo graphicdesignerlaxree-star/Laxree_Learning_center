@@ -126,7 +126,7 @@ export function PerformanceMonitor() {
     if (deptFilter !== 'all') params.set('department', deptFilter)
     if (readinessFilter !== 'all') params.set('readiness', readinessFilter)
 
-    fetch(`/api/admin/performance?${params.toString()}`)
+    fetch(`/api/admin/performance?${params.toString()}&_t=${Date.now()}`, { cache: 'no-store' })
       .then(r => r.json())
       .then(data => {
         if (!cancelled && data.employees) {

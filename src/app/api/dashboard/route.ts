@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
       // Pending approvals
       const pendingApprovals = await db.certificationAttempt.count({ where: { status: 'pending' } })
 
-      return NextResponse.json({
+      const response = NextResponse.json({
         totalEmployees, activeEmployees, newJoiners,
         trainingCompletion, certificationRate: certRate,
         avgAssessmentScore, avgMockScore,
@@ -76,6 +76,10 @@ export async function GET(request: NextRequest) {
         totalDocuments: await db.document.count(),
         totalQuestionBanks: await db.questionBank.count(),
       })
+      response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+      response.headers.set('Pragma', 'no-cache')
+      response.headers.set('Expires', '0')
+      return response
     }
 
     if (role === 'TRAINING_MANAGER') {
