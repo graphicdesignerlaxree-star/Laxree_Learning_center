@@ -730,6 +730,40 @@ export function CallPractice() {
         </div>
       </motion.div>
 
+      {/* Call Recording AI — prominent CTA banner */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.05 }}
+      >
+        <Card className="border-emerald-200 bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 overflow-hidden">
+          <CardContent className="p-4 sm:p-5">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-md shrink-0">
+                <Mic className="w-6 h-6 text-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-sm font-bold text-emerald-900 flex items-center gap-2">
+                  Want AI to analyze your real sales calls?
+                  <Badge className="bg-emerald-500 text-white text-[10px] border-0">NEW</Badge>
+                </h3>
+                <p className="text-xs text-emerald-700 mt-1 leading-relaxed">
+                  Upload a recording of your actual sales call and our Expert AI Sales Assistant will analyze your pitch, identify the client&apos;s hotel profile (ARR, property type, stage, location), give you a short &amp; sweet recommended pitch, and guide you on building interest.
+                </p>
+              </div>
+              <Button
+                className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-md font-semibold text-sm gap-2 shrink-0"
+                onClick={() => useAuthStore.getState().setCurrentView('call-analysis')}
+              >
+                <Mic className="w-4 h-4" />
+                Open Call Recording AI
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
       {/* Tabs */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
