@@ -21,8 +21,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ assessment })
     }
 
+    // Assessment model fields: title, description, moduleType, duration, passingScore,
+    // totalQuestions, isActive, createdAt, updatedAt — NO stage/examType/stageLabel
     const assessments = await db.assessment.findMany({
-      orderBy: [{ stage: 'asc' }, { examType: 'asc' }],
+      orderBy: { createdAt: 'desc' },
       include: {
         _count: { select: { attempts: true, questions: true } },
       },
@@ -32,7 +34,6 @@ export async function GET(request: NextRequest) {
       by: ['assessmentId'],
       _count: true,
       _avg: { percentage: true },
-      _min: { passed: true },
     })
 
     const passCounts = await db.assessmentAttempt.groupBy({
@@ -51,7 +52,9 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({ assessments, statsMap })
+    const response = NextResponse.json({ assessments, statsMap })
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+    return response
   } catch (error: any) {
     console.error('Exam management GET error:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })
@@ -61,20 +64,18 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
-    const { title, description, moduleType, examType, stage, stageLabel, duration, passingScore, isActive, questionIds } = data
+    const { title, description, moduleType, duration, passingScore, isActive, questionIds } = data
 
     if (!title) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 })
     }
 
+    // Only use fields that exist on the Assessment model
     const assessment = await db.assessment.create({
       data: {
         title,
         description: description || null,
         moduleType: moduleType || null,
-        examType: examType || null,
-        stage: stage ? parseInt(String(stage)) : 0,
-        stageLabel: stageLabel || null,
         duration: duration ? parseInt(String(duration)) : null,
         passingScore: passingScore ? parseFloat(String(passingScore)) : 70,
         totalQuestions: questionIds ? questionIds.length : 0,
@@ -113,15 +114,13 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Assessment not found' }, { status: 404 })
     }
 
+    // Only allow fields that exist on the Assessment model
     const cleanData: any = {}
-    const allowedFields = ['title', 'description', 'moduleType', 'examType', 'stageLabel', 'duration', 'passingScore', 'isActive']
+    const allowedFields = ['title', 'description', 'moduleType', 'duration', 'passingScore', 'isActive']
     for (const field of allowedFields) {
       if (updateData[field] !== undefined) {
         cleanData[field] = updateData[field]
       }
-    }
-    if (updateData.stage !== undefined) {
-      cleanData.stage = parseInt(String(updateData.stage))
     }
 
     if (questionIds !== undefined) {

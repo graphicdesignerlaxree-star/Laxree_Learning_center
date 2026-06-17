@@ -14,12 +14,13 @@ import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import {
-  ClipboardList, Plus, Search, Edit2, Trash2, Download, Upload,
+  ClipboardList, Plus, Search, Edit2, Trash2,
   Filter, RefreshCw, CheckSquare, XSquare, HelpCircle, BarChart3,
   ChevronLeft, ChevronRight,
 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 
+// Only fields that ACTUALLY exist on the QuestionBank Prisma model
 interface QuestionData {
   id: string
   question: string
@@ -28,22 +29,27 @@ interface QuestionData {
   optionC: string | null
   optionD: string | null
   correctAnswer: string
+  acceptableAnswers: string | null
   explanation: string | null
   category: string | null
   difficulty: string | null
   questionType: string | null
   moduleType: string | null
-  examType: string | null
-  stage: number
-  productCategory: string | null
   createdAt: string
-  _count?: { assessmentQuestions: number }
+  _count?: { assessmentQuestions: number; examQuestions: number }
 }
 
 interface QuestionStats {
   total: number
-  byCategory: { category: string | null; _count: number }[]
-  byDifficulty: { difficulty: string | null; _count: number }[]
+  easy: number
+  medium: number
+  hard: number
+  mcq: number
+  shortAnswer: number
+  byCategory: Record<string, number>
+  byDifficulty: Record<string, number>
+  byModuleType: Record<string, number>
+  byQuestionType: Record<string, number>
 }
 
 const DIFFICULTY_COLORS: Record<string, string> = {
@@ -52,28 +58,28 @@ const DIFFICULTY_COLORS: Record<string, string> = {
   hard: 'bg-red-100 text-red-700',
 }
 
-const EXAM_TYPE_LABELS: Record<string, string> = {
-  inbound_sales_exam: 'Inbound Sales',
-  field_sales_exam: 'Field Sales',
-  both: 'Both',
-}
-
-const STAGE_LABELS: Record<number, string> = {
-  0: 'Any',
-  1: 'Pre Exam (7d)',
-  2: 'Mid Exam (1m)',
-  3: 'Hard Exam (1.5m)',
-  4: 'Extra Hard (2m)',
-}
-
-const CATEGORIES = [
-  'product_basics', 'product_knowledge', 'product_features', 'product_specs',
-  'sales_basics', 'sales_scenario', 'real_time_case', 'calculation',
-  'competitive', 'objection_handling', 'technical_query', 'negotiation',
-  'compliance', 'strategic_selling', 'faq', 'upsell', 'procurement',
+const MODULE_TYPES = [
+  { value: 'ORIENTATION', label: 'Orientation' },
+  { value: 'PRODUCT_ACADEMY', label: 'Product Academy' },
+  { value: 'TECHNICAL', label: 'Technical' },
+  { value: 'SALES_ACADEMY', label: 'Sales Academy' },
+  { value: 'HOSPITALITY', label: 'Hospitality' },
+  { value: 'CUSTOMER_DISCOVERY', label: 'Customer Discovery' },
+  { value: 'NEGOTIATION', label: 'Negotiation' },
+  { value: 'COMPETITIVE_INTELLIGENCE', label: 'Competitive Intelligence' },
+  { value: 'FIELD_SALES', label: 'Field Sales' },
+  { value: 'INBOUND_SALES', label: 'Inbound Sales' },
+  { value: 'CERTIFICATION_PREP', label: 'Certification Prep' },
+  { value: 'MOCK_SIMULATOR', label: 'Mock Simulator' },
+  { value: 'AI_COACH', label: 'AI Coach' },
+  { value: 'CROSS_SELLING', label: 'Cross Selling' },
 ]
 
-const PRODUCT_CATEGORIES = ['minibar', 'kettle', 'safe', 'rfid', 'hair_dryer']
+const CATEGORIES = [
+  'Product Knowledge', 'Sales Process - Opening & Discovery', 'Pitching & Value Proposition',
+  'Objection Handling', 'Negotiation & Closing', 'Industry Context & Competition',
+  'Customer Service & After-Sales', 'Technical', 'Hospitality', 'Compliance',
+]
 
 const emptyForm = {
   question: '',
@@ -82,14 +88,12 @@ const emptyForm = {
   optionC: '',
   optionD: '',
   correctAnswer: 'A',
+  acceptableAnswers: '',
   explanation: '',
   category: '',
   difficulty: 'medium',
-  questionType: 'mcq',
+  questionType: 'MCQ',
   moduleType: '',
-  examType: '',
-  stage: '0',
-  productCategory: '',
 }
 
 export function QuestionBankManagement() {
@@ -102,9 +106,8 @@ export function QuestionBankManagement() {
   const [search, setSearch] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [difficultyFilter, setDifficultyFilter] = useState('all')
-  const [examTypeFilter, setExamTypeFilter] = useState('all')
-  const [stageFilter, setStageFilter] = useState('all')
-  const [productFilter, setProductFilter] = useState('all')
+  const [moduleTypeFilter, setModuleTypeFilter] = useState('all')
+  const [questionTypeFilter, setQuestionTypeFilter] = useState('all')
   const [page, setPage] = useState(0)
   const PAGE_SIZE = 15
   const [showCreate, setShowCreate] = useState(false)
@@ -121,11 +124,11 @@ export function QuestionBankManagement() {
       const params = new URLSearchParams()
       if (categoryFilter !== 'all') params.set('category', categoryFilter)
       if (difficultyFilter !== 'all') params.set('difficulty', difficultyFilter)
-      if (examTypeFilter !== 'all') params.set('examType', examTypeFilter)
-      if (stageFilter !== 'all') params.set('stage', stageFilter)
-      if (productFilter !== 'all') params.set('productCategory', productFilter)
+      if (moduleTypeFilter !== 'all') params.set('moduleType', moduleTypeFilter)
+      if (questionTypeFilter !== 'all') params.set('questionType', questionTypeFilter)
       if (search) params.set('search', search)
-      const res = await fetch(`/api/admin/question-banks?${params.toString()}`)
+      params.set('pageSize', '1000')
+      const res = await fetch(`/api/admin/question-banks?${params.toString()}`, { cache: 'no-store' })
       const data = await res.json()
       if (res.ok) {
         startTransition(() => {
@@ -146,7 +149,7 @@ export function QuestionBankManagement() {
         setLoading(false)
       })
     }
-  }, [categoryFilter, difficultyFilter, examTypeFilter, stageFilter, productFilter, search, startTransition])
+  }, [categoryFilter, difficultyFilter, moduleTypeFilter, questionTypeFilter, search, startTransition])
 
   useEffect(() => { fetchQuestions() }, [fetchQuestions])
 
@@ -159,7 +162,7 @@ export function QuestionBankManagement() {
       const res = await fetch('/api/admin/question-banks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, stage: parseInt(form.stage) || 0 }),
+        body: JSON.stringify(form),
       })
       const data = await res.json()
       if (!res.ok) {
@@ -183,7 +186,7 @@ export function QuestionBankManagement() {
       const res = await fetch('/api/admin/question-banks', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: selectedQuestion.id, ...form, stage: parseInt(form.stage) || 0 }),
+        body: JSON.stringify({ id: selectedQuestion.id, ...form }),
       })
       const data = await res.json()
       if (!res.ok) {
@@ -263,54 +266,32 @@ export function QuestionBankManagement() {
       optionC: q.optionC || '',
       optionD: q.optionD || '',
       correctAnswer: q.correctAnswer,
+      acceptableAnswers: q.acceptableAnswers || '',
       explanation: q.explanation || '',
       category: q.category || '',
       difficulty: q.difficulty || 'medium',
-      questionType: q.questionType || 'mcq',
+      questionType: q.questionType || 'MCQ',
       moduleType: q.moduleType || '',
-      examType: q.examType || '',
-      stage: String(q.stage),
-      productCategory: q.productCategory || '',
     })
     setShowEdit(true)
   }
 
+  const isShortAnswer = form.questionType === 'SHORT_ANSWER'
+
   const formDialog = (
-    <div className="grid gap-4 py-4 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2">
+    <div className="grid gap-4 py-4 max-h-[60vh] overflow-y-auto pr-2">
       <div className="grid gap-2">
         <Label>Question Text *</Label>
         <Textarea value={form.question} onChange={(e) => setForm({ ...form, question: e.target.value })} placeholder="Enter question text" rows={3} />
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="grid gap-2">
-          <Label>Option A *</Label>
-          <Input value={form.optionA} onChange={(e) => setForm({ ...form, optionA: e.target.value })} placeholder="Option A" />
-        </div>
-        <div className="grid gap-2">
-          <Label>Option B *</Label>
-          <Input value={form.optionB} onChange={(e) => setForm({ ...form, optionB: e.target.value })} placeholder="Option B" />
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="grid gap-2">
-          <Label>Option C</Label>
-          <Input value={form.optionC} onChange={(e) => setForm({ ...form, optionC: e.target.value })} placeholder="Option C (optional)" />
-        </div>
-        <div className="grid gap-2">
-          <Label>Option D</Label>
-          <Input value={form.optionD} onChange={(e) => setForm({ ...form, optionD: e.target.value })} placeholder="Option D (optional)" />
-        </div>
-      </div>
-      <div className="grid grid-cols-3 gap-4">
-        <div className="grid gap-2">
-          <Label>Correct Answer *</Label>
-          <Select value={form.correctAnswer} onValueChange={(v) => setForm({ ...form, correctAnswer: v })}>
+          <Label>Question Type</Label>
+          <Select value={form.questionType} onValueChange={(v) => setForm({ ...form, questionType: v })}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="A">A</SelectItem>
-              <SelectItem value="B">B</SelectItem>
-              <SelectItem value="C">C</SelectItem>
-              <SelectItem value="D">D</SelectItem>
+              <SelectItem value="MCQ">Multiple Choice</SelectItem>
+              <SelectItem value="SHORT_ANSWER">Short Answer</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -325,68 +306,73 @@ export function QuestionBankManagement() {
             </SelectContent>
           </Select>
         </div>
-        <div className="grid gap-2">
-          <Label>Question Type</Label>
-          <Select value={form.questionType} onValueChange={(v) => setForm({ ...form, questionType: v })}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="mcq">MCQ</SelectItem>
-              <SelectItem value="calculator">Calculator</SelectItem>
-              <SelectItem value="scenario">Scenario</SelectItem>
-              <SelectItem value="case_study">Case Study</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="grid gap-2">
           <Label>Category</Label>
           <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>
-            <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder="Select category" /></SelectTrigger>
             <SelectContent>
-              {CATEGORIES.map(c => <SelectItem key={c} value={c}>{c.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</SelectItem>)}
+              {CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
             </SelectContent>
           </Select>
         </div>
         <div className="grid gap-2">
-          <Label>Product Category</Label>
-          <Select value={form.productCategory} onValueChange={(v) => setForm({ ...form, productCategory: v })}>
-            <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+          <Label>Module Type</Label>
+          <Select value={form.moduleType} onValueChange={(v) => setForm({ ...form, moduleType: v })}>
+            <SelectTrigger><SelectValue placeholder="Select module" /></SelectTrigger>
             <SelectContent>
-              {PRODUCT_CATEGORIES.map(p => <SelectItem key={p} value={p}>{p.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</SelectItem>)}
+              {MODULE_TYPES.map(m => <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>)}
             </SelectContent>
           </Select>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      {isShortAnswer ? (
         <div className="grid gap-2">
-          <Label>Exam Type</Label>
-          <Select value={form.examType} onValueChange={(v) => setForm({ ...form, examType: v })}>
-            <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="inbound_sales_exam">Inbound Sales</SelectItem>
-              <SelectItem value="field_sales_exam">Field Sales</SelectItem>
-              <SelectItem value="both">Both</SelectItem>
-            </SelectContent>
-          </Select>
+          <Label>Correct Answer *</Label>
+          <Input value={form.correctAnswer} onChange={(e) => setForm({ ...form, correctAnswer: e.target.value })} placeholder="Enter the correct answer text" />
+          <Label className="mt-2">Acceptable Answers (comma-separated)</Label>
+          <Input value={form.acceptableAnswers} onChange={(e) => setForm({ ...form, acceptableAnswers: e.target.value })} placeholder="alt answer 1, alt answer 2" />
         </div>
-        <div className="grid gap-2">
-          <Label>Stage</Label>
-          <Select value={form.stage} onValueChange={(v) => setForm({ ...form, stage: v })}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="0">Any</SelectItem>
-              <SelectItem value="1">Pre Exam (7d)</SelectItem>
-              <SelectItem value="2">Mid Exam (1m)</SelectItem>
-              <SelectItem value="3">Hard Exam (1.5m)</SelectItem>
-              <SelectItem value="4">Extra Hard (2m)</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label>Option A *</Label>
+              <Input value={form.optionA} onChange={(e) => setForm({ ...form, optionA: e.target.value })} placeholder="Option A" />
+            </div>
+            <div className="grid gap-2">
+              <Label>Option B *</Label>
+              <Input value={form.optionB} onChange={(e) => setForm({ ...form, optionB: e.target.value })} placeholder="Option B" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label>Option C</Label>
+              <Input value={form.optionC} onChange={(e) => setForm({ ...form, optionC: e.target.value })} placeholder="Option C (optional)" />
+            </div>
+            <div className="grid gap-2">
+              <Label>Option D</Label>
+              <Input value={form.optionD} onChange={(e) => setForm({ ...form, optionD: e.target.value })} placeholder="Option D (optional)" />
+            </div>
+          </div>
+          <div className="grid gap-2">
+            <Label>Correct Answer *</Label>
+            <Select value={form.correctAnswer} onValueChange={(v) => setForm({ ...form, correctAnswer: v })}>
+              <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="A">A</SelectItem>
+                <SelectItem value="B">B</SelectItem>
+                <SelectItem value="C">C</SelectItem>
+                <SelectItem value="D">D</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </>
+      )}
       <div className="grid gap-2">
         <Label>Explanation</Label>
-        <Textarea value={form.explanation} onChange={(e) => setForm({ ...form, explanation: e.target.value })} placeholder="Explain the correct answer" rows={2} />
+        <Textarea value={form.explanation} onChange={(e) => setForm({ ...form, explanation: e.target.value })} placeholder="Explain the correct answer (optional)" rows={2} />
       </div>
     </div>
   )
@@ -395,9 +381,7 @@ export function QuestionBankManagement() {
     return (
       <div className="space-y-6">
         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-          <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-            <ClipboardList className="w-5 h-5 text-emerald-600" />
-          </div>
+          <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center"><HelpCircle className="w-5 h-5 text-emerald-600" /></div>
           Question Banks
         </h1>
         <Card className="border-red-200 bg-red-50">
@@ -416,66 +400,46 @@ export function QuestionBankManagement() {
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-            <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-              <ClipboardList className="w-5 h-5 text-emerald-600" />
-            </div>
+            <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center"><HelpCircle className="w-5 h-5 text-emerald-600" /></div>
             Question Banks
           </h1>
-          <p className="text-gray-500 mt-1 ml-13">Manage assessment questions and categories</p>
+          <p className="text-gray-500 mt-1 ml-13">Manage assessment & exam questions</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => toast({ title: 'Export', description: 'Question bank export initiated' })}>
-            <Download className="w-4 h-4 mr-2" /> Export
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => toast({ title: 'Import', description: 'Question bank import dialog coming soon' })}>
-            <Upload className="w-4 h-4 mr-2" /> Import
-          </Button>
+        <div className="flex items-center gap-2">
+          {selectedIds.size > 0 && (
+            <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50" onClick={() => setShowBulkDelete(true)}>
+              <Trash2 className="w-4 h-4 mr-2" /> Delete ({selectedIds.size})
+            </Button>
+          )}
           <Button onClick={() => { setForm(emptyForm); setShowCreate(true) }} className="bg-emerald-600 hover:bg-emerald-700">
             <Plus className="w-4 h-4 mr-2" /> Add Question
           </Button>
         </div>
       </div>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {[
-          { label: 'Total Questions', value: stats?.total || questions.length, icon: HelpCircle, color: 'bg-emerald-600' },
-          { label: 'Easy', value: stats?.byDifficulty.find(d => d.difficulty === 'easy')?._count || questions.filter(q => q.difficulty === 'easy').length, color: 'text-emerald-600', icon: BarChart3, bg: 'bg-emerald-50' },
-          { label: 'Medium', value: stats?.byDifficulty.find(d => d.difficulty === 'medium')?._count || questions.filter(q => q.difficulty === 'medium').length, color: 'text-amber-600', icon: BarChart3, bg: 'bg-amber-50' },
-          { label: 'Hard', value: stats?.byDifficulty.find(d => d.difficulty === 'hard')?._count || questions.filter(q => q.difficulty === 'hard').length, color: 'text-red-600', icon: BarChart3, bg: 'bg-red-50' },
-        ].map((s, i) => (
-          <motion.div key={s.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-            <Card className={s.bg || ''}><CardContent className="p-3">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs text-muted-foreground">{s.label}</p>
-                  <p className={`text-xl font-bold ${s.color || ''}`}>{s.value}</p>
+      {/* Stats */}
+      {stats && (
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          {[
+            { label: 'Total Questions', value: stats.total, icon: HelpCircle, color: 'bg-emerald-600' },
+            { label: 'MCQ', value: stats.mcq, icon: CheckSquare, color: 'bg-teal-600' },
+            { label: 'Short Answer', value: stats.shortAnswer, icon: BarChart3, color: 'bg-emerald-500' },
+            { label: 'Easy', value: stats.easy, icon: CheckSquare, color: 'bg-emerald-400' },
+            { label: 'Hard', value: stats.hard, icon: XSquare, color: 'bg-red-500' },
+          ].map((s, i) => (
+            <motion.div key={s.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+              <Card><CardContent className="p-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs text-muted-foreground">{s.label}</p>
+                    <p className="text-xl font-bold">{s.value}</p>
+                  </div>
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${s.color}`}><s.icon className="w-4 h-4 text-white" /></div>
                 </div>
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${s.color ? 'bg-white' : s.color}` }>
-                  <s.icon className={`w-4 h-4 ${s.color ? s.color : 'text-white'}`} />
-                </div>
-              </div>
-            </CardContent></Card>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Category breakdown */}
-      {stats && stats.byCategory.length > 0 && (
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Category Distribution</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {stats.byCategory.filter(c => c.category).map(c => (
-                <Badge key={c.category} variant="secondary" className="text-xs">
-                  {(c.category || '').replace(/_/g, ' ')}: {c._count}
-                </Badge>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent></Card>
+            </motion.div>
+          ))}
+        </div>
       )}
 
       {/* Filters */}
@@ -487,86 +451,54 @@ export function QuestionBankManagement() {
               <Input placeholder="Search questions..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(0) }} className="pl-9" />
             </div>
             <Select value={categoryFilter} onValueChange={(v) => { setCategoryFilter(v); setPage(0) }}>
-              <SelectTrigger className="w-[160px]"><Filter className="w-4 h-4 mr-2 text-gray-400" /><SelectValue placeholder="Category" /></SelectTrigger>
+              <SelectTrigger className="w-[180px]"><Filter className="w-4 h-4 mr-2 text-gray-400" /><SelectValue placeholder="Category" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
-                {CATEGORIES.map(c => <SelectItem key={c} value={c}>{c.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</SelectItem>)}
+                {CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
               </SelectContent>
             </Select>
             <Select value={difficultyFilter} onValueChange={(v) => { setDifficultyFilter(v); setPage(0) }}>
-              <SelectTrigger className="w-[120px]"><SelectValue placeholder="Difficulty" /></SelectTrigger>
+              <SelectTrigger className="w-[130px]"><SelectValue placeholder="Difficulty" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="all">All Levels</SelectItem>
                 <SelectItem value="easy">Easy</SelectItem>
                 <SelectItem value="medium">Medium</SelectItem>
                 <SelectItem value="hard">Hard</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={examTypeFilter} onValueChange={(v) => { setExamTypeFilter(v); setPage(0) }}>
-              <SelectTrigger className="w-[150px]"><SelectValue placeholder="Exam Type" /></SelectTrigger>
+            <Select value={questionTypeFilter} onValueChange={(v) => { setQuestionTypeFilter(v); setPage(0) }}>
+              <SelectTrigger className="w-[140px]"><SelectValue placeholder="Type" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="inbound_sales_exam">Inbound</SelectItem>
-                <SelectItem value="field_sales_exam">Field</SelectItem>
-                <SelectItem value="both">Both</SelectItem>
+                <SelectItem value="MCQ">MCQ</SelectItem>
+                <SelectItem value="SHORT_ANSWER">Short Answer</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={stageFilter} onValueChange={(v) => { setStageFilter(v); setPage(0) }}>
-              <SelectTrigger className="w-[130px]"><SelectValue placeholder="Stage" /></SelectTrigger>
+            <Select value={moduleTypeFilter} onValueChange={(v) => { setModuleTypeFilter(v); setPage(0) }}>
+              <SelectTrigger className="w-[160px]"><SelectValue placeholder="Module" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Stages</SelectItem>
-                <SelectItem value="0">Any</SelectItem>
-                <SelectItem value="1">Pre</SelectItem>
-                <SelectItem value="2">Mid</SelectItem>
-                <SelectItem value="3">Hard</SelectItem>
-                <SelectItem value="4">Extra Hard</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={productFilter} onValueChange={(v) => { setProductFilter(v); setPage(0) }}>
-              <SelectTrigger className="w-[130px]"><SelectValue placeholder="Product" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Products</SelectItem>
-                {PRODUCT_CATEGORIES.map(p => <SelectItem key={p} value={p}>{p.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</SelectItem>)}
+                <SelectItem value="all">All Modules</SelectItem>
+                {MODULE_TYPES.map(m => <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
         </CardContent>
       </Card>
 
-      {/* Bulk Actions Bar */}
-      {selectedIds.size > 0 && (
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <Card className="border-emerald-200 bg-emerald-50">
-            <CardContent className="p-3 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <CheckSquare className="w-4 h-4 text-emerald-600" />
-                <span className="text-sm font-medium text-emerald-700">{selectedIds.size} selected</span>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={() => setSelectedIds(new Set())}>
-                  <XSquare className="w-4 h-4 mr-1" /> Clear
-                </Button>
-                <Button variant="destructive" size="sm" onClick={() => setShowBulkDelete(true)}>
-                  <Trash2 className="w-4 h-4 mr-1" /> Delete Selected
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      )}
-
       {/* Questions Table */}
       {loading ? (
-        <div className="space-y-3">{Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-16 w-full" />)}</div>
+        <div className="space-y-3">{Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-16 w-full" />)}</div>
       ) : questions.length === 0 ? (
         <Card className="border-dashed">
           <CardContent className="p-12 text-center">
             <div className="w-20 h-20 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <ClipboardList className="w-10 h-10 text-emerald-300" />
+              <HelpCircle className="w-10 h-10 text-emerald-300" />
             </div>
             <h3 className="text-lg font-semibold text-gray-700 mb-2">No Questions Found</h3>
             <p className="text-gray-400 max-w-md mx-auto mb-4">
-              {search || categoryFilter !== 'all' ? 'Try adjusting your filters or search.' : 'Start by adding questions to the bank.'}
+              {search || categoryFilter !== 'all' || difficultyFilter !== 'all' || moduleTypeFilter !== 'all' || questionTypeFilter !== 'all'
+                ? 'Try adjusting your filters or search terms.'
+                : 'Add your first question to the bank.'}
             </p>
             <Button onClick={() => { setForm(emptyForm); setShowCreate(true) }} className="bg-emerald-600 hover:bg-emerald-700">
               <Plus className="w-4 h-4 mr-2" /> Add Question
@@ -586,47 +518,47 @@ export function QuestionBankManagement() {
                     <TableHead className="w-10">#</TableHead>
                     <TableHead>Question</TableHead>
                     <TableHead className="hidden md:table-cell">Category</TableHead>
+                    <TableHead>Type</TableHead>
                     <TableHead>Difficulty</TableHead>
-                    <TableHead className="hidden lg:table-cell">Exam Type</TableHead>
-                    <TableHead className="hidden lg:table-cell">Stage</TableHead>
                     <TableHead className="hidden lg:table-cell">Answer</TableHead>
-                    <TableHead className="w-10">Actions</TableHead>
+                    <TableHead className="w-20">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  <AnimatePresence>
-                    {paginated.map((q, i) => (
-                      <motion.tr key={q.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="hover:bg-gray-50/50">
-                        <TableCell>
-                          <Checkbox checked={selectedIds.has(q.id)} onCheckedChange={() => toggleSelect(q.id)} />
-                        </TableCell>
-                        <TableCell className="text-xs text-muted-foreground">{page * PAGE_SIZE + i + 1}</TableCell>
-                        <TableCell className="max-w-[300px]">
-                          <p className="text-sm line-clamp-2">{q.question}</p>
-                          {q._count && q._count.assessmentQuestions > 0 && (
-                            <span className="text-[10px] text-emerald-600">Used in {q._count.assessmentQuestions} exam(s)</span>
-                          )}
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          {q.category ? <Badge variant="secondary" className="text-[10px]">{q.category.replace(/_/g, ' ')}</Badge> : '-'}
-                        </TableCell>
-                        <TableCell>
-                          <Badge className={DIFFICULTY_COLORS[q.difficulty || 'medium'] || ''} variant="secondary">{q.difficulty || 'medium'}</Badge>
-                        </TableCell>
-                        <TableCell className="hidden lg:table-cell">
-                          {q.examType ? <Badge variant="secondary" className="text-[10px]">{EXAM_TYPE_LABELS[q.examType] || q.examType}</Badge> : '-'}
-                        </TableCell>
-                        <TableCell className="hidden lg:table-cell text-xs">{STAGE_LABELS[q.stage] || q.stage}</TableCell>
-                        <TableCell className="hidden lg:table-cell"><span className="font-medium text-emerald-600">{q.correctAnswer}</span></TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1">
-                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => openEdit(q)}><Edit2 className="w-3 h-3" /></Button>
-                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-red-500" onClick={() => { setSelectedQuestion(q); setShowDelete(true) }}><Trash2 className="w-3 h-3" /></Button>
-                          </div>
-                        </TableCell>
-                      </motion.tr>
-                    ))}
-                  </AnimatePresence>
+                  {paginated.map((q, i) => (
+                    <TableRow key={q.id} className="hover:bg-gray-50/50">
+                      <TableCell>
+                        <Checkbox checked={selectedIds.has(q.id)} onCheckedChange={() => toggleSelect(q.id)} />
+                      </TableCell>
+                      <TableCell className="text-xs text-muted-foreground">{page * PAGE_SIZE + i + 1}</TableCell>
+                      <TableCell className="text-sm max-w-[300px]">
+                        <p className="line-clamp-2">{q.question}</p>
+                        {(q._count?.assessmentQuestions || q._count?.examQuestions) && (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Used in {q._count?.assessmentQuestions || 0} assessment(s) · {q._count?.examQuestions || 0} exam(s)
+                          </p>
+                        )}
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell"><Badge variant="secondary" className="text-xs">{q.category || '-'}</Badge></TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="text-xs">
+                          {q.questionType === 'SHORT_ANSWER' ? 'Short Answer' : 'MCQ'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell><Badge className={DIFFICULTY_COLORS[q.difficulty || 'medium'] || ''} variant="secondary">{q.difficulty || 'medium'}</Badge></TableCell>
+                      <TableCell className="hidden lg:table-cell">
+                        <span className="font-medium text-emerald-600 text-sm">
+                          {q.questionType === 'SHORT_ANSWER' ? (q.correctAnswer.length > 20 ? q.correctAnswer.slice(0, 20) + '...' : q.correctAnswer) : q.correctAnswer}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1">
+                          <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => openEdit(q)}><Edit2 className="w-3 h-3" /></Button>
+                          <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-red-500 hover:text-red-600" onClick={() => { setSelectedQuestion(q); setShowDelete(true) }}><Trash2 className="w-3 h-3" /></Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </div>
@@ -641,13 +573,9 @@ export function QuestionBankManagement() {
             Showing {page * PAGE_SIZE + 1}-{Math.min((page + 1) * PAGE_SIZE, questions.length)} of {questions.length}
           </p>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" disabled={page === 0} onClick={() => setPage(page - 1)}>
-              <ChevronLeft className="w-4 h-4" />
-            </Button>
+            <Button variant="outline" size="sm" disabled={page === 0} onClick={() => setPage(page - 1)}><ChevronLeft className="w-4 h-4" /></Button>
             <span className="text-sm text-muted-foreground">Page {page + 1} of {totalPages}</span>
-            <Button variant="outline" size="sm" disabled={page >= totalPages - 1} onClick={() => setPage(page + 1)}>
-              <ChevronRight className="w-4 h-4" />
-            </Button>
+            <Button variant="outline" size="sm" disabled={page >= totalPages - 1} onClick={() => setPage(page + 1)}><ChevronRight className="w-4 h-4" /></Button>
           </div>
         </div>
       )}
@@ -656,14 +584,14 @@ export function QuestionBankManagement() {
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2"><Plus className="w-5 h-5 text-emerald-600" /> Add New Question</DialogTitle>
-            <DialogDescription>Create a new question for the question bank</DialogDescription>
+            <DialogTitle className="flex items-center gap-2"><Plus className="w-5 h-5 text-emerald-600" /> Add Question</DialogTitle>
+            <DialogDescription>Create a new question for assessments and exams</DialogDescription>
           </DialogHeader>
           {formDialog}
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowCreate(false)}>Cancel</Button>
-            <Button onClick={handleCreate} disabled={saving || !form.question || !form.optionA || !form.optionB} className="bg-emerald-600 hover:bg-emerald-700">
-              {saving ? 'Creating...' : 'Add Question'}
+            <Button onClick={handleCreate} disabled={saving || !form.question || (!isShortAnswer && (!form.optionA || !form.optionB))} className="bg-emerald-600 hover:bg-emerald-700">
+              {saving ? 'Saving...' : 'Create Question'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -679,8 +607,8 @@ export function QuestionBankManagement() {
           {formDialog}
           <DialogFooter>
             <Button variant="outline" onClick={() => { setShowEdit(false); setSelectedQuestion(null) }}>Cancel</Button>
-            <Button onClick={handleEdit} disabled={saving} className="bg-emerald-600 hover:bg-emerald-700">
-              {saving ? 'Saving...' : 'Save Changes'}
+            <Button onClick={handleEdit} disabled={saving || !form.question || (!isShortAnswer && (!form.optionA || !form.optionB))} className="bg-emerald-600 hover:bg-emerald-700">
+              {saving ? 'Saving...' : 'Update Question'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -690,17 +618,18 @@ export function QuestionBankManagement() {
       <Dialog open={showDelete} onOpenChange={setShowDelete}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-red-600"><Trash2 className="w-5 h-5" /> Delete Question</DialogTitle>
+            <DialogTitle className="flex items-center gap-2"><Trash2 className="w-5 h-5 text-red-500" /> Delete Question</DialogTitle>
+            <DialogDescription>This will permanently delete the question and remove it from all assessments/exams.</DialogDescription>
           </DialogHeader>
-          <p className="text-sm text-gray-600 py-4">
-            Are you sure you want to delete this question? This action cannot be undone.
-          </p>
-          <p className="text-xs text-muted-foreground bg-gray-50 p-3 rounded-lg line-clamp-3">{selectedQuestion?.question}</p>
+          {selectedQuestion && (
+            <div className="py-4">
+              <p className="text-sm mb-2">Are you sure you want to delete this question?</p>
+              <p className="text-sm text-muted-foreground bg-gray-50 rounded-lg p-3 line-clamp-3">{selectedQuestion.question}</p>
+            </div>
+          )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => { setShowDelete(false); setSelectedQuestion(null) }}>Cancel</Button>
-            <Button onClick={handleDelete} disabled={saving} variant="destructive">
-              {saving ? 'Deleting...' : 'Delete Question'}
-            </Button>
+            <Button variant="outline" onClick={() => setShowDelete(false)}>Cancel</Button>
+            <Button onClick={handleDelete} disabled={saving} variant="destructive">{saving ? 'Deleting...' : 'Delete'}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -709,16 +638,15 @@ export function QuestionBankManagement() {
       <Dialog open={showBulkDelete} onOpenChange={setShowBulkDelete}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-red-600"><Trash2 className="w-5 h-5" /> Bulk Delete</DialogTitle>
+            <DialogTitle className="flex items-center gap-2"><Trash2 className="w-5 h-5 text-red-500" /> Bulk Delete</DialogTitle>
+            <DialogDescription>This will permanently delete {selectedIds.size} question(s).</DialogDescription>
           </DialogHeader>
-          <p className="text-sm text-gray-600 py-4">
-            Are you sure you want to delete <strong>{selectedIds.size} questions</strong>? This action cannot be undone.
-          </p>
+          <div className="py-4">
+            <p className="text-sm">Are you sure you want to delete {selectedIds.size} question(s)? This cannot be undone.</p>
+          </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowBulkDelete(false)}>Cancel</Button>
-            <Button onClick={handleBulkDelete} disabled={saving} variant="destructive">
-              {saving ? 'Deleting...' : `Delete ${selectedIds.size} Questions`}
-            </Button>
+            <Button onClick={handleBulkDelete} disabled={saving} variant="destructive">{saving ? 'Deleting...' : `Delete ${selectedIds.size} Questions`}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

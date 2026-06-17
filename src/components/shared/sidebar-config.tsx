@@ -63,7 +63,8 @@ const SUPER_ADMIN_ITEMS: SidebarItem[] = [
 
   // Approvals & Scorecards
   { label: 'Stage Approvals', view: 'stage-approvals', icon: Shield },
-  { label: 'Scorecards', view: 'scorecards', icon: Award },
+  { label: 'Employee Scorecard', view: 'scorecards', icon: Award },
+  { label: 'Scorecard Analytics', view: 'scorecard-analytics', icon: BarChart3 },
   { label: 'Certifications', view: 'certifications', icon: Sparkles },
 
   // Analytics & Audit

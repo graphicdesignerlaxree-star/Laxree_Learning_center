@@ -4,19 +4,20 @@ import { db } from '@/lib/db'
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const examType = searchParams.get('examType')
-    const stage = searchParams.get('stage')
     const passStatus = searchParams.get('passStatus')
     const dateFrom = searchParams.get('dateFrom')
     const dateTo = searchParams.get('dateTo')
     const departmentId = searchParams.get('departmentId')
     const userId = searchParams.get('userId')
+    const examName = searchParams.get('examName')
 
+    // Scorecard model fields: userId, examName, date, totalQuestions, correctAnswers,
+    // wrongAnswers, scorePercentage, rank, passStatus, certificationStatus, etc.
+    // — NO examType / stage fields (those are on ExamAttempt, not Scorecard)
     const where: any = {}
-    if (examType) where.examType = examType
-    if (stage) where.stage = parseInt(stage)
     if (passStatus !== null && passStatus !== undefined && passStatus !== '') where.passStatus = passStatus === 'true'
     if (userId) where.userId = userId
+    if (examName) where.examName = { contains: examName, mode: 'insensitive' }
     if (dateFrom || dateTo) {
       where.date = {}
       if (dateFrom) where.date.gte = new Date(dateFrom)
@@ -77,7 +78,7 @@ export async function GET(request: NextRequest) {
       avgScore: data.scores.length > 0 ? Math.round(data.scores.reduce((a, b) => a + b, 0) / data.scores.length) : 0,
     }))
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       scorecards,
       stats: {
         total: totalScorecards,
@@ -89,6 +90,8 @@ export async function GET(request: NextRequest) {
         departmentPerformance,
       },
     })
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+    return response
   } catch (error: any) {
     console.error('Scorecards GET error:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })

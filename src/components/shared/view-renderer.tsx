@@ -28,6 +28,7 @@ import { MonitoringCenter } from '@/components/admin/monitoring-center'
 import { ReportsView } from '@/components/admin/reports-view'
 import { ExamManagement } from '@/components/admin/exam-management'
 import { ScorecardMonitor } from '@/components/admin/scorecard-monitor'
+import { EmployeeScorecard } from '@/components/admin/employee-scorecard'
 import { StageApproval } from '@/components/admin/stage-approval'
 import { QuestionBankManagement } from '@/components/admin/question-bank-management'
 import { VideoManagement } from '@/components/admin/video-management'
@@ -68,6 +69,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   'reports': BarChart3,
   'exam-management': ClipboardList,
   'scorecards': Award,
+  'scorecard-analytics': BarChart3,
   'stage-approvals': Shield,
   'question-banks': BookOpen,
   'video-management': Video,
@@ -101,7 +103,8 @@ const VIEW_TITLES: Record<string, string> = {
   'monitoring-center': 'Monitoring Center',
   'reports': 'Reports & Analytics',
   'exam-management': 'Exam Management',
-  'scorecards': 'Scorecards',
+  'scorecards': 'Employee Scorecard',
+  'scorecard-analytics': 'Scorecard Analytics',
   'stage-approvals': 'Stage Approvals',
   'question-banks': 'Question Banks',
   'video-management': 'Video Library',
@@ -135,7 +138,8 @@ const VIEW_DESCRIPTIONS: Record<string, string> = {
   'monitoring-center': 'Advanced monitoring dashboard with detailed charts and KPIs',
   'reports': 'Generate and view detailed reports across all platform metrics',
   'exam-management': 'Create, edit, and manage exams with question linking',
-  'scorecards': 'Browse all employee scorecards with advanced filters',
+  'scorecards': 'Select any employee and view their complete performance — exams, assessments, simulations, certifications, and training',
+  'scorecard-analytics': 'Browse all employee scorecards with advanced filters and charts',
   'stage-approvals': 'Approve or reject employee stage progression requests',
   'question-banks': 'Create, edit, and manage question bank questions',
   'video-management': 'Manage training videos with CRUD operations',
@@ -218,7 +222,8 @@ const ADMIN_VIEWS: Record<string, React.ComponentType> = {
   'monitoring-center': MonitoringCenter,
   'reports': ReportsView,
   'exam-management': ExamManagement,
-  'scorecards': ScorecardMonitor,
+  'scorecards': EmployeeScorecard,
+  'scorecard-analytics': ScorecardMonitor,
   'stage-approvals': StageApproval,
   'question-banks': QuestionBankManagement,
   'video-management': VideoManagement,

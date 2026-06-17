@@ -74,7 +74,8 @@ const VIEW_LABELS: Record<string, string> = {
   'monitoring-center': 'Monitoring Center',
   reports: 'Reports & Analytics',
   'exam-management': 'Exam Management',
-  scorecards: 'Scorecards',
+  scorecards: 'Employee Scorecard',
+  'scorecard-analytics': 'Scorecard Analytics',
   'stage-approvals': 'Stage Approvals',
   'question-banks': 'Question Banks',
   'video-management': 'Video Library',
@@ -189,7 +190,7 @@ function SidebarNav() {
     const overviewItems = items.filter(i => ['dashboard', 'monitoring-center'].includes(i.view))
     const peopleItems = items.filter(i => ['employees', 'departments', 'performance-monitor', 'login-history'].includes(i.view))
     const contentItems = items.filter(i => ['learning-paths', 'courses', 'assessments', 'exam-management', 'question-banks', 'mock-simulations', 'video-management', 'documents'].includes(i.view))
-    const approvalItems = items.filter(i => ['stage-approvals', 'scorecards', 'certifications'].includes(i.view))
+    const approvalItems = items.filter(i => ['stage-approvals', 'scorecards', 'scorecard-analytics', 'certifications'].includes(i.view))
     const analyticsItems = items.filter(i => ['reports', 'audit-center'].includes(i.view))
     const aiItems = items.filter(i => ['ai-deployment'].includes(i.view))
     const configItems = items.filter(i => ['customization', 'settings'].includes(i.view))

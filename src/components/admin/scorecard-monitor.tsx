@@ -13,7 +13,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import {
-  BarChart3, RefreshCw, Download, Eye, Search, Filter,
+  BarChart3, RefreshCw, Download, Eye, Search,
   CheckCircle2, XCircle, TrendingUp, Users, Target,
   MessageSquare, ChevronLeft, ChevronRight,
 } from 'lucide-react'
@@ -26,9 +26,6 @@ interface ScorecardData {
   id: string
   userId: string
   examName: string
-  examType: string | null
-  stage: number
-  stageLabel: string | null
   date: string
   totalQuestions: number
   correctAnswers: number
@@ -61,14 +58,6 @@ interface ScorecardStats {
   departmentPerformance: { name: string; total: number; passed: number; passRate: number; avgScore: number }[]
 }
 
-const STAGE_LABELS: Record<number, string> = {
-  0: 'Any',
-  1: 'Pre Exam',
-  2: 'Mid Exam',
-  3: 'Hard Exam',
-  4: 'Extra Hard',
-}
-
 const CHART_COLORS = ['#059669', '#0D9488', '#10B981', '#34D399', '#6EE7B7']
 
 export function ScorecardMonitor() {
@@ -79,8 +68,6 @@ export function ScorecardMonitor() {
   const [error, setError] = useState<string | null>(null)
   const [, startTransition] = useTransition()
   const [search, setSearch] = useState('')
-  const [examTypeFilter, setExamTypeFilter] = useState('all')
-  const [stageFilter, setStageFilter] = useState('all')
   const [passFilter, setPassFilter] = useState('all')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
@@ -95,12 +82,10 @@ export function ScorecardMonitor() {
   const fetchScorecards = useCallback(async () => {
     try {
       const params = new URLSearchParams()
-      if (examTypeFilter !== 'all') params.set('examType', examTypeFilter)
-      if (stageFilter !== 'all') params.set('stage', stageFilter)
       if (passFilter !== 'all') params.set('passStatus', passFilter)
       if (dateFrom) params.set('dateFrom', dateFrom)
       if (dateTo) params.set('dateTo', dateTo)
-      const res = await fetch(`/api/admin/scorecards?${params.toString()}`)
+      const res = await fetch(`/api/admin/scorecards?${params.toString()}`, { cache: 'no-store' })
       const data = await res.json()
       if (res.ok) {
         startTransition(() => {
@@ -121,7 +106,7 @@ export function ScorecardMonitor() {
         setLoading(false)
       })
     }
-  }, [examTypeFilter, stageFilter, passFilter, dateFrom, dateTo, startTransition])
+  }, [passFilter, dateFrom, dateTo, startTransition])
 
   useEffect(() => { fetchScorecards() }, [fetchScorecards])
 
@@ -317,24 +302,6 @@ export function ScorecardMonitor() {
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <Input placeholder="Search by name, email, exam..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(0) }} className="pl-9" />
             </div>
-            <Select value={examTypeFilter} onValueChange={(v) => { setExamTypeFilter(v); setPage(0) }}>
-              <SelectTrigger className="w-[150px]"><Filter className="w-4 h-4 mr-2 text-gray-400" /><SelectValue placeholder="Exam Type" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="inbound_sales_exam">Inbound</SelectItem>
-                <SelectItem value="field_sales_exam">Field</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={stageFilter} onValueChange={(v) => { setStageFilter(v); setPage(0) }}>
-              <SelectTrigger className="w-[130px]"><SelectValue placeholder="Stage" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Stages</SelectItem>
-                <SelectItem value="1">Pre Exam</SelectItem>
-                <SelectItem value="2">Mid Exam</SelectItem>
-                <SelectItem value="3">Hard Exam</SelectItem>
-                <SelectItem value="4">Extra Hard</SelectItem>
-              </SelectContent>
-            </Select>
             <Select value={passFilter} onValueChange={(v) => { setPassFilter(v); setPage(0) }}>
               <SelectTrigger className="w-[120px]"><SelectValue placeholder="Result" /></SelectTrigger>
               <SelectContent>
@@ -360,7 +327,7 @@ export function ScorecardMonitor() {
             </div>
             <h3 className="text-lg font-semibold text-gray-700 mb-2">No Scorecards Found</h3>
             <p className="text-gray-400 max-w-md mx-auto">
-              {search || examTypeFilter !== 'all' || stageFilter !== 'all' || passFilter !== 'all'
+              {search || passFilter !== 'all'
                 ? 'Try adjusting your filters or search terms.'
                 : 'Scorecards will appear here once employees take exams.'}
             </p>
@@ -375,8 +342,6 @@ export function ScorecardMonitor() {
                   <TableRow>
                     <TableHead>Employee</TableHead>
                     <TableHead>Exam</TableHead>
-                    <TableHead className="hidden md:table-cell">Type</TableHead>
-                    <TableHead className="hidden md:table-cell">Stage</TableHead>
                     <TableHead>Score</TableHead>
                     <TableHead>Result</TableHead>
                     <TableHead className="hidden lg:table-cell">Date</TableHead>
@@ -402,10 +367,6 @@ export function ScorecardMonitor() {
                         <p className="line-clamp-1">{s.examName}</p>
                         <p className="text-xs text-muted-foreground">{s.totalQuestions}Q · {s.correctAnswers}✓ · {s.wrongAnswers}✗</p>
                       </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {s.examType ? <Badge variant="outline" className="text-[10px]">{s.examType === 'inbound_sales_exam' ? 'Inbound' : 'Field'}</Badge> : '-'}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell text-xs">{s.stage > 0 ? STAGE_LABELS[s.stage] || `Stage ${s.stage}` : '-'}</TableCell>
                       <TableCell>
                         <span className={`text-sm font-bold ${s.scorePercentage >= 70 ? 'text-emerald-600' : s.scorePercentage >= 40 ? 'text-amber-600' : 'text-red-500'}`}>
                           {Math.round(s.scorePercentage)}%
@@ -494,8 +455,6 @@ export function ScorecardMonitor() {
               {/* Exam info */}
               <div className="bg-gray-50 rounded-lg p-4 space-y-2">
                 <div className="flex justify-between"><span className="text-sm text-muted-foreground">Exam</span><span className="text-sm font-medium">{selectedScorecard.examName}</span></div>
-                <div className="flex justify-between"><span className="text-sm text-muted-foreground">Type</span><span className="text-sm">{selectedScorecard.examType === 'inbound_sales_exam' ? 'Inbound Sales' : selectedScorecard.examType === 'field_sales_exam' ? 'Field Sales' : '-'}</span></div>
-                <div className="flex justify-between"><span className="text-sm text-muted-foreground">Stage</span><span className="text-sm">{selectedScorecard.stage > 0 ? STAGE_LABELS[selectedScorecard.stage] || `Stage ${selectedScorecard.stage}` : '-'}</span></div>
                 <div className="flex justify-between"><span className="text-sm text-muted-foreground">Date</span><span className="text-sm">{new Date(selectedScorecard.date).toLocaleDateString()}</span></div>
                 {selectedScorecard.rank && <div className="flex justify-between"><span className="text-sm text-muted-foreground">Rank</span><span className="text-sm">#{selectedScorecard.rank}</span></div>}
               </div>
