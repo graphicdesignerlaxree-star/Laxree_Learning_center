@@ -19,6 +19,16 @@ import {
   Phone,
   Bot,
   Mic,
+  // New icons for boss view
+  Shield,
+  BarChart3,
+  Award,
+  Video,
+  Building2,
+  ScrollText,
+  History,
+  Palette,
+  Gauge,
   type LucideIcon,
 } from 'lucide-react'
 import type { Role } from '@/stores/auth-store'
@@ -31,15 +41,40 @@ export interface SidebarItem {
 }
 
 const SUPER_ADMIN_ITEMS: SidebarItem[] = [
+  // Overview
   { label: 'Dashboard', view: 'dashboard', icon: LayoutDashboard },
+  { label: 'Monitoring Center', view: 'monitoring-center', icon: Gauge },
+
+  // People
   { label: 'Employees', view: 'employees', icon: Users },
+  { label: 'Departments', view: 'departments', icon: Building2 },
   { label: 'Performance Monitor', view: 'performance-monitor', icon: Activity },
-  { label: 'AI Deployment Advisor', view: 'ai-deployment', icon: Brain },
+  { label: 'Login History', view: 'login-history', icon: History },
+
+  // Learning Content
   { label: 'Learning Paths', view: 'learning-paths', icon: Route },
   { label: 'Courses & Modules', view: 'courses', icon: BookOpen },
   { label: 'Assessments', view: 'assessments', icon: ClipboardCheck },
+  { label: 'Exam Management', view: 'exam-management', icon: ClipboardList },
+  { label: 'Question Banks', view: 'question-banks', icon: BookOpen },
   { label: 'Mock Simulations', view: 'mock-simulations', icon: MonitorPlay },
+  { label: 'Video Library', view: 'video-management', icon: Video },
   { label: 'Documents', view: 'documents', icon: FileText },
+
+  // Approvals & Scorecards
+  { label: 'Stage Approvals', view: 'stage-approvals', icon: Shield },
+  { label: 'Scorecards', view: 'scorecards', icon: Award },
+  { label: 'Certifications', view: 'certifications', icon: Sparkles },
+
+  // Analytics & Audit
+  { label: 'Reports', view: 'reports', icon: BarChart3 },
+  { label: 'Audit Center', view: 'audit-center', icon: ScrollText },
+
+  // AI Tools
+  { label: 'AI Deployment Advisor', view: 'ai-deployment', icon: Brain },
+
+  // Config
+  { label: 'Customization', view: 'customization', icon: Palette },
   { label: 'Settings', view: 'settings', icon: Settings },
 ]
 

@@ -21,6 +21,9 @@ import {
   UserCog,
   Activity,
   FileText,
+  Shield,
+  BarChart3,
+  Users,
 } from 'lucide-react'
 import {
   Sidebar,
@@ -68,11 +71,21 @@ const VIEW_LABELS: Record<string, string> = {
   'mock-simulations': 'Mock Simulations',
   documents: 'Documents',
   settings: 'Settings',
+  'monitoring-center': 'Monitoring Center',
+  reports: 'Reports & Analytics',
+  'exam-management': 'Exam Management',
+  scorecards: 'Scorecards',
+  'stage-approvals': 'Stage Approvals',
+  'question-banks': 'Question Banks',
+  'video-management': 'Video Library',
+  certifications: 'Certifications',
+  departments: 'Departments',
+  'audit-center': 'Audit Center',
+  customization: 'Customization Center',
+  'login-history': 'Login History',
   'learning-center': 'Learning Center',
   'exam-center': 'Exam Center',
   'my-performance': 'My Performance',
-  scorecards: 'Scorecards',
-  certifications: 'Certifications',
   'ai-career-center': 'AI Career Center',
   'call-practice': 'Call Practice',
   'call-analysis': 'Call Recording AI',
@@ -172,18 +185,22 @@ function SidebarNav() {
   let groups: { label: string; items: typeof items; icon: any }[]
 
   if (user?.role === 'SUPER_ADMIN' || user?.role === 'TRAINING_MANAGER' || user?.role === 'TEAM_LEADER') {
-    // Admin-style grouping
-    const overviewItems = items.filter(i => ['dashboard', 'employees'].includes(i.view))
-    const monitorItems = items.filter(i => ['performance-monitor', 'ai-deployment'].includes(i.view))
-    const contentItems = items.filter(i => ['learning-paths', 'courses', 'assessments', 'mock-simulations'].includes(i.view))
-    const resourceItems = items.filter(i => ['documents'].includes(i.view))
-    const configItems = items.filter(i => ['settings'].includes(i.view))
+    // Admin-style grouping — boss view with full control
+    const overviewItems = items.filter(i => ['dashboard', 'monitoring-center'].includes(i.view))
+    const peopleItems = items.filter(i => ['employees', 'departments', 'performance-monitor', 'login-history'].includes(i.view))
+    const contentItems = items.filter(i => ['learning-paths', 'courses', 'assessments', 'exam-management', 'question-banks', 'mock-simulations', 'video-management', 'documents'].includes(i.view))
+    const approvalItems = items.filter(i => ['stage-approvals', 'scorecards', 'certifications'].includes(i.view))
+    const analyticsItems = items.filter(i => ['reports', 'audit-center'].includes(i.view))
+    const aiItems = items.filter(i => ['ai-deployment'].includes(i.view))
+    const configItems = items.filter(i => ['customization', 'settings'].includes(i.view))
 
     groups = [
       { label: 'Overview', items: overviewItems, icon: Home },
-      { label: 'Monitor', items: monitorItems, icon: Activity },
-      { label: 'Content', items: contentItems, icon: BookOpen },
-      { label: 'Resources', items: resourceItems, icon: FileText },
+      { label: 'People', items: peopleItems, icon: Users },
+      { label: 'Learning Content', items: contentItems, icon: BookOpen },
+      { label: 'Approvals', items: approvalItems, icon: Shield },
+      { label: 'Analytics', items: analyticsItems, icon: BarChart3 },
+      { label: 'AI Tools', items: aiItems, icon: Brain },
       { label: 'Config', items: configItems, icon: Settings },
     ].filter(g => g.items.length > 0)
   } else {

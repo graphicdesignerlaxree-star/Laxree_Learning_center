@@ -5,8 +5,9 @@ import {
   LayoutDashboard, Users, Route, BookOpen, ClipboardCheck,
   MonitorPlay, FileText, Activity, Settings,
   TrendingUp, Sparkles, Brain, User, GraduationCap,
-  ClipboardList, Upload, Phone, Bot, Mic,
+  ClipboardList, Phone, Bot, Mic,
   Construction,
+  Shield, BarChart3, Award, Video, Building2, ScrollText, History, Palette, Gauge,
   type LucideIcon,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -23,6 +24,19 @@ import { AssessmentsView } from '@/components/admin/assessments-view'
 import { MockSimulationsView as AdminMockSimulationsView } from '@/components/admin/mock-simulations-view'
 import { DocumentsView } from '@/components/admin/documents-view'
 import { SettingsView } from '@/components/admin/settings-view'
+import { MonitoringCenter } from '@/components/admin/monitoring-center'
+import { ReportsView } from '@/components/admin/reports-view'
+import { ExamManagement } from '@/components/admin/exam-management'
+import { ScorecardMonitor } from '@/components/admin/scorecard-monitor'
+import { StageApproval } from '@/components/admin/stage-approval'
+import { QuestionBankManagement } from '@/components/admin/question-bank-management'
+import { VideoManagement } from '@/components/admin/video-management'
+import { CertificationsView as AdminCertificationsView } from '@/components/admin/certifications-view'
+import { DepartmentsView } from '@/components/admin/departments-view'
+import { AuditCenter } from '@/components/admin/audit-center'
+import { CustomizationCenter } from '@/components/admin/customization-center'
+import { PerformanceMonitor } from '@/components/admin/performance-monitor'
+import { LoginHistoryView } from '@/components/admin/login-history'
 
 // Employee Components
 import { EmployeeDashboard } from '@/components/employee/employee-dashboard'
@@ -33,7 +47,6 @@ import { MockSimulationsView } from '@/components/employee/mock-simulations'
 import { ExamCenter } from '@/components/employee/exam-center'
 import { AICoachView } from '@/components/employee/ai-coach'
 import { MyProfileView } from '@/components/employee/my-profile'
-import { UploadCenter } from '@/components/employee/upload-center'
 import { CallPractice } from '@/components/employee/call-practice'
 import { CallAnalysisView } from '@/components/employee/call-analysis'
 import { AISimulation } from '@/components/employee/ai-simulation'
@@ -51,13 +64,24 @@ const ICON_MAP: Record<string, LucideIcon> = {
   'mock-simulations': MonitorPlay,
   'documents': FileText,
   'settings': Settings,
+  'monitoring-center': Gauge,
+  'reports': BarChart3,
+  'exam-management': ClipboardList,
+  'scorecards': Award,
+  'stage-approvals': Shield,
+  'question-banks': BookOpen,
+  'video-management': Video,
+  'certifications': Sparkles,
+  'departments': Building2,
+  'audit-center': ScrollText,
+  'customization': Palette,
+  'login-history': History,
   'learning-center': GraduationCap,
   'exam-center': ClipboardList,
   'my-performance': TrendingUp,
   'ai-career-center': Sparkles,
   'ai-coach': Brain,
   'my-profile': User,
-  'upload-center': Upload,
   'call-practice': Phone,
   'call-analysis': Mic,
   'ai-simulation': Bot,
@@ -74,31 +98,52 @@ const VIEW_TITLES: Record<string, string> = {
   'mock-simulations': 'Mock Simulations',
   'documents': 'Documents',
   'settings': 'Settings',
+  'monitoring-center': 'Monitoring Center',
+  'reports': 'Reports & Analytics',
+  'exam-management': 'Exam Management',
+  'scorecards': 'Scorecards',
+  'stage-approvals': 'Stage Approvals',
+  'question-banks': 'Question Banks',
+  'video-management': 'Video Library',
+  'certifications': 'Certifications',
+  'departments': 'Departments',
+  'audit-center': 'Audit Center',
+  'customization': 'Customization Center',
+  'login-history': 'Login History',
   'learning-center': 'Learning Center',
   'exam-center': 'Exam Center',
   'my-performance': 'My Performance',
-  'scorecards': 'Scorecards',
-  'certifications': 'Certifications',
   'ai-career-center': 'AI Career Center',
   'ai-coach': 'AI Coach',
   'my-profile': 'My Profile',
-  'upload-center': 'Upload Center',
   'call-practice': 'Call Practice',
   'call-analysis': 'Call Recording AI',
   'ai-simulation': 'AI Simulation',
 }
 
 const VIEW_DESCRIPTIONS: Record<string, string> = {
-  'dashboard': 'Overview of your platform activity and key metrics',
-  'employees': 'Create and manage employees, provide login credentials',
-  'performance-monitor': 'Monitor employee performance, scores, and readiness',
+  'dashboard': 'Complete platform overview — track every employee, course, and certification in one place',
+  'employees': 'Create and manage employees, assign departments, reset passwords, track activity',
+  'performance-monitor': 'Monitor employee performance, scores, and readiness in real-time',
   'ai-deployment': 'AI recommends whether employee should handle calls or go to field',
-  'learning-paths': 'Create and manage learning paths for employees',
+  'learning-paths': 'View and manage learning paths for employees',
   'courses': 'Manage courses, modules, and content',
   'assessments': 'Create and manage assessments and tests',
   'mock-simulations': 'Set up and monitor mock sales simulations',
-  'documents': 'Manage training documents and resources',
+  'documents': 'Manage training documents, PDFs, and resources',
   'settings': 'Platform configuration and preferences',
+  'monitoring-center': 'Advanced monitoring dashboard with detailed charts and KPIs',
+  'reports': 'Generate and view detailed reports across all platform metrics',
+  'exam-management': 'Create, edit, and manage exams with question linking',
+  'scorecards': 'Browse all employee scorecards with advanced filters',
+  'stage-approvals': 'Approve or reject employee stage progression requests',
+  'question-banks': 'Create, edit, and manage question bank questions',
+  'video-management': 'Manage training videos with CRUD operations',
+  'certifications': 'Approve or reject employee certification attempts',
+  'departments': 'Create and manage departments',
+  'audit-center': 'View complete audit trail of all admin actions',
+  'customization': 'Customize platform branding, colors, and appearance',
+  'login-history': 'Track every employee login — who, when, and how often',
   'learning-center': 'Browse and enroll in courses',
   'exam-center': 'Take certification exams and advance your career',
   'my-performance': 'Track your learning progress and scores',
@@ -107,7 +152,6 @@ const VIEW_DESCRIPTIONS: Record<string, string> = {
   'ai-career-center': 'AI-powered career development recommendations',
   'ai-coach': 'Get personalized AI coaching and feedback',
   'my-profile': 'View and update your profile information',
-  'upload-center': 'Upload and manage documents, catalogs, and resources',
   'call-practice': 'Practice sales calls with realistic scenarios',
   'call-analysis': 'Upload call recordings and get AI-powered sales coaching with pitch guidance',
   'ai-simulation': 'Chat with an AI sales simulator to sharpen your skills',
@@ -171,6 +215,18 @@ const ADMIN_VIEWS: Record<string, React.ComponentType> = {
   'mock-simulations': AdminMockSimulationsView,
   'documents': DocumentsView,
   'settings': SettingsView,
+  'monitoring-center': MonitoringCenter,
+  'reports': ReportsView,
+  'exam-management': ExamManagement,
+  'scorecards': ScorecardMonitor,
+  'stage-approvals': StageApproval,
+  'question-banks': QuestionBankManagement,
+  'video-management': VideoManagement,
+  'certifications': AdminCertificationsView,
+  'departments': DepartmentsView,
+  'audit-center': AuditCenter,
+  'customization': CustomizationCenter,
+  'login-history': LoginHistoryView,
 }
 
 // Employee view mapping
@@ -185,7 +241,6 @@ const EMPLOYEE_VIEWS: Record<string, React.ComponentType> = {
   'mock-simulations': MockSimulationsView,
   'ai-coach': AICoachView,
   'my-profile': MyProfileView,
-  'upload-center': UploadCenter,
   'call-practice': CallPractice,
   'call-analysis': CallAnalysisView,
   'ai-simulation': AISimulation,

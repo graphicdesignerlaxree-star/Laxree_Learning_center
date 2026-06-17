@@ -16,6 +16,7 @@ import {
   Sparkles, BarChart3, Brain, Shield, ArrowUpRight, ArrowDownRight, Activity,
   Upload, FileText, Video, BookOpen, Zap, MapPin, Phone, AlertTriangle,
   ChevronRight, ArrowRight, User, Rocket, Eye, Play, Plus,
+  History, ScrollText,
 } from 'lucide-react'
 import {
   BarChart, Bar, AreaChart, Area, XAxis, YAxis,
@@ -161,17 +162,27 @@ export function AdminDashboard() {
         </div>
       </motion.div>
 
-      {/* Quick Actions - Prominent Action Buttons */}
+      {/* Quick Actions - Boss Control Panel */}
       <motion.div variants={itemVariants}>
         <Card className="border-0 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white shadow-lg">
           <CardContent className="p-4">
-            <p className="text-sm font-semibold text-emerald-100 mb-3">Quick Actions</p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-sm font-semibold text-emerald-100 flex items-center gap-2">
+                <Shield className="w-4 h-4" />
+                Boss Control Panel — Quick Actions
+              </p>
+              <Badge className="bg-white/20 text-white border-0 hover:bg-white/30">{data.totalEmployees} employees under you</Badge>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {[
                 { label: 'Add Employee', sublabel: 'Onboard new team member', icon: UserPlus, onClick: () => useAuthStore.getState().setCurrentView('employees') },
                 { label: 'Upload Content', sublabel: 'Add videos, PDFs & docs', icon: Upload, onClick: () => useAuthStore.getState().setCurrentView('documents') },
                 { label: 'AI Recommendations', sublabel: 'View deployment insights', icon: Brain, onClick: () => useAuthStore.getState().setCurrentView('ai-deployment') },
                 { label: 'Manage Courses', sublabel: 'Create & edit courses', icon: BookOpen, onClick: () => useAuthStore.getState().setCurrentView('courses') },
+                { label: 'Login History', sublabel: 'Track employee logins', icon: History, onClick: () => useAuthStore.getState().setCurrentView('login-history') },
+                { label: 'Audit Center', sublabel: 'View all admin actions', icon: ScrollText, onClick: () => useAuthStore.getState().setCurrentView('audit-center') },
+                { label: 'Approvals', sublabel: 'Pending stage approvals', icon: Shield, onClick: () => useAuthStore.getState().setCurrentView('stage-approvals') },
+                { label: 'Reports', sublabel: 'Generate analytics reports', icon: BarChart3, onClick: () => useAuthStore.getState().setCurrentView('reports') },
               ].map((action) => (
                 <button
                   key={action.label}
@@ -193,20 +204,24 @@ export function AdminDashboard() {
         </Card>
       </motion.div>
 
-      {/* KPI Stats - Compact */}
+      {/* KPI Stats - Comprehensive Boss View */}
       <motion.div variants={itemVariants}>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {[
-            { label: 'Total Employees', value: data.totalEmployees, icon: Users, trend: `${data.activeEmployees} active`, up: true, color: 'emerald' },
-            { label: 'Field Ready', value: data.fieldReadyCount, icon: MapPin, trend: `${Math.round((data.fieldReadyCount / Math.max(data.totalEmployees, 1)) * 100)}% of total`, up: true, color: 'teal' },
-            { label: 'Inbound Ready', value: data.inboundReadyCount, icon: Phone, trend: `${Math.round((data.inboundReadyCount / Math.max(data.totalEmployees, 1)) * 100)}% of total`, up: true, color: 'cyan' },
-            { label: 'Avg Readiness', value: `${data.avgAssessmentScore}%`, icon: Target, trend: `Mock: ${data.avgMockScore}%`, up: data.avgAssessmentScore > 60, color: 'amber' },
+            { label: 'Total Employees', value: data.totalEmployees, icon: Users, trend: `${data.activeEmployees} active · ${data.newJoiners} new this month`, up: true, color: 'emerald' },
+            { label: 'Training Completion', value: `${data.trainingCompletion}%`, icon: GraduationCap, trend: `${data.courses} courses assigned`, up: data.trainingCompletion >= 50, color: 'teal' },
+            { label: 'Avg Assessment Score', value: `${data.avgAssessmentScore}%`, icon: Target, trend: `Mock avg: ${data.avgMockScore}%`, up: data.avgAssessmentScore > 60, color: 'cyan' },
+            { label: 'Certification Rate', value: `${data.certificationRate}%`, icon: Award, trend: `${data.pendingCertifications} pending approvals`, up: data.certificationRate > 50, color: 'amber' },
+            { label: 'Field Ready', value: data.fieldReadyCount, icon: MapPin, trend: `${Math.round((data.fieldReadyCount / Math.max(data.totalEmployees, 1)) * 100)}% of total`, up: true, color: 'emerald' },
+            { label: 'Inbound Ready', value: data.inboundReadyCount, icon: Phone, trend: `${Math.round((data.inboundReadyCount / Math.max(data.totalEmployees, 1)) * 100)}% of total`, up: true, color: 'teal' },
+            { label: 'Avg Readiness Score', value: `${data.avgReadiness}%`, icon: Brain, trend: `Org-wide AI readiness`, up: data.avgReadiness > 50, color: 'cyan' },
+            { label: 'Pending Approvals', value: data.pendingApprovals, icon: AlertCircle, trend: `Awaiting your action`, up: data.pendingApprovals === 0, color: 'amber' },
           ].map((stat, i) => (
             <motion.div
               key={stat.label}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
+              transition={{ delay: i * 0.04 }}
             >
               <Card className="relative overflow-hidden hover:shadow-md transition-shadow">
                 <CardContent className="p-4">
@@ -221,7 +236,7 @@ export function AdminDashboard() {
                   </div>
                   <div className="flex items-center gap-1 mt-2">
                     {stat.up ? <TrendingUp className="w-3 h-3 text-emerald-500" /> : <TrendingDown className="w-3 h-3 text-red-500" />}
-                    <span className="text-xs text-muted-foreground">{stat.trend}</span>
+                    <span className="text-xs text-muted-foreground truncate">{stat.trend}</span>
                   </div>
                 </CardContent>
               </Card>
