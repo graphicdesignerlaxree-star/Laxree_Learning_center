@@ -74,7 +74,6 @@ const VIEW_LABELS: Record<string, string> = {
   scorecards: 'Scorecards',
   certifications: 'Certifications',
   'ai-career-center': 'AI Career Center',
-  'upload-center': 'Upload Center',
   'call-practice': 'Call Practice',
   'call-analysis': 'Call Recording AI',
   'ai-simulation': 'AI Simulation',
@@ -193,7 +192,7 @@ function SidebarNav() {
     const learningItems = items.filter(i => ['learning-center', 'exam-center', 'mock-simulations'].includes(i.view))
     const aiItems = items.filter(i => ['ai-career-center', 'ai-simulation', 'ai-coach', 'call-practice', 'call-analysis'].includes(i.view))
     const progressItems = items.filter(i => ['scorecards', 'certifications'].includes(i.view))
-    const accountItems = items.filter(i => ['upload-center', 'my-profile'].includes(i.view))
+    const accountItems = items.filter(i => ['my-profile'].includes(i.view))
 
     groups = [
       { label: 'Overview', items: overviewItems, icon: Home },

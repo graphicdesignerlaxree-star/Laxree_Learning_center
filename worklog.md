@@ -130,3 +130,45 @@ Stage Summary:
 - Call Recording AI: now discoverable via (1) sidebar under 'AI Tools' group, (2) prominent CTA banner in Call Practice page
 - The 'Call Recording AI' sidebar item shows a Mic icon and is labeled 'Call Recording AI'
 - Upload UI is a drag-drop dropzone accepting mp3/wav/m4a/ogg/flac/webm/aac up to 50MB
+
+---
+Task ID: 6-fix-pdf-upload-center
+Agent: Main Agent
+Task: Fix Minibar PDF showing "File not found" error + remove Upload Center from account dropdown
+
+Work Log:
+- Investigated Minibar PDF issue: user sees {"error":"File not found"} in iframe
+- Found root cause: PDFs were stored at /home/z/my-project/upload/ (with spaces in filenames like "Mini Bar.pdf") and served via /api/uploads route
+  - This worked locally but failed on the user's deployment (Vercel) where filesystem paths don't exist
+- Solution: Moved all 3 PDFs to /home/z/my-project/public/pdfs/ with clean filenames:
+  - Mini Bar.pdf → public/pdfs/mini-bar.pdf (24MB)
+  - Safe Box.pdf → public/pdfs/safe-box.pdf (21MB)
+  - Electric Kettle Trainig PPT_11zon.pdf → public/pdfs/electric-kettle.pdf (4MB)
+- Updated DB pdfUrl for ALL matching modules (7 modules total):
+  - All Minibar modules → /pdfs/mini-bar.pdf (including "Minibar - Product Knowledge" and "Cross-Selling Mini Bar Clients")
+  - All Safe Box modules → /pdfs/safe-box.pdf
+  - All Kettle modules → /pdfs/electric-kettle.pdf
+- Updated getProperUrl() in lesson-viewer.tsx to pass through /pdfs/ URLs directly (no API transformation needed for static assets)
+- Removed "Upload Center" from sidebar:
+  - Removed from EMPLOYEE_ITEMS in sidebar-config.tsx
+  - Removed 'upload-center': 'Upload Center' from VIEW_LABELS in app-shell.tsx
+  - Removed 'upload-center' from accountItems filter in app-shell.tsx (Account group now only has 'My Profile')
+  - Removed unused Upload icon import from sidebar-config.tsx
+- Also fixed .env to use correct Neon PostgreSQL DATABASE_URL (was set to invalid SQLite path "file:/home/z/my-project/db/custom.db" which broke Prisma)
+  - System env var DATABASE_URL was overriding .env file with the broken SQLite path
+  - Updated dev-watcher.sh to explicitly export DATABASE_URL and DIRECT_URL with Neon PostgreSQL URL
+- Verified fixes:
+  - curl test: Mini Bar PDF returns HTTP 206, Content-Type: application/pdf, file identified as valid PDF v1.3
+  - curl test: All 3 PDFs (mini-bar.pdf, safe-box.pdf, electric-kettle.pdf) serve correctly via /pdfs/ path
+  - curl test: /api/courses returns modules with new pdfUrl values (/pdfs/mini-bar.pdf etc.)
+  - curl test: /api/auth works with emp002@laxree.com / emp123 (returns user JSON)
+  - Code inspection: lesson-viewer.tsx getProperUrl() correctly passes through /pdfs/ URLs
+  - Code inspection: sidebar-config.tsx no longer has 'upload-center' entry
+  - Code inspection: app-shell.tsx VIEW_LABELS and accountItems filter no longer reference 'upload-center'
+  - Code inspection: Call Recording AI section is still wired (sidebar item, view-renderer registration, AI Tools group)
+
+Stage Summary:
+- Minibar PDF fix: PDFs moved to public/pdfs/ as static assets (served by Next.js directly, works on any deployment including Vercel). DB updated with new URLs. getProperUrl() updated to pass through /pdfs/ paths. Verified working via curl (HTTP 206, application/pdf).
+- Upload Center removal: Completely removed from sidebar config, view labels, and account group filter. Account dropdown now only contains "My Profile".
+- Environment note: Dev server is extremely unstable in this sandbox (dies every 15-20 seconds). End-to-end browser verification was not possible due to server instability, but all code fixes are verified via direct API calls and code inspection.
+- Call Recording AI section location (for user): It's in the LEFT SIDEBAR under the "AI Tools" group, labeled "Call Recording AI" with a microphone (Mic) icon. It sits between "Call Practice" and "AI Simulation".

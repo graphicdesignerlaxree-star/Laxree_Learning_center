@@ -826,7 +826,9 @@ function ContactsPanel({ open, onClose }: { open: boolean; onClose: () => void }
 // Helper to convert upload URLs to API-served URLs
 function getProperUrl(url: string): string {
   if (!url) return url
-  if (url.startsWith('/api/') || url.startsWith('http')) return url
+  // Static assets served from public folder — pass through directly
+  if (url.startsWith('/pdfs/') || url.startsWith('/images/') || url.startsWith('/api/') || url.startsWith('http')) return url
+  // Legacy /upload/ paths go through the API
   const fileName = url.replace(/^\/upload\//, '')
   return `/api/uploads?file=${encodeURIComponent(fileName)}`
 }
