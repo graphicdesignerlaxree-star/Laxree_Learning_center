@@ -76,6 +76,7 @@ const VIEW_LABELS: Record<string, string> = {
   'ai-career-center': 'AI Career Center',
   'upload-center': 'Upload Center',
   'call-practice': 'Call Practice',
+  'call-analysis': 'Call Recording AI',
   'ai-simulation': 'AI Simulation',
   'ai-coach': 'AI Coach',
   'my-profile': 'My Profile',
@@ -190,7 +191,7 @@ function SidebarNav() {
     // Employee-style grouping
     const overviewItems = items.filter(i => ['dashboard', 'my-performance'].includes(i.view))
     const learningItems = items.filter(i => ['learning-center', 'exam-center', 'mock-simulations'].includes(i.view))
-    const aiItems = items.filter(i => ['ai-career-center', 'ai-simulation', 'ai-coach', 'call-practice'].includes(i.view))
+    const aiItems = items.filter(i => ['ai-career-center', 'ai-simulation', 'ai-coach', 'call-practice', 'call-analysis'].includes(i.view))
     const progressItems = items.filter(i => ['scorecards', 'certifications'].includes(i.view))
     const accountItems = items.filter(i => ['upload-center', 'my-profile'].includes(i.view))
 

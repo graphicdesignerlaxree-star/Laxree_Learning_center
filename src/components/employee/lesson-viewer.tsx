@@ -1076,10 +1076,10 @@ export function LessonViewer({
                     </div>
                     <div>
                       <h3 className="text-base font-bold text-gray-800">
-                        {module.content ? 'Lesson Document' : 'Download Lesson PDF'}
+                        {module.pdfUrl ? 'Product PDF Document' : module.content ? 'Lesson Document' : 'Download Lesson PDF'}
                       </h3>
                       <p className="text-xs text-gray-500">
-                        {module.content ? 'View the formatted lesson document' : 'Save this lesson for offline reading & quick reference'}
+                        {module.pdfUrl ? 'Official product training PDF — view and download below' : module.content ? 'View the formatted lesson document' : 'Save this lesson for offline reading & quick reference'}
                       </p>
                     </div>
                   </div>
@@ -1093,8 +1093,31 @@ export function LessonViewer({
                   </Button>
                 </div>
 
-                {/* Embedded HTML Document Viewer or Download Card */}
-                {module.content ? (
+                {/* Real PDF file viewer (prioritize actual PDF file when pdfUrl exists) */}
+                {module.pdfUrl ? (
+                  <div className="rounded-2xl overflow-hidden border border-gray-200 shadow-lg bg-white">
+                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-100 px-4 py-2.5 flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-amber-700">
+                        <FileDown className="w-4 h-4" />
+                        <span className="text-xs font-semibold">Official PDF Document</span>
+                      </div>
+                      <a
+                        href={getProperUrl(module.pdfUrl)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-amber-700 hover:text-amber-900 font-semibold underline"
+                      >
+                        Open in New Tab →
+                      </a>
+                    </div>
+                    <iframe
+                      src={getProperUrl(module.pdfUrl)}
+                      title={`PDF: ${module.title}`}
+                      className="w-full"
+                      style={{ height: '75vh', minHeight: '600px', border: 'none' }}
+                    />
+                  </div>
+                ) : module.content ? (
                   <div className="rounded-2xl overflow-hidden border border-gray-200 shadow-lg bg-white">
                     <iframe
                       srcDoc={`<!DOCTYPE html>

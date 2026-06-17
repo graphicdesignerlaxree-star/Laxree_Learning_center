@@ -5,7 +5,7 @@ import {
   LayoutDashboard, Users, Route, BookOpen, ClipboardCheck,
   MonitorPlay, FileText, Activity, Settings,
   TrendingUp, Sparkles, Brain, User, GraduationCap,
-  ClipboardList, Upload, Phone, Bot,
+  ClipboardList, Upload, Phone, Bot, Mic,
   Construction,
   type LucideIcon,
 } from 'lucide-react'
@@ -35,6 +35,7 @@ import { AICoachView } from '@/components/employee/ai-coach'
 import { MyProfileView } from '@/components/employee/my-profile'
 import { UploadCenter } from '@/components/employee/upload-center'
 import { CallPractice } from '@/components/employee/call-practice'
+import { CallAnalysisView } from '@/components/employee/call-analysis'
 import { AISimulation } from '@/components/employee/ai-simulation'
 import { ScorecardsView } from '@/components/employee/scorecards-view'
 import { CertificationsView } from '@/components/employee/certifications-view'
@@ -58,6 +59,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   'my-profile': User,
   'upload-center': Upload,
   'call-practice': Phone,
+  'call-analysis': Mic,
   'ai-simulation': Bot,
 }
 
@@ -82,6 +84,7 @@ const VIEW_TITLES: Record<string, string> = {
   'my-profile': 'My Profile',
   'upload-center': 'Upload Center',
   'call-practice': 'Call Practice',
+  'call-analysis': 'Call Recording AI',
   'ai-simulation': 'AI Simulation',
 }
 
@@ -106,6 +109,7 @@ const VIEW_DESCRIPTIONS: Record<string, string> = {
   'my-profile': 'View and update your profile information',
   'upload-center': 'Upload and manage documents, catalogs, and resources',
   'call-practice': 'Practice sales calls with realistic scenarios',
+  'call-analysis': 'Upload call recordings and get AI-powered sales coaching with pitch guidance',
   'ai-simulation': 'Chat with an AI sales simulator to sharpen your skills',
 }
 
@@ -183,6 +187,7 @@ const EMPLOYEE_VIEWS: Record<string, React.ComponentType> = {
   'my-profile': MyProfileView,
   'upload-center': UploadCenter,
   'call-practice': CallPractice,
+  'call-analysis': CallAnalysisView,
   'ai-simulation': AISimulation,
 }
 

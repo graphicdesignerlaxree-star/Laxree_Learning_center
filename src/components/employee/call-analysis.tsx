@@ -14,6 +14,8 @@ import {
   CheckCircle2, Sparkles, TrendingUp, Lightbulb,
   ArrowRight, Clock, Volume2, BarChart3, Star,
   ChevronDown, ChevronUp, Trash2, RotateCcw,
+  Hotel, MapPin, Building2, IndianRupee, BedDouble,
+  Rocket, Megaphone, MessageSquare, Copy, PhoneCall,
 } from 'lucide-react'
 
 // Types
@@ -40,6 +42,19 @@ interface CallAnalysis {
   improvements: string[]
   suggestions: string[]
   callSummary: string
+  clientProfile?: {
+    detected: boolean
+    propertyType: string
+    propertyStage: string
+    location: string
+    arrRange: string
+    roomCount: string
+  }
+  recommendedPitch?: string
+  interestBuildingTips?: string[]
+  followUpMessage?: string
+  clientCutCall?: boolean
+  clientCutReason?: string | null
 }
 
 interface PastAnalysis {
@@ -229,10 +244,10 @@ export function CallAnalysisView() {
           <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
             <Mic className="w-5 h-5 text-emerald-600" />
           </div>
-          Call Recording Analysis
+          Call Recording AI Analysis
         </h1>
         <p className="text-gray-500 mt-1 ml-13">
-          Upload a sales call recording and get AI-powered feedback on your performance
+          Upload your sales call recording — our Expert AI Sales Assistant analyzes your pitch, gives you a short &amp; sweet recommended pitch, identifies the client&apos;s hotel profile (ARR, property type, stage, location), and guides you on building interest.
         </p>
       </div>
 
@@ -758,6 +773,190 @@ export function CallAnalysisView() {
                 </motion.div>
               )}
 
+              {/* Client Cut Call Notice — not salesperson's fault */}
+              {analysis.clientCutCall && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.62 }}
+                >
+                  <Card className="border-blue-200 bg-blue-50/40">
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center shrink-0">
+                          <PhoneCall className="w-4 h-4 text-blue-600" />
+                        </div>
+                        <div className="flex-1">
+                          <span className="text-sm font-semibold text-blue-800 block mb-1">
+                            Client Disconnected Early — Not Your Mistake
+                          </span>
+                          <p className="text-sm text-blue-700 leading-relaxed">
+                            {analysis.clientCutReason || 'The client cut the call early. This often happens when the timing is off or they already have a vendor — not a reflection of your pitch. Use the tips below to rebuild interest.'}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
+
+              {/* Client Profile — Hotel Context */}
+              {analysis.clientProfile && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.63 }}
+                >
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-7 h-7 bg-teal-100 rounded-lg flex items-center justify-center">
+                          <Hotel className="w-4 h-4 text-teal-600" />
+                        </div>
+                        <span className="text-sm font-medium text-gray-700">Client Profile — Hotel Context</span>
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        <ProfileChip
+                          icon={<Building2 className="w-3.5 h-3.5" />}
+                          label="Property Type"
+                          value={analysis.clientProfile.propertyType || 'Unknown'}
+                        />
+                        <ProfileChip
+                          icon={<Rocket className="w-3.5 h-3.5" />}
+                          label="Property Stage"
+                          value={analysis.clientProfile.propertyStage || 'Unknown'}
+                        />
+                        <ProfileChip
+                          icon={<MapPin className="w-3.5 h-3.5" />}
+                          label="Location"
+                          value={analysis.clientProfile.location || 'Unknown'}
+                        />
+                        <ProfileChip
+                          icon={<IndianRupee className="w-3.5 h-3.5" />}
+                          label="ARR Range"
+                          value={analysis.clientProfile.arrRange || 'Unknown'}
+                        />
+                        <ProfileChip
+                          icon={<BedDouble className="w-3.5 h-3.5" />}
+                          label="Room Count"
+                          value={analysis.clientProfile.roomCount || 'Not asked'}
+                        />
+                        <ProfileChip
+                          icon={<Sparkles className="w-3.5 h-3.5" />}
+                          label="Profile Status"
+                          value={analysis.clientProfile.detected ? 'Detected' : 'Not captured'}
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
+
+              {/* Recommended Pitch — Short & Sweet */}
+              {analysis.recommendedPitch && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.65 }}
+                >
+                  <Card className="border-emerald-200 bg-gradient-to-br from-emerald-50/60 to-teal-50/40">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-7 h-7 bg-emerald-100 rounded-lg flex items-center justify-center">
+                          <Megaphone className="w-4 h-4 text-emerald-600" />
+                        </div>
+                        <span className="text-sm font-semibold text-emerald-800">
+                          Recommended Pitch — Short &amp; Sweet
+                        </span>
+                        <Badge className="bg-emerald-100 text-emerald-700 text-[10px] border-emerald-200 font-semibold ml-auto">
+                          USE THIS
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-gray-700 leading-relaxed bg-white/70 rounded-lg p-3 border border-emerald-100">
+                        {analysis.recommendedPitch}
+                      </p>
+                      <p className="text-[11px] text-emerald-600 mt-2 italic">
+                        ✓ Guest experience benefit + ✓ ROI + ✓ Differentiator — short, presentable, easy to understand
+                      </p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
+
+              {/* Interest Building Tips — for re-engaging disengaged clients */}
+              {analysis.interestBuildingTips && analysis.interestBuildingTips.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.68 }}
+                >
+                  <Card className="border-amber-200 bg-amber-50/30">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-7 h-7 bg-amber-100 rounded-lg flex items-center justify-center">
+                          <Lightbulb className="w-4 h-4 text-amber-600" />
+                        </div>
+                        <span className="text-sm font-semibold text-amber-800">
+                          Interest-Building Techniques
+                        </span>
+                        <span className="text-[11px] text-amber-600 ml-auto">If client seems disengaged</span>
+                      </div>
+                      <div className="space-y-2">
+                        {analysis.interestBuildingTips.map((tip, i) => (
+                          <div key={i} className="flex items-start gap-3 p-3 bg-white/80 rounded-lg border border-amber-100">
+                            <div className="w-6 h-6 bg-amber-100 rounded-md flex items-center justify-center shrink-0 text-xs font-bold text-amber-600">
+                              {i + 1}
+                            </div>
+                            <span className="text-sm text-gray-700 leading-relaxed">{tip}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
+
+              {/* Follow-up WhatsApp Message — ready to copy */}
+              {analysis.followUpMessage && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 }}
+                >
+                  <Card className="border-teal-200 bg-teal-50/30">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 bg-teal-100 rounded-lg flex items-center justify-center">
+                            <MessageSquare className="w-4 h-4 text-teal-600" />
+                          </div>
+                          <span className="text-sm font-semibold text-teal-800">
+                            Ready-to-Send Follow-Up Message
+                          </span>
+                          <Badge className="bg-teal-100 text-teal-700 text-[10px] border-teal-200 font-semibold">
+                            WHATSAPP
+                          </Badge>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-7 text-xs gap-1 border-teal-200 text-teal-700 hover:bg-teal-50"
+                          onClick={() => {
+                            navigator.clipboard?.writeText(analysis.followUpMessage || '')
+                          }}
+                        >
+                          <Copy className="w-3 h-3" />
+                          Copy
+                        </Button>
+                      </div>
+                      <p className="text-sm text-gray-700 leading-relaxed bg-white rounded-lg p-3 border border-teal-100 whitespace-pre-wrap">
+                        {analysis.followUpMessage}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
+
               {/* Transcription Toggle */}
               {transcription && (
                 <Card>
@@ -875,6 +1074,30 @@ function FeedbackSection({
         </div>
       </div>
       <p className="text-sm text-gray-500 leading-relaxed pl-8">{feedback}</p>
+    </div>
+  )
+}
+
+// Profile Chip — small labelled value display for client profile
+function ProfileChip({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode
+  label: string
+  value: string
+}) {
+  const isUnknown = !value || value.toLowerCase() === 'unknown' || value.toLowerCase() === 'not asked'
+  return (
+    <div className={`flex items-start gap-2 p-2.5 rounded-lg border ${isUnknown ? 'bg-gray-50/50 border-gray-100' : 'bg-white border-teal-100'}`}>
+      <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 ${isUnknown ? 'bg-gray-100 text-gray-400' : 'bg-teal-100 text-teal-600'}`}>
+        {icon}
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="text-[10px] uppercase tracking-wide text-gray-400 font-semibold">{label}</div>
+        <div className={`text-xs font-medium truncate ${isUnknown ? 'text-gray-400 italic' : 'text-gray-700'}`}>{value}</div>
+      </div>
     </div>
   )
 }

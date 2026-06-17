@@ -19,6 +19,7 @@ import {
   Upload,
   Phone,
   Bot,
+  Mic,
   type LucideIcon,
 } from 'lucide-react'
 import type { Role } from '@/stores/auth-store'
@@ -54,6 +55,7 @@ const EMPLOYEE_ITEMS: SidebarItem[] = [
   { label: 'Mock Simulations', view: 'mock-simulations', icon: MonitorPlay },
   { label: 'Upload Center', view: 'upload-center', icon: Upload },
   { label: 'Call Practice', view: 'call-practice', icon: Phone },
+  { label: 'Call Recording AI', view: 'call-analysis', icon: Mic },
   { label: 'AI Simulation', view: 'ai-simulation', icon: Bot },
   { label: 'AI Coach', view: 'ai-coach', icon: Brain },
   { label: 'My Profile', view: 'my-profile', icon: User },

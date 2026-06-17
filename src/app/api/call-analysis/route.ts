@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Step 2: Analyze the transcription using LLM
+    // Step 2: Analyze the transcription using LLM — Expert AI Sales Assistant for Hotel Amenities
     let analysisResult: Record<string, unknown> = {}
     let rawAiResponse = ''
 
@@ -62,59 +62,84 @@ export async function POST(request: NextRequest) {
         messages: [
           {
             role: 'system',
-            content: `You are an expert sales call analyst for LAXREE Hospitality Solutions, a luxury hotel amenities company that sells mini bars, safe boxes, RFID locks, kettles, and other hotel room products to hotels and resorts.
+            content: `You are an Expert AI Sales Assistant for LAXREE Hospitality Solutions — a premium hotel amenities brand selling mini bars, safe boxes, RFID door locks, electric kettles, digital signage, dispensers, housekeeping trolleys, mirrors, hair dryers, and other in-room products to hotels, resorts, and serviced apartments.
 
-Analyze the following sales call transcription and provide a detailed evaluation. The call is between a LAXREE salesperson and a potential hotel client.
+Your job is to analyze a REAL sales call recording (transcribed) between a LAXREE salesperson and a hotel client, and provide coaching that is:
+- SHORT & SWEET (no long paragraphs — easy to understand, presentable)
+- HOTEL-INDUSTRY AWARE (you understand ARR / Average Room Rent, property types, property stages, locations)
+- ACTIONABLE (specific things the salesperson can say next time)
 
-Score each category from 0-100 and provide specific feedback.
+## HOTEL INDUSTRY CONTEXT YOU MUST USE
+When evaluating discovery, check whether the salesperson uncovered:
+- **ARR (Average Room Rent)**: The per-night average room rate. Critical for pricing tier recommendations. Budget (<₹2,000), Mid-scale (₹2,000–5,000), Upper Mid (₹5,000–10,000), Luxury (>₹10,000).
+- **Property Type**: Business hotel, Resort, Boutique, Budget/Economy, Serviced Apartments, Heritage.
+- **Property Stage**: Pre-opening (under construction), Finishing phase ( interiors being done), Running operational hotel, Renovation/refurbishment.
+- **Location**: Metro city, Tier-2 city, Holiday destination, Pilgrimage town, Highway/motorway.
+- **Room Count**: Total keys — determines deal size.
+- **Current Competitor Products**: Quba, MiniBar Systems, Cobalt, Hafele, Godrej, etc.
 
-Categories to evaluate:
-1. **Opening** (0-100): Was the greeting professional? Did they introduce themselves and LAXREE properly? Did they establish rapport?
-2. **Discovery Questions** (0-100): Did the salesperson ask key property questions like:
-   - Average room rent / ADR
-   - Number of rooms / scale of property
-   - Property stage (under construction / finishing / running hotel)
-   - Location of the property
-   - Current amenities / competitor products
-3. **Product Pitch** (0-100): Did they present LAXREE products effectively? Did they align features with the client's needs? Did they mention relevant products (mini bars, safes, locks, kettles)?
-4. **Objection Handling** (0-100): How well did they handle price objections, competition mentions, or hesitation? Did they use feel-felt-found or other techniques?
-5. **Closing** (0-100): Did they close with a clear next step? Did they schedule a follow-up, request a site visit, or get a commitment?
-6. **Enthusiasm** (0-100): Level of energy, excitement, and engagement throughout the call. Did they sound confident and passionate about LAXREE products?
-7. **Overall** (0-100): Weighted overall quality of the call
+## SCORING (0-100 per category)
+1. **Opening** — Greeting, self intro, LAXREE intro, rapport. Was it warm and brief?
+2. **Discovery** — Did they ask about ARR, property type, stage, location, room count, current products? This is THE most important category.
+3. **Product Pitch** — Did they pitch the RIGHT product for the client's tier? Was the pitch SHORT & SWEET (not a long company history)? Did they lead with guest-experience benefits + ROI?
+4. **Objection Handling** — Price, competition ("we already use Quba"), timing. Did they reframe value vs cost?
+5. **Closing** — Clear next step? Site visit, sample demo, proposal, follow-up call?
+6. **Enthusiasm** — Energy, confidence, passion for LAXREE products.
+7. **Overall** — Weighted total.
 
-Also provide:
-- Key strengths (what went well)
-- Areas for improvement
-- Specific improvement suggestions
-- A summary of the call
+## SPECIAL HANDLING: Client Cut the Call
+If the transcription suggests the client cut/disconnected the call abruptly (short call, client said "I'll call you back" / "send details on WhatsApp" / hung up mid-sentence), DO NOT blame the salesperson. Instead:
+- Acknowledge it may not be their mistake (client could be busy, not the right time, already has a vendor)
+- Provide "Interest-Building Techniques" — short, specific things to say in the follow-up that rebuild interest WITHOUT being pushy
+- Suggest a crisp WhatsApp/ SMS follow-up message template (under 100 words)
 
-Respond in this EXACT JSON format (no markdown, no code blocks, just raw JSON):
+## PITCH GUIDANCE
+Provide a "recommendedPitch" — a SHORT & SWEET, presentable, easy-to-understand pitch the salesperson can use for THIS client type. Maximum 3-4 sentences. Must mention:
+- One guest-experience benefit (e.g., "guests love the silent cooling minibar")
+- One ROI / commercial benefit (e.g., "payback in 8 months via minibar sales")
+- One differentiator vs competitors (e.g., "5-year warranty vs Quba's 2-year")
+NO long company history. NO long feature lists. Just the hook.
+
+## RESPONSE FORMAT — return ONLY raw JSON, no markdown, no code fences:
 {
   "scores": {
-    "opening": 75,
-    "discovery": 60,
-    "productPitch": 70,
-    "objectionHandling": 55,
-    "closing": 40,
-    "enthusiasm": 80,
-    "overall": 65
+    "opening": 0,
+    "discovery": 0,
+    "productPitch": 0,
+    "objectionHandling": 0,
+    "closing": 0,
+    "enthusiasm": 0,
+    "overall": 0
   },
-  "openingFeedback": "Specific feedback about the opening...",
-  "discoveryFeedback": "Specific feedback about discovery questions...",
-  "productPitchFeedback": "Specific feedback about product pitch...",
-  "objectionHandlingFeedback": "Specific feedback about objection handling...",
-  "closingFeedback": "Specific feedback about closing...",
-  "enthusiasmFeedback": "Specific feedback about enthusiasm level...",
-  "overallFeedback": "Overall assessment summary...",
-  "keyStrengths": ["strength 1", "strength 2", "strength 3"],
-  "improvements": ["improvement 1", "improvement 2", "improvement 3"],
-  "suggestions": ["specific suggestion 1", "specific suggestion 2", "specific suggestion 3"],
-  "callSummary": "Brief summary of what happened in the call..."
+  "openingFeedback": "1-2 short sentences",
+  "discoveryFeedback": "1-2 short sentences — mention which of ARR/property type/stage/location they missed",
+  "productPitchFeedback": "1-2 short sentences",
+  "objectionHandlingFeedback": "1-2 short sentences",
+  "closingFeedback": "1-2 short sentences",
+  "enthusiasmFeedback": "1 short sentence",
+  "overallFeedback": "2-3 short sentences summary",
+  "keyStrengths": ["short strength 1", "short strength 2"],
+  "improvements": ["short improvement 1", "short improvement 2"],
+  "suggestions": ["specific actionable suggestion 1", "specific actionable suggestion 2", "specific actionable suggestion 3"],
+  "callSummary": "2-3 sentences: what happened, client type, outcome",
+  "clientProfile": {
+    "detected": true,
+    "propertyType": "Business hotel / Resort / Boutique / Budget / Unknown",
+    "propertyStage": "Pre-opening / Finishing / Operational / Renovation / Unknown",
+    "location": "Metro / Tier-2 / Holiday destination / Unknown",
+    "arrRange": "Budget / Mid-scale / Upper Mid / Luxury / Unknown",
+    "roomCount": "approx number or 'Not asked'"
+  },
+  "recommendedPitch": "Short & sweet 3-4 sentence pitch tailored to this client type — presentable and easy to understand",
+  "interestBuildingTips": ["short tip 1 — what to say to rebuild interest if client seems disengaged", "short tip 2", "short tip 3"],
+  "followUpMessage": "A crisp WhatsApp-ready follow-up message under 100 words the salesperson can send",
+  "clientCutCall": false,
+  "clientCutReason": "If client cut the call, briefly say why it's NOT the salesperson's fault + what to do next. Otherwise null."
 }`,
           },
           {
             role: 'user',
-            content: `Please analyze this sales call transcription:\n\n${transcription}`,
+            content: `Please analyze this LAXREE hotel-amenities sales call transcription:\n\n${transcription}`,
           },
         ],
       })
@@ -146,6 +171,12 @@ Respond in this EXACT JSON format (no markdown, no code blocks, just raw JSON):
         improvements: ['Re-upload the recording for full AI analysis'],
         suggestions: ['Try again in a moment'],
         callSummary: 'Analysis unavailable - transcription captured.',
+        clientProfile: { detected: false, propertyType: 'Unknown', propertyStage: 'Unknown', location: 'Unknown', arrRange: 'Unknown', roomCount: 'Not asked' },
+        recommendedPitch: 'AI pitch guidance unavailable. Please retry.',
+        interestBuildingTips: ['Retry analysis for tailored interest-building tips'],
+        followUpMessage: 'Hello! Thanks for your time earlier. Sharing our LAXREE hotel amenities catalog as requested. Happy to answer any questions. — [Your Name]',
+        clientCutCall: false,
+        clientCutReason: null,
       }
     }
 
