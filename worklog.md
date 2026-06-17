@@ -74,3 +74,36 @@ Stage Summary:
 - Stage-specific question text varies naturally (PRE=baseline recall, MID="In a typical mid-stage evaluation, ...", HARD="In a competitive bid situation, ...", EXTRA_HARD="In a multi-property, multi-stakeholder negotiation, ...")
 - Exam-type context varies naturally (INBOUND="on an inbound call ... during a phone inquiry from the hotel"; FIELD="during an on-site hotel visit ... in a face-to-face meeting at the hotel")
 - Issues encountered: (1) Initial generator version produced duplicate questions across stages — fixed by adding stage-specific scenario prefixes and global uniqueness Set; (2) Conversation-level timeout during script execution, but the script completed successfully in the background
+
+---
+Task ID: 4-pdfs-call-recording
+Agent: Main Agent
+Task: Replace PDFs for Minibar/Safe Box/Kettle, expand exam questions, add Call Recording AI section
+
+Work Log:
+- Created scripts/update-pdf-urls.cjs and ran it to set pdfUrl for 7 modules
+  - Minibar - Product Knowledge -> /upload/Mini Bar.pdf
+  - Safe Box - Product Knowledge -> /upload/Safe Box.pdf
+  - Electric Kettles & TCM Trays -> /upload/Electric Kettle Trainig PPT_11zon.pdf
+  - Also cross-sell variants + Kettle Tray
+- Modified lesson-viewer.tsx "View PDF" tab to show real PDF via iframe when pdfUrl exists
+  (with "Open in New Tab" link and 75vh height), falling back to HTML content otherwise
+- Enhanced /api/call-analysis/route.ts system prompt to be an Expert AI Sales Assistant for
+  hotel amenities — now returns clientProfile (ARR, property type, stage, location, room count),
+  recommendedPitch (short & sweet 3-4 sentences), interestBuildingTips, followUpMessage
+  (WhatsApp-ready), clientCutCall + clientCutReason (not the salesperson's fault)
+- Wired CallAnalysisView into sidebar (view: 'call-analysis', label 'Call Recording AI', Mic icon)
+  under AI Tools group; registered in view-renderer.tsx (ICON_MAP, VIEW_TITLES,
+  VIEW_DESCRIPTIONS, EMPLOYEE_VIEWS) and app-shell.tsx (VIEW_LABELS, aiItems filter)
+- Enhanced call-analysis.tsx component with new UI sections: Client Cut Call Notice,
+  Client Profile (hotel context chips), Recommended Pitch, Interest-Building Tips,
+  Ready-to-Send Follow-Up Message (with copy button). Added ProfileChip helper component.
+
+Stage Summary:
+- PDFs: 3 product PDFs (Minibar 24MB, Safe Box 21MB, Kettle PPT 4MB) wired into DB + lesson viewer
+- Exam Center: 800 questions total (75 MCQ + 25 Short Answer per exam x 8 exams) verified in DB
+- Call Recording AI: new sidebar section with AI-powered hotel-amenities sales coaching
+- Lint clean for src/ (only .cjs/.js helper scripts have pre-existing require-import warnings)
+- Committed (9049bdb) and pushed to GitHub
+- Server compiles successfully (verified HTTP 200 on /, /api/call-analysis, /api/exams,
+  /api/uploads?file=Mini Bar.pdf)
