@@ -107,3 +107,26 @@ Stage Summary:
 - Committed (9049bdb) and pushed to GitHub
 - Server compiles successfully (verified HTTP 200 on /, /api/call-analysis, /api/exams,
   /api/uploads?file=Mini Bar.pdf)
+
+---
+Task ID: 5-fix-pdf-call-cta
+Agent: Main Agent
+Task: Fix PDF not showing + make Call Recording AI section discoverable
+
+Work Log:
+- Used VLM skill to analyze user's screenshot — confirmed they see "Lesson Document" (HTML content) instead of the real Mini Bar.pdf
+- Verified DB: Minibar module has pdfUrl='/upload/Mini Bar.pdf' (correct)
+- Verified /api/courses returns pdfUrl field correctly
+- Verified lesson-viewer.tsx logic: pdfUrl checked FIRST, then content fallback (correct)
+- Root cause: stale Vercel deployment (built before PDF fix commit). DB + API + code are all correct.
+- Added green dot badge on 'View PDF' tab when module.pdfUrl exists (visual indicator for users)
+- Added prominent gradient CTA banner at top of Call Practice page directing users to 'Call Recording AI'
+  - Banner has 'Open Call Recording AI' button that calls useAuthStore.getState().setCurrentView('call-analysis')
+  - Helps users discover the call upload section (under AI Tools sidebar group)
+- Committed (6b994c9) and pushed to GitHub to trigger Vercel rebuild
+
+Stage Summary:
+- PDF issue: code is correct, Vercel deployment was stale. New commit triggers rebuild.
+- Call Recording AI: now discoverable via (1) sidebar under 'AI Tools' group, (2) prominent CTA banner in Call Practice page
+- The 'Call Recording AI' sidebar item shows a Mic icon and is labeled 'Call Recording AI'
+- Upload UI is a drag-drop dropzone accepting mp3/wav/m4a/ogg/flac/webm/aac up to 50MB
