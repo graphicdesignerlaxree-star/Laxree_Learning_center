@@ -50,43 +50,6 @@ function getMedalIcon(rank: number | null) {
   return null
 }
 
-const DEMO_SCORECARDS: ScorecardData[] = [
-  {
-    id: 'demo1',
-    examName: 'Product Knowledge Assessment',
-    date: new Date().toISOString(),
-    totalQuestions: 25,
-    correctAnswers: 20,
-    wrongAnswers: 5,
-    scorePercentage: 80,
-    rank: 3,
-    departmentRank: 2,
-    companyRank: 8,
-    passStatus: true,
-    certificationStatus: 'pending_approval',
-    improvementSuggestions: 'Focus on advanced product features and competitive comparison. Review Module 7-9 for deeper understanding.',
-    managerFeedback: 'Great improvement from last attempt! Keep building on product knowledge depth.',
-    aiFeedback: 'Strong performance overall. Your product knowledge is above average. Consider exploring the Competitive Intelligence Academy to strengthen your comparative analysis skills.',
-  },
-  {
-    id: 'demo2',
-    examName: 'Sales Methodology Test',
-    date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-    totalQuestions: 30,
-    correctAnswers: 18,
-    wrongAnswers: 12,
-    scorePercentage: 60,
-    rank: 12,
-    departmentRank: 5,
-    companyRank: 28,
-    passStatus: false,
-    certificationStatus: 'failed',
-    improvementSuggestions: 'Need to strengthen understanding of sales frameworks. Review the Sales Academy modules, especially objection handling and closing techniques.',
-    managerFeedback: null,
-    aiFeedback: 'Your sales methodology foundation needs reinforcement. Recommended: Complete the Negotiation Academy and practice mock sales scenarios before re-attempting.',
-  },
-]
-
 export function ScorecardsView() {
   const [scorecards, setScorecards] = useState<ScorecardData[]>([])
   const [loading, setLoading] = useState(true)
@@ -99,20 +62,14 @@ export function ScorecardsView() {
         const res = await fetch(`/api/dashboard?userId=${user?.id}&role=EMPLOYEE`)
         if (res.ok) {
           const json = await res.json()
-          const fetchedScorecards = json.scorecards || []
-          // If no real scorecards, use demo data
-          if (fetchedScorecards.length === 0) {
-            setScorecards(DEMO_SCORECARDS)
-          } else {
-            setScorecards(fetchedScorecards)
-          }
+          // Use real data only — no demo/fake scorecards for new employees
+          setScorecards(json.scorecards || [])
         } else {
-          // API failed, use demo data
-          setScorecards(DEMO_SCORECARDS)
+          setScorecards([])
         }
       } catch (err) {
         console.error('Failed to fetch scorecards:', err)
-        setScorecards(DEMO_SCORECARDS)
+        setScorecards([])
       } finally {
         setLoading(false)
       }
@@ -139,6 +96,7 @@ export function ScorecardsView() {
           <h2 className="text-xl font-bold text-gray-900">Your Scorecards</h2>
           <p className="text-sm text-gray-500 mt-0.5">Detailed results from all your assessments</p>
         </div>
+        {scorecards.length > 0 && (
         <div className="flex items-center gap-2">
           <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">
             <CheckCircle2 className="w-3 h-3 mr-1" /> {passedCount} Passed
@@ -147,9 +105,11 @@ export function ScorecardsView() {
             <XCircle className="w-3 h-3 mr-1" /> {failedCount} Failed
           </Badge>
         </div>
+        )}
       </div>
 
-      {/* Summary Stats */}
+      {/* Summary Stats — only show when user has scorecards */}
+      {scorecards.length > 0 && (
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <Card className="border-0 shadow-sm bg-gradient-to-br from-emerald-50 to-white">
           <CardContent className="p-4 flex items-center gap-3">
@@ -200,14 +160,20 @@ export function ScorecardsView() {
           </CardContent>
         </Card>
       </div>
+      )}
 
       {/* Scorecard Cards */}
       {scorecards.length === 0 ? (
-        <Card className="border-dashed">
-          <CardContent className="py-12 text-center">
-            <Target className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-            <h3 className="text-lg font-semibold text-gray-600">No Scorecards Yet</h3>
-            <p className="text-gray-400 mt-1">Complete an assessment to see your scorecard here</p>
+        <Card className="border-dashed border-2 border-emerald-200 bg-gradient-to-br from-emerald-50/50 to-teal-50/30">
+          <CardContent className="py-14 text-center">
+            <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <Target className="w-8 h-8 text-emerald-500" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-700">No Scorecards Yet</h3>
+            <p className="text-gray-500 mt-2 max-w-md mx-auto">
+              You haven&apos;t taken any exams yet. Once you complete an exam from the Exam Center,
+              your detailed scorecard with scores, ranks, and feedback will appear here.
+            </p>
           </CardContent>
         </Card>
       ) : (

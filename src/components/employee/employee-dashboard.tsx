@@ -317,25 +317,41 @@ export function EmployeeDashboard() {
   const currentLevel = data.user.currentLevel || 'Beginner'
   const levelStyle = levelConfig[currentLevel] || levelConfig.Beginner
 
-  // Demo data
-  const todayPlan = [
-    { task: 'Complete Module 5: Product Features', time: '9:00 AM', status: 'pending', type: 'learning' },
-    { task: 'Practice Mock Sales Call', time: '11:00 AM', status: 'completed', type: 'practice' },
-    { task: 'Review Competitive Analysis', time: '2:00 PM', status: 'pending', type: 'learning' },
-    { task: 'Take Assessment: Product Knowledge', time: '4:00 PM', status: 'pending', type: 'assessment' },
-  ]
-
-  const progressData = [
-    { week: 'Week 1', progress: 10, baseline: 8 },
-    { week: 'Week 2', progress: 22, baseline: 18 },
-    { week: 'Week 3', progress: 35, baseline: 28 },
-    { week: 'Week 4', progress: data.trainingCompletion || 42, baseline: 38 },
-  ]
-
   const upcomingAssessments = data.assessments.filter(a => !a.passed).slice(0, 3)
   const pendingCertifications = data.certifications.filter(c => c.status === 'pending').slice(0, 3)
   const pendingModules = data.enrollments.filter(e => e.status !== 'completed').slice(0, 4)
   const completedModules = data.enrollments.filter(e => e.status === 'completed')
+
+  // Today plan — only show real pending modules/courses; no fake tasks
+  const todayPlan = pendingModules.slice(0, 4).map((m, i) => ({
+    task: `Continue: ${m.courseTitle}`,
+    time: ['9:00 AM', '11:00 AM', '2:00 PM', '4:00 PM'][i] || 'Flexible',
+    status: 'pending' as const,
+    type: 'learning' as const,
+  }))
+
+  // Progress data — built from REAL scorecard/assessment data only (no fake weekly numbers)
+  const progressData: Array<{ week: string; progress: number; baseline: number }> = []
+  const allScoreDates: Array<{ date: string; score: number }> = []
+  data.scorecards.forEach((sc: any) => {
+    if (sc.date && typeof sc.scorePercentage === 'number') {
+      allScoreDates.push({ date: sc.date, score: sc.scorePercentage })
+    }
+  })
+  data.assessments.forEach(a => {
+    if (a.date && typeof a.score === 'number') {
+      allScoreDates.push({ date: a.date, score: a.score })
+    }
+  })
+  allScoreDates.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+  const recentScores = allScoreDates.slice(-4)
+  recentScores.forEach((s, i) => {
+    progressData.push({
+      week: `Attempt ${allScoreDates.length - recentScores.length + i + 1}`,
+      progress: Math.round(s.score),
+      baseline: Math.round(s.score),
+    })
+  })
 
   const totalCourses = data.enrollments.length
   const completedCourseCount = completedModules.length
@@ -343,8 +359,14 @@ export function EmployeeDashboard() {
     ? Math.round((data.assessments.filter(a => a.passed).length / data.assessments.length) * 100)
     : 0
 
-  const readinessTrend = [readinessScore - 15, readinessScore - 10, readinessScore - 5, readinessScore]
-  const trainingTrend = [Math.max(0, data.trainingCompletion - 18), Math.max(0, data.trainingCompletion - 12), Math.max(0, data.trainingCompletion - 5), data.trainingCompletion]
+  // Readiness/training trends — only from real data; empty array if no activity
+  const hasRealActivity = data.assessments.length > 0 || data.scorecards.length > 0 || data.mockSimulations.length > 0 || completedCourseCount > 0
+  const readinessTrend = hasRealActivity
+    ? [Math.max(0, readinessScore - 15), Math.max(0, readinessScore - 10), Math.max(0, readinessScore - 5), readinessScore]
+    : []
+  const trainingTrend = hasRealActivity
+    ? [Math.max(0, data.trainingCompletion - 18), Math.max(0, data.trainingCompletion - 12), Math.max(0, data.trainingCompletion - 5), data.trainingCompletion]
+    : []
 
   const firstName = data.user.fullName?.split(' ')[0] || 'Employee'
 
@@ -492,16 +514,22 @@ export function EmployeeDashboard() {
                   <div className="w-12 h-12 bg-gradient-to-br from-teal-400 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-teal-500/25 group-hover:shadow-teal-500/40 transition-shadow">
                     <Zap className="w-5 h-5 text-white" />
                   </div>
+                  {hasRealActivity && readinessTrend.length >= 2 && readinessTrend[readinessTrend.length - 1] > readinessTrend[0] && (
                   <div className="flex items-center gap-1 text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full">
                     <ArrowUpRight className="w-3 h-3" />
-                    <span className="text-[11px] font-semibold">+12</span>
+                    <span className="text-[11px] font-semibold">+{readinessTrend[readinessTrend.length - 1] - readinessTrend[0]}</span>
                   </div>
+                  )}
                 </div>
                 <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">AI Readiness</p>
                 <p className="text-3xl font-bold text-gray-900 mt-0.5 tracking-tight">{readinessScore}<span className="text-sm text-gray-400 font-normal">/100</span></p>
+                {readinessTrend.length > 0 ? (
                 <div className="mt-3 flex items-end gap-1 h-8">
                   <Sparkline data={readinessTrend} color="#0d9488" width={80} height={28} />
                 </div>
+                ) : (
+                <p className="mt-3 text-[11px] text-gray-400">Take exams to build your score</p>
+                )}
               </CardContent>
             </Card>
           </motion.div>
@@ -786,6 +814,14 @@ export function EmployeeDashboard() {
                 </div>
               </CardHeader>
               <CardContent className="px-5 pb-5">
+                {progressData.length === 0 ? (
+                  <div className="h-56 flex flex-col items-center justify-center text-center">
+                    <BarChart3 className="w-10 h-10 text-gray-300 mb-2" />
+                    <p className="text-sm text-gray-400">No training data yet</p>
+                    <p className="text-xs text-gray-300 mt-1">Take exams and complete courses to see your progress trend</p>
+                  </div>
+                ) : (
+                <>
                 <div className="h-56">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={progressData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -844,6 +880,8 @@ export function EmployeeDashboard() {
                     <span className="text-[11px] text-gray-500">Team Average</span>
                   </div>
                 </div>
+                </>
+                )}
               </CardContent>
             </Card>
           </motion.div>
@@ -865,6 +903,13 @@ export function EmployeeDashboard() {
                 </div>
               </CardHeader>
               <CardContent className="px-5 pb-5">
+                {todayPlan.length === 0 ? (
+                  <div className="text-center py-8">
+                    <Calendar className="w-10 h-10 text-gray-300 mx-auto mb-2" />
+                    <p className="text-sm text-gray-400">No pending courses</p>
+                    <p className="text-xs text-gray-300 mt-1">Enroll in courses from the Learning Center to see your plan here</p>
+                  </div>
+                ) : (
                 <div className="space-y-2">
                   {todayPlan.map((item, i) => (
                     <motion.div
@@ -908,6 +953,7 @@ export function EmployeeDashboard() {
                     </motion.div>
                   ))}
                 </div>
+                )}
               </CardContent>
             </Card>
           </motion.div>

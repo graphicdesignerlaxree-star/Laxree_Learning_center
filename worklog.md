@@ -336,3 +336,68 @@ Stage Summary:
 - Exam center 100 questions: VERIFIED INTACT. All 100 user-provided questions are in the DB, linked to 8 exams (PRE/MID/HARD/EXTRA_HARD × INBOUND/FIELD_SALES), and returned correctly by the /api/exams API. They were never actually missing.
 - No other files/code/content were modified, per user's explicit instruction that no changes be made without permission.
 - Dev server in this sandbox is extremely unstable (dies every ~15-30s), but all functional pieces verified via curl + direct DB queries.
+
+---
+Task ID: 6
+Agent: Main Agent
+Task: Fix 3 user-reported issues:
+  1. "abhi bhi 35 question aa rhe hain" — only 35 questions showing in exam (should be 100)
+  2. "already progress aa rha bina exam diye" — progress showing without taking any exam
+  3. "data aa rha jabki abhi tk mene exam diya nhi na kuch kra hain" — data showing without any exam/activity
+
+Work Log:
+
+FIX 1 — Exam Center: 35 questions → 100 questions per exam
+- Root cause: The seed logic split the user's 100 questions by difficulty across 4 stages:
+  * PRE (easy) = 35 Q, MID (medium) = 38 Q, HARD (hard) = 27 Q, EXTRA_HARD (hard+medium) = 65 Q
+  * So the PRE exam only showed 35 questions — user expected 100.
+- Fix: Wrote a DB script (fix-exam-questions2.cjs, now deleted) to:
+  * Delete all 751 existing ExamQuestion links
+  * Link ALL 100 user-provided questions to EACH of the 8 exams (INBOUND/FIELD × PRE/MID/HARD/EXTRA_HARD)
+  * Updated totalQuestions field on each exam to 100
+  * Total: 800 ExamQuestion links created (100 × 8 exams)
+- Verified via /api/exams API: GET /api/exams?examId=X returns exam with totalQuestions=100, and 100 questions (50 MCQ + 50 Short Answer) in the response.
+- Sample verified question: "What type of batteries power LAXREE electronic safe boxes?" (Short Answer, from user's exam-center-questions.ts)
+
+FIX 2 — Remove fake progress data from employee-dashboard.tsx
+- Removed hardcoded fake `progressData` (was: Week1=10%, Week2=22%, Week3=35%, Week4=42%) — now built from REAL scorecard/assessment dates only. Empty array when no activity.
+- Removed fake `readinessTrend` and `trainingTrend` (were: readinessScore-15, -10, -5, current) — now empty array when user has no real activity (no assessments, scorecards, mock sims, or completed courses).
+- Removed fake `todayPlan` (was: 4 hardcoded tasks like "Complete Module 5", "Practice Mock Sales Call") — now built from REAL pending enrollments. Empty when no pending courses.
+- Removed fake "+12" improvement badge on AI Readiness card — now only shows when there's a real upward trend from actual data.
+- Added empty states:
+  * Training Completion Trend chart: "No training data yet — Take exams and complete courses to see your progress trend"
+  * Today's Learning Plan: "No pending courses — Enroll in courses from the Learning Center to see your plan here"
+  * AI Readiness sparkline: "Take exams to build your score" (when no trend data)
+
+FIX 3 — Remove DEMO fake data from my-performance.tsx and scorecards-view.tsx
+
+my-performance.tsx:
+- Removed DEMO_SIMULATIONS constant (2 fake mock simulations with scores 72, 68 etc.)
+- Removed the code that injected DEMO_SIMULATIONS when mockSimulations was empty
+- Removed fake `progressOverTime` chart (was: hardcoded Jan=20%, Feb=32%, Mar=45%, Apr=55%, May=62%, Jun=70%) — now built from REAL scorecard/assessment scores. Empty when no activity.
+- Removed fake `aiFeedback` that always showed something — now returns null when user has no activity, and the AI Insights card shows an empty state: "No insights yet — Take an exam, assessment, or mock simulation to unlock AI-powered performance insights"
+- Score Gauges (Communication/Technical/Product/Sales) now only render when user has mock simulation data — hidden for new employees (was showing 0% which is misleading)
+- Strength Areas and Improvement Areas now show "No data yet" empty states when no mock simulations exist
+- Added a welcome banner for new employees with no activity: "Welcome to your performance dashboard! You haven't taken any exams, assessments, or mock simulations yet..."
+
+scorecards-view.tsx:
+- Removed DEMO_SCORECARDS constant (2 fake scorecards: "Product Knowledge Assessment" 80% pass, "Sales Methodology Test" 60% fail)
+- Removed all code that injected DEMO_SCORECARDS when real scorecards were empty or API failed
+- Now uses real data only: setScorecards(json.scorecards || [])
+- Summary stats (Passed/Failed/Avg Score/Best Rank) now hidden entirely when no scorecards exist (was showing 0/0/0%/— which is confusing)
+- Passed/Failed badges in header now hidden when no scorecards
+- Improved empty state: "No Scorecards Yet — You haven't taken any exams yet. Once you complete an exam from the Exam Center, your detailed scorecard with scores, ranks, and feedback will appear here."
+
+VERIFICATION:
+- Dashboard API tested for new employee emp020 (0 activity): returns aiReadinessScore=0, trainingCompletion=0, enrollments=[], assessments=[], certifications=[], scorecards=[], mockSimulations=[], activities=[], badges=[]
+- Exam API tested: returns 100 questions (50 MCQ + 50 Short Answer) per exam, canTake=true for new employees
+- Lint clean for all source .tsx/.ts files (only pre-existing .cjs/.js helper script errors remain)
+- Dev server compiles successfully
+- Browser login verification was blocked by persistent dev server instability (dies every ~15-30s in this sandbox), but all functional pieces verified via curl + DB queries + code review
+
+Stage Summary:
+- Issue 1 (35 questions): FIXED — every exam now has all 100 user-provided questions (was split by difficulty, now unified)
+- Issue 2 (fake progress without exam): FIXED — removed all hardcoded fake progress/trend data from employee-dashboard.tsx; charts now show empty states for new employees
+- Issue 3 (fake data without exam): FIXED — removed DEMO_SIMULATIONS from my-performance.tsx and DEMO_SCORECARDS from scorecards-view.tsx; new employees now see proper empty states and a welcome banner instead of fake numbers
+- No other files/content were changed (per user's permission instruction)
+- All changes are in: src/components/employee/employee-dashboard.tsx, src/components/employee/my-performance.tsx, src/components/employee/scorecards-view.tsx, and DB (ExamQuestion links)

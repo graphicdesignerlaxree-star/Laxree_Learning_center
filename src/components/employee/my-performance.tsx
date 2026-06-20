@@ -85,12 +85,6 @@ function GaugeChart({ value, label, color = '#059669' }: { value: number; label:
   )
 }
 
-// Demo data for when API returns sparse results
-const DEMO_SIMULATIONS = [
-  { id: 'ds1', score: 72, communicationScore: 78, technicalScore: 65, productKnowledgeScore: 70, salesScore: 75, feedback: 'Good communication, needs technical depth', aiFeedback: 'Your communication skills are strong. Focus on building deeper product knowledge.', completedAt: new Date().toISOString() },
-  { id: 'ds2', score: 68, communicationScore: 72, technicalScore: 60, productKnowledgeScore: 68, salesScore: 70, feedback: null, aiFeedback: 'Consistent improvement trend. Continue practicing sales scenarios.', completedAt: new Date(Date.now() - 7 * 86400000).toISOString() },
-]
-
 export function MyPerformance() {
   const [data, setData] = useState<PerformanceData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -109,10 +103,12 @@ export function MyPerformance() {
       }
       if (res.ok) {
         const json = await res.json()
-        // Ensure mockSimulations exists and has data; use demo if empty
-        if (!json.mockSimulations || json.mockSimulations.length === 0) {
-          json.mockSimulations = DEMO_SIMULATIONS
-        }
+        // Use real data only — no demo/fake data for new employees
+        if (!json.mockSimulations) json.mockSimulations = []
+        if (!json.scorecards) json.scorecards = []
+        if (!json.assessments) json.assessments = []
+        if (!json.certifications) json.certifications = []
+        if (!json.enrollments) json.enrollments = []
         setData(json)
       } else {
         setError('Failed to load performance data from server')
@@ -168,32 +164,43 @@ export function MyPerformance() {
   const avgSales = data.mockSimulations.length > 0
     ? Math.round(data.mockSimulations.reduce((a, m) => a + m.salesScore, 0) / data.mockSimulations.length) : 0
 
-  // Demo data for progress chart
-  const progressOverTime = [
-    { month: 'Jan', score: 20 },
-    { month: 'Feb', score: 32 },
-    { month: 'Mar', score: 45 },
-    { month: 'Apr', score: 55 },
-    { month: 'May', score: 62 },
-    { month: 'Jun', score: data.user.aiReadinessScore || 70 },
-  ]
+  // Build progress chart from REAL scorecard/assessment data only
+  const scoreHistory: Array<{ label: string; value: number; date: string }> = []
+  data.scorecards.forEach((sc: any) => {
+    if (sc.date) scoreHistory.push({ label: new Date(sc.date).toLocaleDateString('en-US', { month: 'short' }), value: Math.round(sc.scorePercentage || 0), date: sc.date })
+  })
+  data.assessments.forEach(a => {
+    if (a.date) scoreHistory.push({ label: new Date(a.date).toLocaleDateString('en-US', { month: 'short' }), value: Math.round(a.score || 0), date: a.date })
+  })
+  // Sort by date ascending and take last 6
+  scoreHistory.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+  const progressOverTime = scoreHistory.slice(-6).map(s => ({ month: s.label, score: s.value }))
 
-  // AI feedback generation
-  const aiFeedback = avgSales > 70
-    ? 'Your sales performance is strong! Focus on advanced negotiation techniques to reach the next level. Consider taking the Competitive Intelligence Academy courses.'
-    : avgTech > 60
-      ? 'Good technical foundation detected. Recommended: Increase product knowledge depth and practice more mock sales scenarios for balanced improvement.'
-      : 'Focus on building core skills across all areas. Start with the foundational modules in Sales Academy and Product Academy for steady growth.'
+  // Determine if user has ANY real activity
+  const hasAnyActivity =
+    data.assessments.length > 0 ||
+    data.mockSimulations.length > 0 ||
+    data.scorecards.length > 0 ||
+    data.certifications.length > 0
 
-  // Improvement and strength areas
-  const allScores = [
+  // AI feedback — only show if user has real activity
+  const aiFeedback = !hasAnyActivity
+    ? null
+    : avgSales > 70
+      ? 'Your sales performance is strong! Focus on advanced negotiation techniques to reach the next level. Consider taking the Competitive Intelligence Academy courses.'
+      : avgTech > 60
+        ? 'Good technical foundation detected. Recommended: Increase product knowledge depth and practice more mock sales scenarios for balanced improvement.'
+        : 'Focus on building core skills across all areas. Start with the foundational modules in Sales Academy and Product Academy for steady growth.'
+
+  // Improvement and strength areas — only compute when user has mock simulation data
+  const skillScores = (data.mockSimulations.length > 0) ? [
     { label: 'Communication', value: avgComm, icon: MessageSquare, color: 'emerald' },
     { label: 'Technical', value: avgTech, icon: BarChart3, color: 'teal' },
     { label: 'Product Knowledge', value: avgProd, icon: Target, color: 'amber' },
     { label: 'Sales', value: avgSales, icon: TrendingUp, color: 'red' },
-  ]
-  const strengths = allScores.filter(s => s.value >= 60).sort((a, b) => b.value - a.value)
-  const improvements = allScores.filter(s => s.value < 60).sort((a, b) => a.value - b.value)
+  ] : []
+  const strengths = skillScores.filter(s => s.value >= 60).sort((a, b) => b.value - a.value)
+  const improvements = skillScores.filter(s => s.value > 0 && s.value < 60).sort((a, b) => a.value - b.value)
 
   const recommendedTraining = [
     { title: 'Advanced Sales Techniques', type: 'SALES_ACADEMY', reason: 'Boost your sales score' },
@@ -207,7 +214,8 @@ export function MyPerformance() {
       animate={{ opacity: 1 }}
       className="space-y-6"
     >
-      {/* Score Gauges */}
+      {/* Score Gauges — only show when user has mock simulation data */}
+      {data.mockSimulations.length > 0 && (
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="border-0 shadow-sm">
           <CardContent className="p-4">
@@ -230,6 +238,23 @@ export function MyPerformance() {
           </CardContent>
         </Card>
       </div>
+      )}
+
+      {/* Welcome banner for new employees with no activity */}
+      {!hasAnyActivity && (
+        <Card className="border-0 shadow-sm bg-gradient-to-br from-emerald-50 via-teal-50 to-white">
+          <CardContent className="p-6 text-center">
+            <div className="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <Sparkles className="w-7 h-7 text-emerald-600" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-800 mb-1">Welcome to your performance dashboard!</h3>
+            <p className="text-sm text-gray-600 max-w-lg mx-auto">
+              You haven&apos;t taken any exams, assessments, or mock simulations yet. Once you start, your scores,
+              progress chart, strength areas, and AI insights will appear here.
+            </p>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Assessment Scores Table */}
       <Card className="border-0 shadow-sm">
@@ -344,17 +369,25 @@ export function MyPerformance() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={progressOverTime}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="month" tick={{ fontSize: 12 }} stroke="#9ca3af" />
-                  <YAxis tick={{ fontSize: 12 }} stroke="#9ca3af" domain={[0, 100]} />
-                  <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb', fontSize: '12px' }} />
-                  <Line type="monotone" dataKey="score" stroke="#059669" strokeWidth={2} dot={{ fill: '#059669', r: 4 }} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+            {progressOverTime.length === 0 ? (
+              <div className="h-64 flex flex-col items-center justify-center text-center">
+                <TrendingUp className="w-10 h-10 text-gray-300 mb-2" />
+                <p className="text-sm text-gray-400">No progress data yet</p>
+                <p className="text-xs text-gray-300 mt-1">Take an exam or assessment to see your progress chart here</p>
+              </div>
+            ) : (
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={progressOverTime}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                    <XAxis dataKey="month" tick={{ fontSize: 12 }} stroke="#9ca3af" />
+                    <YAxis tick={{ fontSize: 12 }} stroke="#9ca3af" domain={[0, 100]} />
+                    <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb', fontSize: '12px' }} />
+                    <Line type="monotone" dataKey="score" stroke="#059669" strokeWidth={2} dot={{ fill: '#059669', r: 4 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -409,13 +442,21 @@ export function MyPerformance() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <p className="text-sm text-gray-700 leading-relaxed">{aiFeedback}</p>
-              <div className="flex items-center gap-2 text-xs text-emerald-600">
-                <Sparkles className="w-3 h-3" />
-                <span>AI-generated based on your performance data</span>
+            {aiFeedback ? (
+              <div className="space-y-4">
+                <p className="text-sm text-gray-700 leading-relaxed">{aiFeedback}</p>
+                <div className="flex items-center gap-2 text-xs text-emerald-600">
+                  <Sparkles className="w-3 h-3" />
+                  <span>AI-generated based on your performance data</span>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="text-center py-6">
+                <Sparkles className="w-10 h-10 text-emerald-300 mx-auto mb-2" />
+                <p className="text-sm text-gray-500 font-medium">No insights yet</p>
+                <p className="text-xs text-gray-400 mt-1">Take an exam, assessment, or mock simulation to unlock AI-powered performance insights</p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -432,7 +473,13 @@ export function MyPerformance() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {strengths.length === 0 ? (
+            {data.mockSimulations.length === 0 ? (
+              <div className="text-center py-4">
+                <ThumbsUp className="w-10 h-10 text-gray-200 mx-auto mb-2" />
+                <p className="text-sm text-gray-400">No data yet</p>
+                <p className="text-xs text-gray-300 mt-1">Complete a mock simulation to see your strength areas</p>
+              </div>
+            ) : strengths.length === 0 ? (
               <p className="text-sm text-gray-400 text-center py-4">Keep working to build your strengths!</p>
             ) : (
               <div className="space-y-3">
@@ -463,7 +510,13 @@ export function MyPerformance() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {improvements.length === 0 ? (
+            {data.mockSimulations.length === 0 ? (
+              <div className="text-center py-4">
+                <AlertTriangle className="w-10 h-10 text-gray-200 mx-auto mb-2" />
+                <p className="text-sm text-gray-400">No data yet</p>
+                <p className="text-xs text-gray-300 mt-1">Complete a mock simulation to see where to improve</p>
+              </div>
+            ) : improvements.length === 0 ? (
               <div className="text-center py-4">
                 <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto mb-2" />
                 <p className="text-sm text-emerald-600 font-medium">All areas performing well!</p>
