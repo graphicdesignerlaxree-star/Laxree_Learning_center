@@ -401,3 +401,36 @@ Stage Summary:
 - Issue 3 (fake data without exam): FIXED — removed DEMO_SIMULATIONS from my-performance.tsx and DEMO_SCORECARDS from scorecards-view.tsx; new employees now see proper empty states and a welcome banner instead of fake numbers
 - No other files/content were changed (per user's permission instruction)
 - All changes are in: src/components/employee/employee-dashboard.tsx, src/components/employee/my-performance.tsx, src/components/employee/scorecards-view.tsx, and DB (ExamQuestion links)
+
+---
+Task ID: 9
+Agent: Main Agent
+Task: Fix "Still score is coming" — user sees scores on My Performance + Scorecards pages despite never taking any exam
+
+Work Log:
+- Analyzed the 2 user-provided screenshots via VLM:
+  * Image 1 (My Performance page): Communication 75%, Technical 63%, Product Knowledge 69%, Sales 73% (gauges); Product Knowledge Assessment 68% Fail dated 19/06/2026; 2 Mock Simulations (22/06 + 15/06); Learning Progress chart Jan-Jun
+  * Image 2 (Scorecards page): 0 Passed / 1 Failed, Avg 68%, Product Knowledge Assessment 68% Fail
+- Queried Neon PostgreSQL DB to find the source of the data for emp002@laxree.com (Laxee Warrior — the logged-in user):
+  * Exam attempts: 0 (user never took any exam)
+  * Assessment attempts: 1 SEEDED FAKE (Product Knowledge Assessment 68% Fail, dated Jun 19 11:01:52 — seed batch insert time)
+  * Scorecards: 1 SEEDED FAKE (linked to the fake assessment attempt, 68% Fail)
+  * Mock sim attempts: 0
+- ROOT CAUSE #1 (DB): The seed script inserted fake AssessmentAttempt + Scorecard records for emp001-emp006 (all dated Jun 19 2026 ~11:01:xx, batch insert). These users have 0 real exam attempts but the fake scorecard showed "Product Knowledge Assessment 68%" on both My Performance and Scorecards pages.
+- ROOT CAUSE #2 (UI deployment): My previous UI fixes (commit 1b9587f, Jun 20) that removed DEMO_SIMULATIONS / fake gauges / fake progress chart from my-performance.tsx, scorecards-view.tsx, employee-dashboard.tsx were committed locally but NEVER PUSHED to GitHub. Vercel was still serving the OLD version with fake mock simulations (75/63/69/73% gauges + 2 fake sims dated 22/06 + 15/06) and fake progress chart.
+- FIX #1 (DB): Deleted the 6 fake seeded scorecards AND 6 fake seeded assessment attempts from Neon DB. Verified ALL 11 employees now have CLEAN state: 0 scorecards, 0 assessment attempts, 0 exam attempts, 0 mock sim attempts.
+- FIX #2 (deploy): Pushed commit 1b9587f to GitHub (origin/main f6c0bb9 -> 1b9587f). Vercel will auto-deploy the UI fixes that show empty states for users with no activity:
+  * My Performance: no gauges, no mock sims, no progress chart, welcome banner for new employees
+  * Scorecards: "No Scorecards Yet" empty state
+
+Stage Summary:
+- The "score coming without exam" issue had TWO root causes: (1) fake seeded AssessmentAttempt+Scorecard records in the DB for emp001-emp006, and (2) my UI fixes were committed but not pushed to GitHub so Vercel was serving old code with fake mock sim/gauge/progress data.
+- Both fixed: DB cleaned (6 fake scorecards + 6 fake assessment attempts deleted), UI fixes pushed to GitHub (Vercel auto-deploying).
+- All 11 employees now have a clean state — no scores will show until they actually take an exam/assessment/mock simulation.
+- No code files were changed in this task (only DB data cleanup + git push of already-committed code).
+
+Additional cleanup (Task 9 continued):
+- Found 3 SEEDED FAKE UserBadge records (emp001 "First Course Complete", emp002 "Product Expert - Scored 90%+ on product assessment", emp003 "Sales Ready") — all for users with 0 real activity. Deleted all 3.
+- Verified dashboard API for emp002 returns COMPLETELY EMPTY data: assessments=[], scorecards=[], mockSimulations=[], certifications=[], badges=[], activities=0.
+- Only remaining non-empty field is aiReadinessScore (60.2, a seeded user profile metric) — NOT shown as an exam score on My Performance page (verified via grep: aiReadinessScore only appears in interface definition, not rendered as a score).
+- End-to-end verified: dev server started against Neon DB, /api/dashboard?userId=emp002&role=EMPLOYEE returns all empty arrays for exam/score/sim/badge data.
