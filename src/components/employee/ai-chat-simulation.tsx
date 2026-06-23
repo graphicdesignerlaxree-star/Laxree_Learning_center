@@ -60,7 +60,8 @@ type Phase = 'select' | 'chat' | 'scoring'
 
 // ─── Scenario Data ───────────────────────────────────────────────────────────
 
-const SCENARIOS: Scenario[] = [
+// AMENITIES scenarios (hospitality — minibars, safes, RFID locks, kettles)
+const AMENITIES_CHAT_SCENARIOS: Scenario[] = [
   {
     id: 'hotel-minibar',
     title: 'Hotel Mini Bar Inquiry',
@@ -102,6 +103,74 @@ const SCENARIOS: Scenario[] = [
   },
 ]
 
+// ROOFING scenarios (premium roofing — stone-coated, thatch, asphalt shingle tiles)
+const ROOFING_CHAT_SCENARIOS: Scenario[] = [
+  {
+    id: 'roofing-villa-homeowner',
+    title: 'Homeowner Villa Roofing',
+    description: 'A homeowner is building a premium 5,000 sq ft villa in Pune and needs a long-lasting, elegant roof. Pitch Laxree stone-coated tiles, navigate profiles vs clay, and close the deal.',
+    difficulty: 'Beginner',
+    icon: Building2,
+    clientName: 'Vikram Mehta',
+    clientRole: 'Homeowner, Pune',
+    tags: ['Stone Coated Tiles', 'New Villa', 'Premium Roofing'],
+    color: 'text-amber-600',
+    bgGradient: 'from-amber-50 to-orange-100/50',
+    iconBg: 'bg-amber-100',
+  },
+  {
+    id: 'roofing-builder-bulk',
+    title: 'Builder Bulk Roofing Order',
+    description: 'A project director is constructing a 50-villa township in Bangalore and needs roofing for all villas. Demonstrate profile depth, weather performance, and bulk-order value engineering.',
+    difficulty: 'Intermediate',
+    icon: Handshake,
+    clientName: 'Rajiv Khanna',
+    clientRole: 'Project Director, Skyline Builders',
+    tags: ['Stone Coated Tiles', '50-Villa Project', 'Bulk Order'],
+    color: 'text-orange-600',
+    bgGradient: 'from-orange-50 to-amber-100/50',
+    iconBg: 'bg-orange-100',
+  },
+  {
+    id: 'roofing-resort-package',
+    title: 'Resort Roofing Package',
+    description: 'A resort architect in Kerala wants a complete roofing package across main buildings, gazebos and poolside cabanas. Showcase stone-coated + thatch + shingle portfolio and consultative design.',
+    difficulty: 'Advanced',
+    icon: Hotel,
+    clientName: 'Priya Nair',
+    clientRole: 'Resort Architect, Kerala',
+    tags: ['Multi-Product', 'Stone Coated + Thatch', 'Resort'],
+    color: 'text-red-600',
+    bgGradient: 'from-rose-50 to-amber-100/50',
+    iconBg: 'bg-rose-100',
+  },
+  {
+    id: 'roofing-thatch-cross-sell',
+    title: 'Thatch Tile Cross-Sell',
+    description: 'A resort owner in Goa called about stone-coated tiles for the main roof — pitch artificial thatch tiles for the gazebos, tiki bar and poolside cabanas as a complementary product line.',
+    difficulty: 'Intermediate',
+    icon: Sparkles,
+    clientName: 'Arjun Reddy',
+    clientRole: 'Resort Owner, Goa',
+    tags: ['Artificial Thatch', 'Gazebos & Cabanas', 'Cross-Sell'],
+    color: 'text-yellow-700',
+    bgGradient: 'from-yellow-50 to-amber-100/50',
+    iconBg: 'bg-yellow-100',
+  },
+]
+
+// Lookup for explicit Tailwind button classes per scenario id (keeps Tailwind's
+// purger happy — dynamic class strings would otherwise be stripped out).
+const SCENARIO_BUTTON_BG: Record<string, string> = {
+  'hotel-minibar': 'bg-emerald-600 hover:bg-emerald-700',
+  'bulk-safes': 'bg-teal-600 hover:bg-teal-700',
+  'resort-complete': 'bg-amber-600 hover:bg-amber-700',
+  'roofing-villa-homeowner': 'bg-amber-600 hover:bg-amber-700',
+  'roofing-builder-bulk': 'bg-orange-600 hover:bg-orange-700',
+  'roofing-resort-package': 'bg-rose-600 hover:bg-rose-700',
+  'roofing-thatch-cross-sell': 'bg-yellow-600 hover:bg-yellow-700',
+}
+
 const DIFFICULTY_STYLES: Record<string, string> = {
   Beginner: 'bg-emerald-100 text-emerald-700 border-emerald-200',
   Intermediate: 'bg-amber-100 text-amber-700 border-amber-200',
@@ -142,6 +211,23 @@ export function AIChatSimulation() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const user = useAuthStore((s) => s.user)
+  const isRoofing = user?.company === 'ROOFING'
+  const SCENARIOS = isRoofing ? ROOFING_CHAT_SCENARIOS : AMENITIES_CHAT_SCENARIOS
+  // Theme tokens — amber/orange for Roofing, emerald/teal for Amenities
+  const accentBg = isRoofing ? 'bg-amber-100' : 'bg-emerald-100'
+  const accentText = isRoofing ? 'text-amber-600' : 'text-emerald-600'
+  const accentTextStrong = isRoofing ? 'text-amber-700' : 'text-emerald-700'
+  const accentBtn = isRoofing ? 'bg-amber-600 hover:bg-amber-700' : 'bg-emerald-600 hover:bg-emerald-700'
+  const accentBtnBorder = isRoofing
+    ? 'bg-amber-600 hover:bg-amber-700 text-white border-amber-600 hover:border-amber-700'
+    : 'bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600 hover:border-emerald-700'
+  const accentInputFocus = isRoofing
+    ? 'focus:ring-amber-300 focus:border-amber-400'
+    : 'focus:ring-emerald-300 focus:border-emerald-400'
+  const accentUserBubble = isRoofing ? 'bg-amber-600 text-white' : 'bg-emerald-600 text-white'
+  const accentGradient = isRoofing
+    ? 'from-amber-50 to-orange-50 border-amber-100'
+    : 'from-emerald-50 to-teal-50 border-emerald-100'
 
   // Auto-scroll on new messages
   useEffect(() => {
@@ -193,6 +279,10 @@ export function AIChatSimulation() {
         'hotel-minibar': "Hi, I'm Rajesh Mehta. We're setting up a new 150-room hotel in Mumbai and I need mini bars for all rooms. What does LAXREE offer?",
         'bulk-safes': "Hello, this is Sarah Chen from Pacific Hotels Group. We need approximately 2,000 safe boxes across our 12 properties. Can you tell me about your product range and certifications?",
         'resort-complete': "Good day. I'm David Okafor, GM of Sunset Beach Resort in Dubai. We're opening a 300-room luxury property and I'm looking for a single vendor who can handle all our in-room amenities — locks, minibars, safes, and kettles. Does LAXREE do complete packages?",
+        'roofing-villa-homeowner': "Hi, I'm Vikram Mehta. We're building a 5,000 sq ft villa in Pune and our architect suggested premium roofing. I've only ever used clay tiles. What is this stone-coated tile you're offering?",
+        'roofing-builder-bulk': "Hello, this is Rajiv Khanna from Skyline Builders. We're constructing a 50-villa township in Bangalore and need roofing for every villa. I have quotes from two competitors — one clay, one concrete. What's your best price on stone-coated tiles at this volume?",
+        'roofing-resort-package': "Good day. I'm Priya Nair, the architect for a resort project in Kerala. We need a complete roofing package — stone-coated tiles for the 20 main buildings, plus something aesthetic for the gazebos and poolside cabanas. Can Laxree handle the full scope?",
+        'roofing-thatch-cross-sell': "Hi, I'm Arjun Reddy, owner of a beachside resort in Goa. We were planning to use stone-coated tiles for the main roofs. Someone mentioned you also do artificial thatch — is that something worth looking at for our tiki bar and cabanas?",
       }
       const fallback: ChatMessage = {
         id: `msg-${Date.now()}`,
@@ -356,33 +446,39 @@ export function AIChatSimulation() {
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-            <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-              <MessageSquare className="w-5 h-5 text-emerald-600" />
+            <div className={`w-10 h-10 ${accentBg} rounded-xl flex items-center justify-center`}>
+              <MessageSquare className={`w-5 h-5 ${accentText}`} />
             </div>
             AI Chat Simulation
           </h1>
-          <p className="text-gray-500 mt-1 ml-13">Practice sales conversations via text chat with AI-powered hotel clients</p>
+          <p className="text-gray-500 mt-1 ml-13">
+            {isRoofing
+              ? 'Practice roofing sales conversations via text chat with AI-powered homeowners, builders and architects'
+              : 'Practice sales conversations via text chat with AI-powered hotel clients'}
+          </p>
         </div>
 
         {/* Info Card */}
-        <Card className="bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-100">
+        <Card className={`bg-gradient-to-r ${accentGradient}`}>
           <CardContent className="p-4 flex items-start gap-3">
-            <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center shrink-0 mt-0.5">
-              <Sparkles className="w-5 h-5 text-emerald-600" />
+            <div className={`w-10 h-10 ${accentBg} rounded-xl flex items-center justify-center shrink-0 mt-0.5`}>
+              <Sparkles className={`w-5 h-5 ${accentText}`} />
             </div>
             <div>
-              <p className="text-sm font-medium text-emerald-700">How It Works</p>
+              <p className={`text-sm font-medium ${accentTextStrong}`}>How It Works</p>
               <p className="text-xs text-gray-600 mt-1 leading-relaxed">
-                Pick a scenario below, and you&apos;ll be connected to an AI simulating a potential hotel client via business chat.
-                Respond naturally — the AI will ask questions about property details, budget, timeline, and specific needs.
-                When you&apos;re done, end the chat to get a detailed performance score with AI-generated feedback.
+                {isRoofing ? (
+                  <>Pick a scenario below, and you&apos;ll be connected to an AI simulating a potential roofing client — a homeowner, builder or architect — via business chat. Respond naturally — the AI will ask questions about project details, roof area, budget, timeline, and specific tile preferences. When you&apos;re done, end the chat to get a detailed performance score with AI-generated feedback.</>
+                ) : (
+                  <>Pick a scenario below, and you&apos;ll be connected to an AI simulating a potential hotel client via business chat. Respond naturally — the AI will ask questions about property details, budget, timeline, and specific needs. When you&apos;re done, end the chat to get a detailed performance score with AI-generated feedback.</>
+                )}
               </p>
             </div>
           </CardContent>
         </Card>
 
         {/* Scenario Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {SCENARIOS.map((scenario, index) => {
             const Icon = scenario.icon
             return (
@@ -391,18 +487,30 @@ export function AIChatSimulation() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
+                whileHover={{ y: -6 }}
+                className="h-full"
               >
                 <Card
-                  className={`cursor-pointer hover:shadow-md transition-all duration-200 border-0 bg-gradient-to-br ${scenario.bgGradient} group h-full`}
+                  className={`relative cursor-pointer hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br ${scenario.bgGradient} group h-full overflow-hidden`}
                   onClick={() => startChat(scenario)}
                 >
-                  <CardContent className="p-6 flex flex-col h-full">
+                  {/* Top accent bar */}
+                  <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${
+                    scenario.id === 'hotel-minibar' ? 'from-emerald-500 to-teal-500'
+                    : scenario.id === 'bulk-safes' ? 'from-teal-500 to-cyan-500'
+                    : scenario.id === 'resort-complete' ? 'from-amber-500 to-orange-500'
+                    : scenario.id === 'roofing-villa-homeowner' ? 'from-amber-500 to-orange-500'
+                    : scenario.id === 'roofing-builder-bulk' ? 'from-orange-500 to-red-500'
+                    : scenario.id === 'roofing-resort-package' ? 'from-rose-500 to-amber-500'
+                    : 'from-yellow-500 to-amber-500'
+                  }`} />
+                  <CardContent className="p-6 pt-7 flex flex-col h-full">
                     {/* Icon + Badge */}
                     <div className="flex items-start justify-between mb-4">
-                      <div className={`w-12 h-12 ${scenario.iconBg} rounded-xl flex items-center justify-center`}>
+                      <div className={`w-12 h-12 ${scenario.iconBg} rounded-xl flex items-center justify-center shadow-sm`}>
                         <Icon className={`w-6 h-6 ${scenario.color}`} />
                       </div>
-                      <Badge className={DIFFICULTY_STYLES[scenario.difficulty]} variant="outline">
+                      <Badge className={`${DIFFICULTY_STYLES[scenario.difficulty]} rounded-full px-2.5 py-0.5`} variant="outline">
                         {scenario.difficulty}
                       </Badge>
                     </div>
@@ -439,7 +547,7 @@ export function AIChatSimulation() {
 
                     {/* Start Button */}
                     <Button
-                      className={`w-full ${scenario.id === 'hotel-minibar' ? 'bg-emerald-600 hover:bg-emerald-700' : scenario.id === 'bulk-safes' ? 'bg-teal-600 hover:bg-teal-700' : 'bg-amber-600 hover:bg-amber-700'} text-white`}
+                      className={`w-full ${SCENARIO_BUTTON_BG[scenario.id] || accentBtn} text-white`}
                       size="sm"
                     >
                       <MessageSquare className="w-3.5 h-3.5 mr-1.5" />
@@ -463,7 +571,7 @@ export function AIChatSimulation() {
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-0">
         <Card className="flex flex-col h-[calc(100vh-10rem)] overflow-hidden">
           {/* Chat Header */}
-          <CardHeader className="pb-3 border-b bg-gradient-to-r from-emerald-50 to-teal-50 shrink-0">
+          <CardHeader className={`pb-3 border-b bg-gradient-to-r ${accentGradient} shrink-0`}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Button
@@ -475,7 +583,7 @@ export function AIChatSimulation() {
                   <ArrowLeft className="w-4 h-4" />
                 </Button>
                 <Avatar className="w-9 h-9">
-                  <AvatarFallback className="bg-emerald-100 text-emerald-700 text-xs font-semibold">
+                  <AvatarFallback className={`${accentBg} ${accentTextStrong} text-xs font-semibold`}>
                     {selectedScenario?.clientName.split(' ').map(n => n[0]).join('')}
                   </AvatarFallback>
                 </Avatar>
@@ -486,7 +594,7 @@ export function AIChatSimulation() {
                   <p className="text-[10px] text-gray-400">{selectedScenario?.clientRole} • {selectedScenario?.title}</p>
                 </div>
                 <Badge variant="outline" className="text-[10px] ml-1">
-                  <Bot className="w-2.5 h-2.5 mr-1 text-emerald-500" />
+                  <Bot className={`w-2.5 h-2.5 mr-1 ${accentText}`} />
                   AI Client
                 </Badge>
               </div>
@@ -499,7 +607,7 @@ export function AIChatSimulation() {
                   size="sm"
                   onClick={endChat}
                   disabled={messages.filter(m => m.role === 'user').length < 2}
-                  className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600 hover:border-emerald-700 h-7"
+                  className={`text-xs ${accentBtnBorder} h-7`}
                 >
                   <Trophy className="w-3 h-3 mr-1" />
                   End Chat & Get Score
@@ -522,7 +630,7 @@ export function AIChatSimulation() {
                   {/* Avatar */}
                   {msg.role === 'assistant' ? (
                     <Avatar className="w-7 h-7 shrink-0 mb-5">
-                      <AvatarFallback className="bg-emerald-100 text-emerald-700 text-[10px] font-semibold">
+                      <AvatarFallback className={`${accentBg} ${accentTextStrong} text-[10px] font-semibold`}>
                         {selectedScenario?.clientName.split(' ').map(n => n[0]).join('')}
                       </AvatarFallback>
                     </Avatar>
@@ -541,7 +649,7 @@ export function AIChatSimulation() {
                     )}
                     <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
                       msg.role === 'user'
-                        ? 'bg-emerald-600 text-white rounded-br-sm'
+                        ? `${accentUserBubble} rounded-br-sm`
                         : 'bg-gray-100 text-gray-700 rounded-bl-sm'
                     }`}>
                       {msg.content}
@@ -562,7 +670,7 @@ export function AIChatSimulation() {
                 className="flex items-end gap-2"
               >
                 <Avatar className="w-7 h-7 shrink-0">
-                  <AvatarFallback className="bg-emerald-100 text-emerald-700 text-[10px] font-semibold">
+                  <AvatarFallback className={`${accentBg} ${accentTextStrong} text-[10px] font-semibold`}>
                     {selectedScenario?.clientName.split(' ').map(n => n[0]).join('')}
                   </AvatarFallback>
                 </Avatar>
@@ -607,19 +715,19 @@ export function AIChatSimulation() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
-                className="flex-1 px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400 bg-white"
+                className={`flex-1 px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 ${accentInputFocus} bg-white`}
                 disabled={isTyping}
               />
               <Button
                 onClick={sendMessage}
                 disabled={!input.trim() || isTyping}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl px-4 h-10"
+                className={`${accentBtn} text-white rounded-xl px-4 h-10`}
               >
                 <Send className="w-4 h-4" />
               </Button>
             </div>
             <p className="text-[10px] text-gray-400 mt-1.5 text-center">
-              Respond as a LAXREE sales representative • End the chat when you feel the conversation is complete
+              Respond as a {isRoofing ? 'Laxree Roofing' : 'LAXREE'} sales representative • End the chat when you feel the conversation is complete
             </p>
           </div>
         </Card>
@@ -641,7 +749,7 @@ export function AIChatSimulation() {
                 transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
                 className="w-16 h-16 mx-auto mb-4"
               >
-                <div className="w-16 h-16 border-4 border-emerald-200 border-t-emerald-600 rounded-full" />
+                <div className={`w-16 h-16 border-4 ${isRoofing ? 'border-amber-200 border-t-amber-600' : 'border-emerald-200 border-t-emerald-600'} rounded-full`} />
               </motion.div>
               <h3 className="text-lg font-semibold text-gray-700 mb-2">Analyzing Your Performance</h3>
               <p className="text-sm text-gray-400">AI is reviewing your conversation and preparing detailed feedback...</p>
@@ -662,8 +770,8 @@ export function AIChatSimulation() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-                  <Trophy className="w-5 h-5 text-emerald-600" />
+                <div className={`w-10 h-10 ${accentBg} rounded-xl flex items-center justify-center`}>
+                  <Trophy className={`w-5 h-5 ${accentText}`} />
                 </div>
                 Chat Simulation Results
               </h1>
@@ -683,7 +791,7 @@ export function AIChatSimulation() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.1 }}
           >
-            <Card className="bg-gradient-to-br from-emerald-50 via-white to-teal-50 border-emerald-100 overflow-hidden">
+            <Card className={`bg-gradient-to-br ${isRoofing ? 'from-amber-50 via-white to-orange-50 border-amber-100' : 'from-emerald-50 via-white to-teal-50 border-emerald-100'} overflow-hidden`}>
               <CardContent className="p-6">
                 <div className="flex flex-col sm:flex-row items-center gap-6">
                   {/* Score Circle */}
@@ -843,14 +951,14 @@ export function AIChatSimulation() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
           >
-            <Card className="bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-100">
+            <Card className={`bg-gradient-to-r ${accentGradient}`}>
               <CardContent className="p-6">
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center shrink-0">
-                    <Sparkles className="w-5 h-5 text-emerald-600" />
+                  <div className={`w-10 h-10 ${accentBg} rounded-xl flex items-center justify-center shrink-0`}>
+                    <Sparkles className={`w-5 h-5 ${accentText}`} />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-emerald-700 mb-2">AI Coach Feedback</p>
+                    <p className={`text-sm font-medium ${accentTextStrong} mb-2`}>AI Coach Feedback</p>
                     <p className="text-sm text-gray-600 leading-relaxed">{scoreResult.feedback}</p>
                   </div>
                 </div>
@@ -865,7 +973,7 @@ export function AIChatSimulation() {
             transition={{ delay: 0.9 }}
             className="flex items-center justify-center gap-3"
           >
-            <Button onClick={resetAll} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+            <Button onClick={resetAll} className={`${accentBtn} text-white`}>
               <RotateCcw className="w-4 h-4 mr-2" />
               Try Another Scenario
             </Button>

@@ -47,7 +47,8 @@ type SimulationPhase = 'intro' | 'question' | 'results'
 
 // ==================== SCENARIO DATA ====================
 
-const SIMULATION_SCENARIOS: SimulationScenario[] = [
+// AMENITIES scenarios (hospitality — minibars, safes, RFID locks, kettles)
+const AMENITIES_DIALOG_SCENARIOS: SimulationScenario[] = [
   {
     id: 'sim1',
     title: 'Hotel GM Meeting',
@@ -430,6 +431,393 @@ const SIMULATION_SCENARIOS: SimulationScenario[] = [
   }
 ]
 
+// ROOFING scenarios (premium roofing — stone-coated, thatch, asphalt shingle tiles)
+// Same IDs (sim1-sim5) as AMENITIES_DIALOG_SCENARIOS so the SimulationDialog lookup
+// stays in sync when an employee in the ROOFING company launches a sim from
+// mock-simulations.tsx (which uses the same sim1-sim5 IDs).
+const ROOFING_DIALOG_SCENARIOS: SimulationScenario[] = [
+  {
+    id: 'sim1',
+    title: 'Homeowner Villa Meeting',
+    description: 'Practice making initial contact with a premium-villa homeowner. Focus on opening statements and roofing-needs discovery.',
+    type: 'field_sales',
+    difficulty: 'Beginner',
+    duration: '15 min',
+    scenario: 'You are meeting with Vikram Mehta, a homeowner building a premium 5,000 sq ft villa in Pune. His architect suggested premium roofing but Vikram has only ever used traditional clay tiles and has never heard of stone-coated steel tiles. He is budget-conscious but willing to spend for quality and a long-lasting roof. This is your first face-to-face meeting at the construction site. Vikram is busy, focused on budget control, and curious about newer roofing technology. You have 20 minutes to make your pitch.',
+    questions: [
+      {
+        question: 'How do you open the meeting after exchanging greetings with Vikram at his villa site?',
+        options: [
+          'Jump straight into the Laxree Roofing catalog and start listing tile profiles and prices',
+          'Thank him for his time, acknowledge the villa project, and ask what his top priorities are for the roof — aesthetics, lifespan, weather resistance, or budget',
+          'Start by telling him about Laxree\'s years of industry experience and global presence',
+          'Ask about his current clay tile supplier and what problems he has had'
+        ],
+        correctAnswer: 1,
+        explanation: 'A needs-based opening shows professionalism and customer-centricity. Acknowledging his project shows you\'ve done your homework. Asking about priorities opens the conversation naturally and gives you the information you need to tailor your pitch to stone-coated, thatch, or shingle tiles.',
+        categoryScores: { communication: 20, technical: 0, productKnowledge: 5, sales: 10 },
+        categoryMax: { communication: 20, technical: 5, productKnowledge: 10, sales: 15 }
+      },
+      {
+        question: 'Vikram says: "Our biggest concern is longevity — I want a roof that lasts my lifetime. Clay tiles crack and need replacement." Which Laxree Roofing product do you lead with?',
+        options: [
+          'The asphalt shingle series, since it\'s the cheapest and most common',
+          'The stone-coated tile series, highlighting the 50-year lifespan, steel core, stone-chip coating, and Class-A fire rating — explicitly contrasting with clay tile cracking and concrete\'s weight issues',
+          'A thatch tile because it looks tropical',
+          'Suggest he doesn\'t need a premium roof at all to save money'
+        ],
+        correctAnswer: 1,
+        explanation: 'The stone-coated tile is the right lead. Its 50-year lifespan directly answers Vikram\'s longevity concern. The steel core + stone-chip coating makes it crack-resistant (unlike clay) and lightweight (unlike concrete). This positioning addresses his stated pain point precisely.',
+        categoryScores: { communication: 5, technical: 15, productKnowledge: 20, sales: 10 },
+        categoryMax: { communication: 10, technical: 20, productKnowledge: 20, sales: 15 }
+      },
+      {
+        question: 'Vikram asks: "What about weather performance? Pune gets heavy monsoon rain and some hail." How do you respond?',
+        options: [
+          'Say "Laxree tiles never leak" to reassure him',
+          'Explain that stone-coated tiles are interlocking, tested for wind uplift up to 190 km/h, the stone-chip coating absorbs hail impact, and the steel core won\'t crack under thermal cycling. Mention the 50-year warranty covers manufacturing defects',
+          'Tell him he should have chosen Laxree from the start',
+          'Avoid the topic and redirect to pricing'
+        ],
+        correctAnswer: 1,
+        explanation: 'Honesty with concrete facts builds trust. Explaining the interlocking design, wind uplift rating, hail-resistant stone-chip coating, and thermal-cycle resistance — combined with specific warranty details — directly addresses the monsoon and hail concern without making unrealistic claims.',
+        categoryScores: { communication: 15, technical: 10, productKnowledge: 10, sales: 15 },
+        categoryMax: { communication: 15, technical: 15, productKnowledge: 15, sales: 15 }
+      },
+      {
+        question: 'Vikram says: "Your competitor is offering clay tiles at ₹350 per sq ft. Your stone-coated tile is ₹520. Can you match the clay price?" How do you handle this?',
+        options: [
+          'Immediately drop the price to ₹350 to win the deal',
+          'Say "Our quality is better" without providing specifics',
+          'Reframe the conversation: "Let me show you total cost of ownership. Stone-coated lasts 50 years vs clay\'s 15-20. Over 50 years, that\'s 2-3 clay replacements. Add the steel core\'s crack resistance and zero-maintenance finish, and our lifetime cost is actually 30-40% lower than clay."',
+          'Walk away from the deal since he\'s price-focused'
+        ],
+        correctAnswer: 2,
+        explanation: 'Value-based selling is critical here. Instead of competing on per-sq-ft price, reframe to Total Cost of Ownership. The 50-year lifespan vs clay\'s 15-20 years means 2-3 replacement cycles avoided, plus zero maintenance. Using specific numbers for his villa makes the case compelling and financial.',
+        categoryScores: { communication: 10, technical: 5, productKnowledge: 10, sales: 20 },
+        categoryMax: { communication: 10, technical: 10, productKnowledge: 10, sales: 20 }
+      },
+      {
+        question: 'The meeting is wrapping up. What\'s your closing approach?',
+        options: [
+          'Say "Thanks for your time" and leave your business card',
+          'Push hard for an immediate purchase order',
+          'Propose a clear next step: "I\'d like to arrange a sample installation on a small porch section of your villa so you can see the profile and color in natural light. I\'ll also prepare a TCO comparison vs clay. Can we schedule a follow-up next Thursday?"',
+          'Ask him to call you when he\'s ready to decide'
+        ],
+        correctAnswer: 2,
+        explanation: 'Always close with a specific next step. Proposing a sample installation is powerful because it lets the product speak for itself in real light. Scheduling a specific follow-up date keeps momentum. This approach is professional, customer-friendly, and significantly increases close rates.',
+        categoryScores: { communication: 15, technical: 0, productKnowledge: 5, sales: 20 },
+        categoryMax: { communication: 15, technical: 5, productKnowledge: 10, sales: 20 }
+      }
+    ]
+  },
+  {
+    id: 'sim2',
+    title: 'Roofing Product Demo',
+    description: 'Present Laxree tile profiles to a prospective builder. Handle technical questions and objections.',
+    type: 'field_sales',
+    difficulty: 'Intermediate',
+    duration: '20 min',
+    scenario: 'You are presenting to the procurement team of Skyline Builders, constructing a 50-villa gated township in Bangalore. They need roofing for all 50 villas. The procurement director, head of design, and project manager are present. They\'ve shortlisted Laxree Roofing and one competitor (a clay tile supplier). This is your product demo presentation — make it count.',
+    questions: [
+      {
+        question: 'How do you structure the opening of your demo presentation?',
+        options: [
+          'Start by showing all 6 stone-coated profiles Laxree offers to demonstrate breadth of range',
+          'Open with a brief overview of Laxree Roofing, then focus on the profiles most relevant to their 50-villa township — Classic, Shingle, and Tudor Pro — explaining why these fit premium residential use',
+          'Begin with pricing to show competitiveness right away',
+          'Start with a technical deep-dive into steel core metallurgy'
+        ],
+        correctAnswer: 1,
+        explanation: 'Tailoring your presentation to the client\'s specific needs (premium residential, 50 villas) shows preparation and respect for their time. Leading with Classic, Shingle, and Tudor Pro — ideal profiles for premium villas — demonstrates product knowledge and customer understanding.',
+        categoryScores: { communication: 20, technical: 5, productKnowledge: 15, sales: 10 },
+        categoryMax: { communication: 20, technical: 10, productKnowledge: 15, sales: 10 }
+      },
+      {
+        question: 'The Head of Design asks: "What profiles do you have? We need something that looks premium but isn\'t generic." What do you highlight?',
+        options: [
+          'Just say "we have several profiles" and move on',
+          'Explain Laxree\'s 6 stone-coated profiles: Classic (timeless), Classic Pro (enhanced), Shingle (modern flat), Nosen (cedar shake look), Wood (rustic wood texture), and Tudor Pro (European elegance). Recommend Tudor Pro and Wood for premium villas to differentiate the township aesthetically',
+          'Recommend only the cheapest profile',
+          'Show a video of a clay tile roof instead'
+        ],
+        correctAnswer: 1,
+        explanation: 'Showing the full 6-profile range (Classic, Classic Pro, Shingle, Nosen, Wood, Tudor Pro) demonstrates breadth while specific recommendations (Tudor Pro and Wood for premium villas) demonstrate consultative selling. This addresses both the "premium look" and "not generic" requirements.',
+        categoryScores: { communication: 10, technical: 20, productKnowledge: 20, sales: 10 },
+        categoryMax: { communication: 10, technical: 20, productKnowledge: 20, sales: 10 }
+      },
+      {
+        question: 'The Project Manager asks: "These look like clay tiles visually — what\'s actually different? Why stone-coated steel?" How do you respond?',
+        options: [
+          'Say "it\'s just better" without specifics',
+          'Present the technical specs: steel core (strength + crack resistance vs clay), stone-chip coating (UV-stable color, doesn\'t fade), lightweight (60% lighter than concrete, no structural reinforcement needed), Class-A fire rating, and 50-year lifespan vs clay\'s 15-20',
+          'Recommend they buy clay from the competitor instead',
+          'Say you\'ll check and get back to them'
+        ],
+        correctAnswer: 1,
+        explanation: 'Knowing your product specs cold is essential. The steel core + stone-chip coating differentiates from clay on every dimension: strength, weight, fire, lifespan. Presenting these specs builds credibility and addresses the comparison question completely.',
+        categoryScores: { communication: 5, technical: 15, productKnowledge: 20, sales: 10 },
+        categoryMax: { communication: 10, technical: 15, productKnowledge: 20, sales: 15 }
+      },
+      {
+        question: 'The Procurement Director says: "Tudor Pro looks beautiful for the show villas, but it\'s expensive. Is it really worth the premium over Classic?" How do you justify it?',
+        options: [
+          'Agree it\'s expensive and suggest they skip it',
+          'Simply state that it\'s the premium model',
+          'Explain Tudor Pro\'s European elegance differentiates their township from competitors, justifies a higher villa selling price, creates a memorable streetscape that drives faster sales, and the 50-year warranty means zero replacement cost for the homeowner — a powerful marketing story',
+          'Offer a discount to make it cheaper'
+        ],
+        correctAnswer: 2,
+        explanation: 'Tudor Pro is a distinctive premium profile. Positioning it as a marketing differentiator that justifies higher villa prices and faster sales transforms it from a cost into an investment. This is consultative selling at its best.',
+        categoryScores: { communication: 10, technical: 5, productKnowledge: 15, sales: 20 },
+        categoryMax: { communication: 10, technical: 10, productKnowledge: 15, sales: 20 }
+      },
+      {
+        question: 'The team seems impressed but the Procurement Director says: "We need to see installed references from similar township projects before deciding." How do you handle this?',
+        options: [
+          'Say you don\'t have references available',
+          'Promise to email references later but push for a decision now',
+          'Acknowledge this as a reasonable request, share that Laxree Roofing has installed tiles in premium villa projects across India including several in Bangalore, offer to arrange a site visit to a completed township nearby, and propose signing a letter of intent conditional on satisfactory references',
+          'Tell them references aren\'t necessary because Laxree is well-known'
+        ],
+        correctAnswer: 2,
+        explanation: 'Viewing reference requests as buying signals (they\'re interested!) rather than obstacles is key. Providing local references is powerful, and proposing a conditional LOI keeps the deal moving forward while respecting their process. This builds trust and maintains deal momentum.',
+        categoryScores: { communication: 15, technical: 5, productKnowledge: 5, sales: 20 },
+        categoryMax: { communication: 15, technical: 10, productKnowledge: 10, sales: 20 }
+      }
+    ]
+  },
+  {
+    id: 'sim3',
+    title: 'Inbound Roofing Inquiry',
+    description: 'Handle incoming roofing inquiries, qualify leads, and guide prospects through the buying process.',
+    type: 'inbound_sales',
+    difficulty: 'Beginner',
+    duration: '12 min',
+    scenario: 'You receive an inbound call from Priya Nair, an architect designing a resort in Kerala with 20 cottage buildings. She saw Laxree Roofing\'s website and is interested in stone-coated tiles for the main buildings, and possibly thatch tiles for gazebos and poolside cabanas. She\'s planning the roofing selection now and wants quotes. This is a warm lead — handle it professionally.',
+    questions: [
+      {
+        question: 'How do you open the call after she states her interest in Laxree Roofing?',
+        options: [
+          'Immediately quote prices for all stone-coated profiles',
+          'Thank her for calling, confirm her interest in Laxree Roofing, and ask qualifying questions: number of buildings, total roof area, slope style, timeline, and key priorities (aesthetics, weather resistance, fire rating, budget)',
+          'Ask her to send an email with her requirements instead',
+          'Transfer her to the technical department'
+        ],
+        correctAnswer: 1,
+        explanation: 'Qualifying the lead properly is essential. Understanding the scope (20 cottages), roof area, slope style, timeline, and priorities lets you tailor your response and properly assess the opportunity. Warm leads deserve professional handling — don\'t rush to quote without understanding needs.',
+        categoryScores: { communication: 20, technical: 5, productKnowledge: 5, sales: 15 },
+        categoryMax: { communication: 20, technical: 10, productKnowledge: 10, sales: 15 }
+      },
+      {
+        question: 'She asks: "What\'s the difference between your stone-coated profiles? Which would work for resort cottages?" How do you respond?',
+        options: [
+          'Send her the full product catalog by email',
+          'Explain the 6 profile range: Classic, Classic Pro, Shingle, Nosen, Wood, Tudor Pro. Recommend Wood or Nosen for resort cottages since their organic textures blend beautifully with Kerala\'s natural surroundings and resort aesthetic. Mention both come in earth-tone colors',
+          'Recommend the most expensive model without explanation',
+          'Say "They\'re all good, pick any one"'
+        ],
+        correctAnswer: 1,
+        explanation: 'Demonstrating detailed product knowledge while making a specific recommendation based on her project (resort in Kerala) shows expertise and builds confidence. Wood and Nosen profiles\' organic textures genuinely suit resort aesthetics.',
+        categoryScores: { communication: 10, technical: 15, productKnowledge: 20, sales: 10 },
+        categoryMax: { communication: 10, technical: 15, productKnowledge: 20, sales: 15 }
+      },
+      {
+        question: 'Priya mentions: "We also have gazebos, a poolside cabana, and a tiki bar. I\'m worried stone-coated might look too formal for those spaces." How do you use this pain point?',
+        options: [
+          'Say "That\'s too bad" and move on to pricing',
+          'Empathize with the design concern, then introduce Laxree Artificial Thatch Tiles — UV-stable, fire-resistant, 30+ year lifespan, no maintenance, and available in 500mm and 1000mm sizes. Share that resorts across India use thatch for gazebos and cabanas to create that relaxed tropical vibe without natural thatch\'s fire risk',
+          'Criticize her design sense',
+          'Tell her all roofing has the same look'
+        ],
+        correctAnswer: 1,
+        explanation: 'Empathy followed by a specific complementary product (artificial thatch) and quantified benefits (30+ year lifespan, fire-resistant, no maintenance) is the most effective approach. This directly addresses her aesthetic concern while creating a cross-sell opportunity.',
+        categoryScores: { communication: 15, technical: 10, productKnowledge: 15, sales: 15 },
+        categoryMax: { communication: 15, technical: 15, productKnowledge: 15, sales: 15 }
+      },
+      {
+        question: 'She asks: "Can you give me a price for 20 buildings plus the thatch areas?" What\'s the best approach?',
+        options: [
+          'Give the list price per sq ft immediately',
+          'Ask a few more questions first: "To give you the most competitive pricing, can you share — do you need installation services? What\'s your target timeline? Are there other resort projects in your portfolio that might need roofing?" Then provide a range with volume discount tiers',
+          'Refuse to give any pricing until a site visit',
+          'Give the lowest possible price to win the deal'
+        ],
+        correctAnswer: 1,
+        explanation: 'Asking about installation, timeline, and additional properties expands the opportunity and allows you to offer better volume pricing. Providing a price range with discount tiers shows transparency while keeping negotiation room. This maximizes deal value for both parties.',
+        categoryScores: { communication: 10, technical: 5, productKnowledge: 5, sales: 20 },
+        categoryMax: { communication: 10, technical: 10, productKnowledge: 10, sales: 20 }
+      },
+      {
+        question: 'Before ending the call, what\'s your closing action?',
+        options: [
+          'Say "Thanks for calling" and wait for her to call back',
+          'Summarize the discussed solution, send a formal quote within 24 hours with Wood profile + thatch specifications, propose a site visit to assess roof slopes and installation requirements, and schedule a follow-up call for next week — getting her confirmation on the date',
+          'Push for an immediate verbal commitment',
+          'Just email the quote without any follow-up plan'
+        ],
+        correctAnswer: 1,
+        explanation: 'A professional close includes: summary of agreed points, clear next steps with timelines, and a confirmed follow-up date. This ensures the lead doesn\'t go cold and demonstrates organized, reliable service. The site visit proposal also deepens engagement and moves toward closing.',
+        categoryScores: { communication: 15, technical: 5, productKnowledge: 5, sales: 20 },
+        categoryMax: { communication: 15, technical: 5, productKnowledge: 10, sales: 20 }
+      }
+    ]
+  },
+  {
+    id: 'sim4',
+    title: 'Roofing Negotiation Challenge',
+    description: 'Negotiate pricing and contract terms with a budget-conscious builder while maintaining value positioning.',
+    type: 'negotiation',
+    difficulty: 'Advanced',
+    duration: '25 min',
+    scenario: 'You\'re in a negotiation meeting with Skyline Builders, constructing a 50-villa gated township in Bangalore. They want stone-coated tiles for all 50 villas plus thatch tiles for the clubhouse gazebo and poolside cabanas. Their procurement VP is pushing hard for a 30% discount, referencing a clay tile competitor\'s lower quote. The deal value at list price is approximately ₹1.2 crore. Your target is to close at no more than 15% discount.',
+    questions: [
+      {
+        question: 'The VP opens with: "We need 30% off. That\'s our budget, and your clay tile competitor has already agreed to it." How do you respond?',
+        options: [
+          'Immediately agree to 30% to avoid losing the deal',
+          'Refuse any discount and insist on list price',
+          'Acknowledge their budget constraint, ask to understand what\'s included in the competitor\'s quote (cheaper clay quotes often exclude installation, warranty, or proper underlayment), and suggest exploring the package scope to find value rather than just cutting price',
+          'Offer 25% as a compromise'
+        ],
+        correctAnswer: 2,
+        explanation: 'Never accept the first offer or reflexively discount. Instead, challenge the comparison — competitor quotes often exclude critical items. Shifting from price negotiation to value negotiation is a key skill. Understanding what\'s actually in the competitor\'s quote gives you leverage.',
+        categoryScores: { communication: 15, technical: 5, productKnowledge: 5, sales: 20 },
+        categoryMax: { communication: 15, technical: 10, productKnowledge: 10, sales: 20 }
+      },
+      {
+        question: 'You discover the clay competitor\'s quote excludes installation, underlayment, and warranty. How do you leverage this?',
+        options: [
+          'Insult the competitor\'s products',
+          'Create a side-by-side comparison: show that Laxree\'s package includes stone-coated tiles, full installation, ridge accessories, underlayment, 50-year warranty, and 24/7 service support — making the total cost of ownership over 50 years actually lower than clay despite a higher upfront price',
+          'Ignore it and focus only on your own products',
+          'Match their price by removing warranty and service'
+        ],
+        correctAnswer: 1,
+        explanation: 'A factual side-by-side comparison is the most powerful negotiation tool. It doesn\'t attack the competitor directly — it lets the facts speak. Showing lower TCO over 50 years (clay needs 2-3 replacements) reframes the conversation from "price" to "value," which is where Laxree Roofing wins.',
+        categoryScores: { communication: 10, technical: 10, productKnowledge: 15, sales: 20 },
+        categoryMax: { communication: 10, technical: 15, productKnowledge: 15, sales: 20 }
+      },
+      {
+        question: 'The VP says: "I appreciate the comparison, but my board approved a fixed budget. We literally cannot exceed it." What creative solution do you propose?',
+        options: [
+          'Walk away from the deal',
+          'Propose a phased rollout: install premium Tudor Pro stone-coated tiles in the 10 show villas first (where marketing ROI is highest), use Classic profile in the other 40 to fit budget, with an upgrade path. Include a volume discount on the full 50-villa package and the thatch clubhouse package for committing to all of it',
+          'Cut product quality to fit their budget',
+          'Suggest they find more budget'
+        ],
+        correctAnswer: 1,
+        explanation: 'Phased rollout is a creative win-win solution. The 10 show villas get the premium Tudor Pro profile (impresses buyers, highest ROI), while staying within budget using Classic for other 40. The upgrade path keeps future business coming. This shows flexibility while maintaining brand integrity.',
+        categoryScores: { communication: 15, technical: 5, productKnowledge: 10, sales: 20 },
+        categoryMax: { communication: 15, technical: 10, productKnowledge: 10, sales: 20 }
+      },
+      {
+        question: 'They ask about payment terms. You typically require 50% upfront, 50% on delivery. They want 30/70. What\'s your response?',
+        options: [
+          'Refuse any change to payment terms',
+          'Agree to 30/70 immediately to close the deal',
+          'Propose 40/60 as a middle ground, with the condition of a signed 5-year service contract (recurring revenue for warranty maintenance visits). Explain this provides them better cash flow while giving Laxree the service contract as added value — a win-win structure',
+          'Ask for 100% upfront instead'
+        ],
+        correctAnswer: 2,
+        explanation: 'Negotiating payment terms while attaching a service contract creates mutual value. The client gets better cash flow (40/60 vs 50/50), and Laxree secures recurring service revenue. This is creative deal structuring that expands the pie rather than just splitting it differently.',
+        categoryScores: { communication: 10, technical: 5, productKnowledge: 5, sales: 20 },
+        categoryMax: { communication: 15, technical: 5, productKnowledge: 5, sales: 20 }
+      },
+      {
+        question: 'Final terms discussion: they want a 50-year warranty instead of the standard 30 years on the stone-coated tiles. How do you handle this?',
+        options: [
+          'Give the 50-year warranty for free',
+          'Refuse any warranty extension',
+          'Acknowledge that the stone-coated tiles ARE rated for 50 years lifespan, offer to extend the formal warranty from 30 to 50 years as part of the service contract (making it conditional on signing the 5-year service agreement), or offer 40 years standard with a paid extended warranty program',
+          'Offer 50 years but remove other benefits to compensate'
+        ],
+        correctAnswer: 2,
+        explanation: 'Using warranty length as a negotiation lever tied to the service contract is smart deal-making. Since the tiles genuinely last 50 years, extending the formal warranty is low-cost to you but high-value to the client. Trading warranty length for service contract commitment is a win-win.',
+        categoryScores: { communication: 10, technical: 5, productKnowledge: 10, sales: 20 },
+        categoryMax: { communication: 10, technical: 10, productKnowledge: 10, sales: 20 }
+      }
+    ]
+  },
+  {
+    id: 'sim5',
+    title: 'Roofing Customer Discovery',
+    description: 'Conduct a thorough needs analysis for a new resort project and align with Laxree Roofing solutions across the product portfolio.',
+    type: 'customer_discovery',
+    difficulty: 'Intermediate',
+    duration: '18 min',
+    scenario: 'You\'re meeting with Priya Nair, the architect for a luxury beachfront resort in Kerala. The resort has 20 main cottage buildings, a central clubhouse, a spa, 8 gazebos, 4 poolside cabanas, and a tiki bar. Priya is in the design specification phase — 6 months from final roofing decisions. The owner wants a cohesive aesthetic across all structures while respecting the beachfront setting. This is a discovery meeting, not a sales pitch.',
+    questions: [
+      {
+        question: 'How do you open this discovery meeting with Priya the architect?',
+        options: [
+          'Start by showing the Laxree Roofing catalog and walking through every profile',
+          'Begin by asking Priya about her design vision for the resort — what aesthetic is she trying to achieve, what\'s the architectural style, how does she want each structure (cottages, clubhouse, spa, gazebos) to feel to guests',
+          'Open with pricing to set expectations',
+          'Skip discovery and ask for the contract'
+        ],
+        correctAnswer: 1,
+        explanation: 'Discovery meetings are about understanding the client\'s vision first. Starting with Priya\'s design intent shows you respect her role as architect and want to be a design partner, not just a tile vendor. This builds the trust needed for a long-term project.',
+        categoryScores: { communication: 20, technical: 0, productKnowledge: 5, sales: 10 },
+        categoryMax: { communication: 20, technical: 5, productKnowledge: 10, sales: 15 }
+      },
+      {
+        question: 'Priya shares that she wants the main cottages to feel "modern coastal" but the gazebos and tiki bar to feel "tropical rustic." Which Laxree products do you propose for each?',
+        options: [
+          'Recommend the same stone-coated profile everywhere for consistency',
+          'Recommend Shingle or Classic profile stone-coated tiles in sea-tone colors for the modern coastal cottages and clubhouse, and Artificial Thatch tiles (1000mm size) for the gazebos, cabanas, and tiki bar to deliver the tropical rustic look without natural thatch\'s fire risk',
+          'Recommend only thatch everywhere',
+          'Recommend asphalt shingles for everything to save money'
+        ],
+        correctAnswer: 1,
+        explanation: 'A multi-product solution matches each structure\'s design intent perfectly. Shingle/Classic stone-coated for modern coastal, thatch for tropical rustic — this is exactly the kind of consultative cross-product solution Laxree Roofing is uniquely positioned to deliver. It also deepens the account.',
+        categoryScores: { communication: 10, technical: 10, productKnowledge: 20, sales: 15 },
+        categoryMax: { communication: 10, technical: 15, productKnowledge: 20, sales: 15 }
+      },
+      {
+        question: 'Priya asks about fire safety for the beachfront thatch structures: "Natural thatch is banned in our coastal zone. Will artificial thatch pass fire codes?" How do you respond?',
+        options: [
+          'Say Laxree thatch "is probably fine"',
+          'Present the Laxree Artificial Thatch certifications: Class-A fire rating, UV-stable for 30+ years, no maintenance, available in 500mm and 1000mm sizes. Offer to send the fire-rating certificate and arrange a sample for the local fire marshal to approve',
+          'Recommend she use natural thatch anyway',
+          'Only share the price list'
+        ],
+        correctAnswer: 1,
+        explanation: 'Specific certifications combined with a practical next step (sample for the fire marshal) shows professionalism and removes a critical barrier. The Class-A fire rating directly addresses the coastal ban, and the 30+ year lifespan beats natural thatch\'s 5-7 years.',
+        categoryScores: { communication: 10, technical: 15, productKnowledge: 20, sales: 10 },
+        categoryMax: { communication: 10, technical: 15, productKnowledge: 20, sales: 15 }
+      },
+      {
+        question: 'Priya reveals: "The owner wants the main cottage roofs to have visible texture from a distance — smooth profiles won\'t work." How do you help?',
+        options: [
+          'Pick one profile and argue for it',
+          'Suggest the Wood or Nosen profile stone-coated tiles — both have rich surface textures (wood grain or cedar shake look) that are visible from a distance, come in earth-tone colors that complement the coastal setting, and offer different visual weights for variety across the 20 cottages',
+          'Tell her to figure it out internally first',
+          'Recommend smooth profiles anyway'
+        ],
+        correctAnswer: 1,
+        explanation: 'Wood and Nosen profiles\' textured surfaces directly address the "visible texture from distance" requirement. Offering two textured options (Wood for grain, Nosen for cedar shake) with different visual weights adds design flexibility. This demonstrates consultative problem-solving.',
+        categoryScores: { communication: 15, technical: 10, productKnowledge: 15, sales: 10 },
+        categoryMax: { communication: 15, technical: 15, productKnowledge: 15, sales: 15 }
+      },
+      {
+        question: 'At the end of the meeting, Priya says: "This has been very helpful. We\'re still 6 months from final specifications." How do you maintain engagement over this long sales cycle?',
+        options: [
+          'Say "Call us when you\'re ready" and move on',
+          'Establish a structured engagement plan: monthly check-ins, share case studies of similar resort projects, offer to present to the owner about ROI of premium roofing, provide sample tiles for the design team\'s mock-up cottage, and create a shared project specification document that evolves with the design',
+          'Send generic marketing emails every week',
+          'Offer the lowest price now to force an early decision'
+        ],
+        correctAnswer: 1,
+        explanation: 'Long sales cycles require structured nurture. A plan that adds value at every touchpoint — case studies, owner presentations, mock-up samples, and a collaborative specification document — keeps you engaged and positions Laxree Roofing as the default choice when they\'re ready to buy.',
+        categoryScores: { communication: 15, technical: 5, productKnowledge: 5, sales: 20 },
+        categoryMax: { communication: 15, technical: 5, productKnowledge: 10, sales: 20 }
+      }
+    ]
+  }
+]
+
 // ==================== DIFFICULTY CONFIG ====================
 
 const difficultyColors: Record<string, string> = {
@@ -440,8 +828,15 @@ const difficultyColors: Record<string, string> = {
 
 // ==================== HELPER FUNCTIONS ====================
 
-function generateAIFeedback(scores: CategoryScores, overall: number): string {
+function generateAIFeedback(scores: CategoryScores, overall: number, isRoofing = false): string {
   const parts: string[] = []
+  const brand = isRoofing ? 'Laxree Roofing' : 'LAXREE'
+  const catalogContext = isRoofing
+    ? 'knowing specs, technologies (stone-coated vs clay vs concrete, fire ratings, thatch materials) and competitive differentiators is essential'
+    : 'knowing specs, technologies (compressor vs absorption, RFID features), and competitive differentiators is essential'
+  const rangeContext = isRoofing
+    ? 'learning the full Laxree Roofing range (stone-coated profiles, thatch tiles, asphalt shingles) and when to recommend each'
+    : 'learning the full LAXREE range and when to recommend each model'
 
   if (overall >= 90) {
     parts.push('Outstanding performance! You demonstrated exceptional sales acumen and product mastery.')
@@ -464,11 +859,11 @@ function generateAIFeedback(scores: CategoryScores, overall: number): string {
   }
 
   if (scores.technical >= 80) {
-    parts.push('Your technical knowledge is impressive — you clearly understand LAXREE product specifications and technology.')
+    parts.push(`Your technical knowledge is impressive — you clearly understand ${brand} product specifications and technology.`)
   } else if (scores.technical >= 60) {
     parts.push('Technical knowledge is adequate but deeper product understanding would strengthen your credibility. Review the Product Academy modules.')
   } else {
-    parts.push('Technical knowledge needs work. Study the LAXREE product catalog thoroughly — knowing specs, technologies (compressor vs absorption, RFID features), and competitive differentiators is essential.')
+    parts.push(`Technical knowledge needs work. Study the ${brand} product catalog thoroughly — ${catalogContext}.`)
   }
 
   if (scores.productKnowledge >= 80) {
@@ -476,7 +871,7 @@ function generateAIFeedback(scores: CategoryScores, overall: number): string {
   } else if (scores.productKnowledge >= 60) {
     parts.push('Product knowledge is functional but could be more nuanced. Practice matching specific models to customer needs.')
   } else {
-    parts.push('Product knowledge needs significant improvement. Spend time in the Product Academy learning the full LAXREE range and when to recommend each model.')
+    parts.push(`Product knowledge needs significant improvement. Spend time in the Product Academy ${rangeContext}.`)
   }
 
   if (scores.sales >= 80) {
@@ -525,7 +920,21 @@ interface SimulationAttempt {
 
 export function SimulationDialog({ simulationId, open, onClose, onComplete }: SimulationDialogProps) {
   const user = useAuthStore((s) => s.user)
+  const isRoofing = user?.company === 'ROOFING'
+  const SIMULATION_SCENARIOS = isRoofing ? ROOFING_DIALOG_SCENARIOS : AMENITIES_DIALOG_SCENARIOS
   const scenario = SIMULATION_SCENARIOS.find((s) => s.id === simulationId)
+  // Theme tokens — amber/orange for Roofing, emerald/teal for Amenities
+  const accentBg = isRoofing ? 'bg-amber-100' : 'bg-emerald-100'
+  const accentText = isRoofing ? 'text-amber-600' : 'text-emerald-600'
+  const accentTextStrong = isRoofing ? 'text-amber-700' : 'text-emerald-700'
+  const accentBtn = isRoofing ? 'bg-amber-600 hover:bg-amber-700' : 'bg-emerald-600 hover:bg-emerald-700'
+  const accentProgress = isRoofing ? '[&>div]:bg-amber-500' : '[&>div]:bg-emerald-500'
+  const accentScenarioCard = isRoofing
+    ? 'border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50'
+    : 'border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50'
+  const accentFeedbackCard = isRoofing
+    ? 'border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50'
+    : 'border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50'
 
   const [phase, setPhase] = useState<SimulationPhase>('intro')
   const [currentQuestion, setCurrentQuestion] = useState(0)
@@ -612,7 +1021,8 @@ export function SimulationDialog({ simulationId, open, onClose, onComplete }: Si
 
     const aiFeedback = generateAIFeedback(
       { communication: commPct, technical: techPct, productKnowledge: prodPct, sales: salesPct },
-      overall
+      overall,
+      isRoofing
     )
 
     const attempt: SimulationAttempt = {
@@ -682,8 +1092,8 @@ export function SimulationDialog({ simulationId, open, onClose, onComplete }: Si
           <div className="space-y-5">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2 text-xl">
-                <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center shrink-0">
-                  <Play className="w-5 h-5 text-emerald-600" />
+                <div className={`w-10 h-10 ${accentBg} rounded-lg flex items-center justify-center shrink-0`}>
+                  <Play className={`w-5 h-5 ${accentText}`} />
                 </div>
                 {scenario.title}
               </DialogTitle>
@@ -706,11 +1116,11 @@ export function SimulationDialog({ simulationId, open, onClose, onComplete }: Si
             </div>
 
             {/* Scenario Description */}
-            <Card className="border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50">
+            <Card className={accentScenarioCard}>
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <Sparkles className="w-4 h-4 text-emerald-600" />
-                  <span className="text-sm font-semibold text-emerald-700">Scenario</span>
+                  <Sparkles className={`w-4 h-4 ${accentText}`} />
+                  <span className={`text-sm font-semibold ${accentTextStrong}`}>Scenario</span>
                 </div>
                 <p className="text-sm text-gray-700 leading-relaxed">{scenario.scenario}</p>
               </CardContent>
@@ -734,7 +1144,7 @@ export function SimulationDialog({ simulationId, open, onClose, onComplete }: Si
             <div className="flex justify-end">
               <Button
                 onClick={startSimulation}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2"
+                className={`${accentBtn} text-white gap-2`}
               >
                 <Play className="w-4 h-4" /> Begin Simulation
               </Button>
@@ -757,7 +1167,7 @@ export function SimulationDialog({ simulationId, open, onClose, onComplete }: Si
               <div className="w-full">
                 <Progress
                   value={((currentQuestion + (selectedAnswer !== null ? 1 : 0)) / scenario.questions.length) * 100}
-                  className="h-2 [&>div]:bg-emerald-500"
+                  className={`h-2 ${accentProgress}`}
                 />
               </div>
             </DialogHeader>
@@ -770,7 +1180,9 @@ export function SimulationDialog({ simulationId, open, onClose, onComplete }: Si
                 const isCorrectOption = idx === question.correctAnswer
                 const showResult = selectedAnswer !== null
 
-                let optionStyle = 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer'
+                let optionStyle = isRoofing
+                  ? 'border-gray-200 hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer'
+                  : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer'
                 if (showResult) {
                   if (isCorrectOption) {
                     optionStyle = 'border-emerald-400 bg-emerald-50 ring-1 ring-emerald-300'
@@ -780,7 +1192,9 @@ export function SimulationDialog({ simulationId, open, onClose, onComplete }: Si
                     optionStyle = 'border-gray-200 opacity-60'
                   }
                 } else if (isSelected) {
-                  optionStyle = 'border-emerald-400 bg-emerald-50 ring-1 ring-emerald-300'
+                  optionStyle = isRoofing
+                    ? 'border-amber-400 bg-amber-50 ring-1 ring-amber-300'
+                    : 'border-emerald-400 bg-emerald-50 ring-1 ring-emerald-300'
                 }
 
                 return (
@@ -836,7 +1250,7 @@ export function SimulationDialog({ simulationId, open, onClose, onComplete }: Si
                 <div className="flex justify-end mt-3">
                   <Button
                     onClick={handleNextQuestion}
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2"
+                    className={`${accentBtn} text-white gap-2`}
                   >
                     {currentQuestion < scenario.questions.length - 1 ? (
                       <>Next Question <ArrowRight className="w-4 h-4" /></>
@@ -855,7 +1269,7 @@ export function SimulationDialog({ simulationId, open, onClose, onComplete }: Si
           <div className="space-y-5">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
-                <Trophy className="w-5 h-5 text-emerald-600" />
+                <Trophy className={`w-5 h-5 ${accentText}`} />
                 Simulation Results
               </DialogTitle>
               <DialogDescription>{scenario.title} — Performance Summary</DialogDescription>
@@ -925,16 +1339,17 @@ export function SimulationDialog({ simulationId, open, onClose, onComplete }: Si
             </div>
 
             {/* AI Feedback */}
-            <Card className="border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50">
+            <Card className={accentFeedbackCard}>
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <Sparkles className="w-4 h-4 text-emerald-600" />
-                  <span className="text-sm font-semibold text-emerald-700">AI Performance Feedback</span>
+                  <Sparkles className={`w-4 h-4 ${accentText}`} />
+                  <span className={`text-sm font-semibold ${accentTextStrong}`}>AI Performance Feedback</span>
                 </div>
                 <p className="text-xs text-gray-700 leading-relaxed">
                   {generateAIFeedback(
                     { communication: commPct, technical: techPct, productKnowledge: prodPct, sales: salesPct },
-                    overallPct
+                    overallPct,
+                    isRoofing
                   )}
                 </p>
               </CardContent>
@@ -994,7 +1409,7 @@ export function SimulationDialog({ simulationId, open, onClose, onComplete }: Si
                   handleClose()
                 }}
                 disabled={saving}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2"
+                className={`${accentBtn} text-white gap-2`}
               >
                 {saving ? (
                   <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}>

@@ -639,3 +639,97 @@ Stage Summary:
 - FIX: Added `withDbRetry()` helper in src/lib/db.ts that retries DB ops on transient failures (auth/connection/timeout errors) up to 3 times with increasing delays. Applied to auth API (login lookup + post-login writes) and dashboard API (SUPER_ADMIN queries). Also strengthened resolveDatabaseUrl() to reject credential-less URLs.
 - VERIFIED: Both Amenities and Roofing admin logins succeed on local AND Vercel production (HTTP 200). Browser confirms roofing admin reaches Admin Dashboard with no error.
 - Retry logic now handles Neon cold-starts gracefully — if the first connection fails, it waits and retries up to 3 times, giving Neon compute time to wake up. Login will no longer intermittently fail.
+
+---
+Task ID: 15
+Agent: Subagent (Two-Segment UI Fixer)
+Task: Fix 3 employee simulation files so Roofing-segment users see Roofing content instead of Amenities content (ai-chat-simulation.tsx, simulation-dialog.tsx, mock-simulations.tsx) + make scenario cards more attractive
+
+Work Log:
+- Read worklog.md (Tasks 1-14) and the two reference files ai-simulation.tsx + call-practice.tsx to confirm the AMENITIES_*/ROOFING_* + isRoofing switching pattern.
+- Read the 3 target files end-to-end to understand the existing data structures:
+  * ai-chat-simulation.tsx: had `const SCENARIOS: Scenario[]` (3 entries: hotel-minibar, bulk-safes, resort-complete) with fields id/title/description/difficulty/icon/clientName/clientRole/tags/color/bgGradient/iconBg. Fallback opening messages were keyed by scenario.id. `useAuthStore` user already imported.
+  * simulation-dialog.tsx: had `const SIMULATION_SCENARIOS: SimulationScenario[]` (5 entries: sim1-sim5) each with id/title/description/type/difficulty/duration/scenario/questions[] (5 questions each = 25 total). Each question had question/options[4]/correctAnswer/explanation/categoryScores/categoryMax. Scenario lookup was `SIMULATION_SCENARIOS.find((s) => s.id === simulationId)` at line ~528. `useAuthStore` user already imported.
+  * mock-simulations.tsx: had `const AVAILABLE_SIMULATIONS` (5 entries: sim1-sim5) with id/title/description/type/difficulty/duration. `useAuthStore` user already imported.
+
+CHANGES TO FILE 1 — src/components/employee/ai-chat-simulation.tsx:
+- Renamed `const SCENARIOS: Scenario[]` → `const AMENITIES_CHAT_SCENARIOS: Scenario[]` (3 entries UNCHANGED — content/data identical).
+- Added `const ROOFING_CHAT_SCENARIOS: Scenario[]` with 4 NEW roofing scenarios (Vikram Mehta/Pune villa, Rajiv Khanna/Bangalore builder, Priya Nair/Kerala resort architect, Arjun Reddy/Goa resort cross-sell). Same fields/interface as Amenities. Amber/orange/rose/yellow color themes.
+- Added `const SCENARIO_BUTTON_BG: Record<string, string>` lookup table with explicit Tailwind button-bg classes per scenario id (so Tailwind's purger keeps the classes).
+- Added `const isRoofing = user?.company === 'ROOFING'` and `const SCENARIOS = isRoofing ? ROOFING_CHAT_SCENARIOS : AMENITIES_CHAT_SCENARIOS`.
+- Added 7 theme tokens (accentBg/accentText/accentTextStrong/accentBtn/accentBtnBorder/accentInputFocus/accentUserBubble/accentGradient) all ternary on isRoofing — amber/orange for Roofing, emerald/teal for Amenities.
+- Updated ALL hard-coded emerald class strings in the component to use the theme tokens:
+  * Header icon + Info card icon + "How It Works" text (amber when roofing)
+  * Section subtitle: "Practice sales conversations via text chat with AI-powered hotel clients" → conditional ("...AI-powered homeowners, builders and architects" when roofing)
+  * Info card body text: conditional — describes either hotel client or roofing client (homeowner/builder/architect)
+  * Chat header gradient, message avatar bubble, typing indicator avatar, user message bubble color, chat input focus ring, send button color, end-chat button color, scoring-phase loading spinner, scoring header icon, overall score card gradient, AI feedback card, try-again button, "Respond as a LAXREE sales representative" → "Respond as a Laxree Roofing sales representative" when roofing
+- Added 4 new roofing fallback opening messages keyed by new roofing IDs (roofing-villa-homeowner, roofing-builder-bulk, roofing-resort-package, roofing-thatch-cross-sell).
+- Made scenario cards MORE ATTRACTIVE:
+  * Added motion.div whileHover={{ y: -6 }} for a lift effect
+  * Added top accent bar (gradient strip) on each card
+  * Increased grid gap to gap-5, added responsive lg:grid-cols-3
+  * Added hover:shadow-xl transition-all duration-300
+  * Added rounded-full difficulty badge with px-2.5 py-0.5
+  * Added shadow-sm on the icon rounded square
+- Replaced the inline ternary `${scenario.id === 'hotel-minibar' ? 'bg-emerald-600 ...' : ...}` Start-Chat button color with `${SCENARIO_BUTTON_BG[scenario.id] || accentBtn}` so all 7 scenarios (3 amenities + 4 roofing) get the right color.
+
+CHANGES TO FILE 2 — src/components/employee/simulation-dialog.tsx:
+- Renamed `const SIMULATION_SCENARIOS: SimulationScenario[]` → `const AMENITIES_DIALOG_SCENARIOS: SimulationScenario[]` (5 scenarios UNCHANGED — content/data identical).
+- Added `const ROOFING_DIALOG_SCENARIOS: SimulationScenario[]` with 5 NEW full roofing scenarios, each with 5 questions = 25 NEW questions total. Same interface (id/title/description/type/difficulty/duration/scenario/questions[]). Same IDs (sim1-sim5) so the lookup stays in sync with mock-simulations.tsx. Roofing scenarios:
+  1. sim1 "Homeowner Villa Meeting" (Beginner, 15 min, field_sales) — Vikram Mehta in Pune, 5 Q on opening/stone-coated lead/weather/TCO vs clay/close
+  2. sim2 "Roofing Product Demo" (Intermediate, 20 min, field_sales) — Skyline Builders 50-villa Bangalore, 5 Q on demo structure/6 profiles/stone-coated vs clay specs/Tudor Pro justification/references
+  3. sim3 "Inbound Roofing Inquiry" (Beginner, 12 min, inbound_sales) — Priya Nair architect Kerala, 5 Q on qualifying/6 profiles/thatch cross-sell/pricing approach/close
+  4. sim4 "Roofing Negotiation Challenge" (Advanced, 25 min, negotiation) — Skyline 50-villa + clubhouse, 5 Q on first offer/side-by-side TCO/phased rollout/payment terms/warranty negotiation
+  5. sim5 "Roofing Customer Discovery" (Intermediate, 18 min, customer_discovery) — Priya Nair resort architect, 5 Q on design vision/multi-product fit/fire certification for thatch/texture profiles/long-cycle nurture
+  All questions use realistic Indian client names and Indian cities (Pune, Bangalore, Kerala). All roofing content uses Laxree Roofing products: stone-coated tiles (6 profiles: Classic, Classic Pro, Shingle, Nosen, Wood, Tudor Pro; 50-year lifespan; steel core + stone chips; Class-A fire), artificial thatch tiles (500mm/1000mm; 30+ year lifespan; UV-stable; fire-resistant), asphalt shingles (Laminated/Mosaic/3-Tab; 30-50 year lifespan).
+- Updated `generateAIFeedback()` function: added 3rd parameter `isRoofing = false` and made the brand mention ("LAXREE" → "Laxree Roofing"), the catalog-context feedback ("compressor vs absorption, RFID features" → "stone-coated vs clay vs concrete, fire ratings, thatch materials"), and the range-context feedback ("full LAXREE range" → "full Laxree Roofing range (stone-coated profiles, thatch tiles, asphalt shingles)") all conditional on isRoofing. Updated BOTH call sites to pass isRoofing.
+- Inside `SimulationDialog` component: added `const isRoofing = user?.company === 'ROOFING'` and `const SIMULATION_SCENARIOS = isRoofing ? ROOFING_DIALOG_SCENARIOS : AMENITIES_DIALOG_SCENARIOS` (this local const replaces the old top-level const of the same name, picked up by the existing `.find((s) => s.id === simulationId)` call).
+- Added 7 theme tokens (accentBg/accentText/accentTextStrong/accentBtn/accentProgress/accentScenarioCard/accentFeedbackCard) ternary on isRoofing.
+- Updated ALL hard-coded emerald class strings in intro/question/results phases to use the theme tokens:
+  * Intro phase: header icon, scenario description card gradient/border, "Begin Simulation" button
+  * Question phase: progress bar fill (`[&>div]:bg-emerald-500` → conditional `[&>div]:bg-amber-500`), option hover/selected ring (emerald → conditional amber), "Next Question"/"See Results" button
+  * Results phase: header Trophy icon, AI Performance Feedback card gradient, "Save & Close" button
+- (Note: optionStyle correct/incorrect colors kept emerald/red across both segments — those are semantic "correct/incorrect" colors, not theme colors, so they correctly stay consistent.)
+
+CHANGES TO FILE 3 — src/components/employee/mock-simulations.tsx:
+- Renamed `const AVAILABLE_SIMULATIONS` → `const AMENITIES_AVAILABLE_SIMULATIONS` (5 entries UNCHANGED — content/data identical).
+- Added `const ROOFING_AVAILABLE_SIMULATIONS` with 5 NEW roofing entries using SAME IDs (sim1-sim5) so the launched SimulationDialog lookup stays in sync. Titles/descriptions all roofing-specific (Homeowner Villa Meeting, Roofing Product Demo, Inbound Roofing Inquiry, Roofing Negotiation Challenge, Roofing Customer Discovery).
+- Added `const isRoofing = user?.company === 'ROOFING'` and `const AVAILABLE_SIMULATIONS = isRoofing ? ROOFING_AVAILABLE_SIMULATIONS : AMENITIES_AVAILABLE_SIMULATIONS`.
+- Added `const themeRadarStroke = isRoofing ? '#d97706' : '#059669'` (CSS color string for the radar chart stroke/fill — amber for roofing, emerald for amenities).
+- Made the available-simulation cards MORE ATTRACTIVE:
+  * Replaced the flat `p-3 bg-gray-50 rounded-lg` with a `motion.div` featuring `whileHover={{ scale: 1.02, y: -2 }}` and a richer gradient (`bg-gradient-to-br from-amber-50 via-white to-orange-50/40 border-amber-100 hover:border-amber-300` for roofing, emerald/teal equivalent for amenities)
+  * Added a top accent bar (`bg-gradient-to-r from-amber-500 to-orange-500` for roofing, emerald/teal for amenities)
+  * Added staggered entrance animation (initial/animate with delay=index*0.06)
+  * Increased padding to p-4, rounded-xl, hover:shadow-md, transition-all duration-300
+  * Made difficulty badge rounded-full with px-2.5 py-0.5
+  * "Start" button: conditional bg-amber-600/bg-emerald-600
+- Updated summary stat cards (overall/communication) to use amber/orange theme when roofing, kept technical/sales cards amber/rose (already neutral across both segments).
+- Updated radar chart stroke/fill to use `themeRadarStroke`.
+- Updated Skills Radar / Available Simulations / Past Simulation Results header icons to amber/orange when roofing.
+- Updated past-simulation AI feedback box to use amber/orange theme when roofing.
+
+CONSTRAINTS HONORED:
+- ✅ NO Amenities scenario content modified — only `const` names renamed (SCENARIOS→AMENITIES_CHAT_SCENARIOS, SIMULATION_SCENARIOS→AMENITIES_DIALOG_SCENARIOS, AVAILABLE_SIMULATIONS→AMENITIES_AVAILABLE_SIMULATIONS). All Amenities data fields identical.
+- ✅ NO API routes, database, or schema changes.
+- ✅ Did NOT modify call-practice.tsx or ai-simulation.tsx (the two already-working files) — they were left untouched per the constraint.
+- ✅ All chat/simulation-dialog/mock-sim launch functionality preserved (same IDs, same flow).
+- ✅ Used `useAuthStore` from `@/stores/auth-store` (already imported in all 3 files — no new imports needed).
+- ✅ Roofing scenarios use realistic Indian client names (Vikram Mehta, Rajiv Khanna, Priya Nair, Arjun Reddy) and Indian cities (Pune, Bangalore, Kerala, Goa).
+- ✅ Roofing cards use amber/orange/red/stone color theme (NOT indigo/blue). Amenities cards kept emerald/teal.
+- ✅ Framer-motion `motion.div` with `whileHover` lift effect added to scenario cards (framer-motion was already imported).
+- ✅ All theme-token class strings are explicit Tailwind classes (no dynamic class-string concatenation that Tailwind's purger would strip).
+
+VERIFICATION:
+- `bun run lint 2>&1 | grep -E "ai-chat-simulation|simulation-dialog|mock-simulations"` → ZERO errors in the 3 changed files.
+- The only remaining lint errors in the project are pre-existing `.cjs`/`.js` require-import errors (custom-server.js, scripts/*.cjs, server-wrapper.js, smart-proxy.js, update-videos.js) — these are NOT in any of my 3 changed `.tsx` files and were explicitly told to be ignored.
+- Confirmed via grep that all references to old single-array names are gone, replaced by the AMENITIES_*/ROOFING_* ternary pattern.
+- Confirmed via grep that all 7+ accent theme tokens are used (no unused-var lint errors).
+- File line counts: ai-chat-simulation.tsx 881→989, simulation-dialog.tsx 1014→1430, mock-simulations.tsx 381→444.
+
+Stage Summary:
+- ROOT PROBLEM FIXED: A user logged into the ROOFING segment now sees ROOFING-specific scenarios (stone-coated tiles, thatch tiles, asphalt shingles, Indian homeowners/builders/architects, Pune/Bangalore/Kerala/Goa) in ALL THREE previously-broken files: AI Chat Simulation, Simulation Dialog (mock sim launch), and Mock Simulations list. Amenities users continue to see the same Amenities content as before (no behavior change).
+- PATTERN: Applied the exact same pattern already used in ai-simulation.tsx + call-practice.tsx — rename existing array to AMENITIES_*, add parallel ROOFING_* array, derive `isRoofing = user?.company === 'ROOFING'`, switch via `const X = isRoofing ? ROOFING_* : AMENITIES_*`.
+- ADDED ROOFING SCENARIOS: 4 in ai-chat-simulation.tsx, 5 (with 25 questions) in simulation-dialog.tsx, 5 in mock-simulations.tsx = 14 new roofing scenarios + 25 new roofing questions total.
+- ATTRACTIVENESS UPGRADES: All scenario cards in the 3 files now have gradient backgrounds, top accent bars, framer-motion lift-on-hover, rounded-full difficulty badges, hover shadows, and richer spacing — amber/orange for roofing, emerald/teal for amenities.
+- AI Coach feedback text now correctly references Laxree Roofing products (stone-coated/clay/concrete, thatch materials) when a roofing user completes a simulation, instead of incorrectly mentioning minibar compressor/absorption and RFID features.
+- LINT CLEAN: Zero errors in the 3 changed files. Only pre-existing `.cjs`/`.js` errors remain (untouched per task instructions).

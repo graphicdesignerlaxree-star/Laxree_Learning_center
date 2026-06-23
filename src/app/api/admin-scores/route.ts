@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
+import { db, withDbRetry } from '@/lib/db'
 
 export async function GET(request: NextRequest) {
   try {
@@ -8,11 +8,19 @@ export async function GET(request: NextRequest) {
     const departmentId = searchParams.get('departmentId')
     const dateFrom = searchParams.get('dateFrom')
     const dateTo = searchParams.get('dateTo')
+    // Resolve the requester's company so Amenities/Roofing data stay isolated
+    const requesterId = searchParams.get('userId') || searchParams.get('adminId') || searchParams.get('requesterId')
+    let company: string | undefined
+    if (requesterId) {
+      const adminUser = await withDbRetry(() => db.user.findUnique({ where: { id: requesterId }, select: { company: true } }))
+      company = adminUser?.company
+    }
 
     if (viewType === 'module-scores') {
       // Get all employees with their module quiz scores
       const where: any = { role: 'EMPLOYEE', isActive: true }
       if (departmentId) where.departmentId = departmentId
+      if (company) where.company = company
 
       const employees = await db.user.findMany({
         where,
@@ -102,6 +110,7 @@ export async function GET(request: NextRequest) {
       // Get mock simulation scores for all employees
       const where: any = { role: 'EMPLOYEE', isActive: true }
       if (departmentId) where.departmentId = departmentId
+      if (company) where.company = company
 
       const employees = await db.user.findMany({
         where,
@@ -131,9 +140,9 @@ export async function GET(request: NextRequest) {
         }))
       }
 
-      // Get all simulations
+      // Get all simulations (filtered by requester's company)
       const simulations = await db.mockSimulation.findMany({
-        where: { isActive: true },
+        where: { isActive: true, ...(company ? { company } : {}) },
         orderBy: { createdAt: 'asc' },
       })
 

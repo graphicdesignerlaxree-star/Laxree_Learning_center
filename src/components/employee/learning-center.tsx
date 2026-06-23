@@ -29,7 +29,7 @@ import {
   ExternalLink, FileDown, BookMarked, Trophy, RefreshCw,
   HelpCircle, MessageCircle, CirclePlay, Volume2, ShoppingCart,
   Shield, Refrigerator, Flame, ArrowRight, XCircle, Target,
-  Lightbulb, RotateCcw, Clock
+  Lightbulb, RotateCcw, Clock, Star
 } from 'lucide-react'
 import { ModuleQuiz } from './module-quiz'
 import { LessonViewer } from './lesson-viewer'
@@ -2256,66 +2256,90 @@ export function LearningCenter() {
                                         const ModIcon = getModuleIcon(mod.title)
 
                                         return (
-                                          <div
+                                          <motion.div
                                             key={mod.id}
-                                            className={`p-3 rounded-lg border transition-all cursor-pointer group ${
+                                            initial={{ opacity: 0, y: 8 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: Math.min(mod.order * 0.05, 0.4) }}
+                                            whileHover={{ y: -2 }}
+                                            className={`p-3.5 rounded-xl border-2 transition-all duration-200 cursor-pointer group relative overflow-hidden ${
                                               isCompleted
-                                                ? 'bg-emerald-50/50 border-emerald-200 hover:border-emerald-300'
-                                                : 'bg-white border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/30'
+                                                ? 'bg-gradient-to-br from-emerald-50/80 to-teal-50/40 border-emerald-200 hover:border-emerald-400 hover:shadow-md hover:shadow-emerald-100'
+                                                : mod.contentType === 'video'
+                                                  ? 'bg-gradient-to-br from-white to-rose-50/30 border-gray-100 hover:border-rose-300 hover:shadow-md hover:shadow-rose-100'
+                                                  : 'bg-gradient-to-br from-white to-slate-50/50 border-gray-100 hover:border-emerald-300 hover:shadow-md hover:shadow-emerald-100'
                                             }`}
                                             onClick={() => { setSelectedModule(mod); setViewingModule(true) }}
                                           >
-                                            <div className="flex items-center gap-3">
-                                              <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 relative ${
-                                                isCompleted ? 'bg-emerald-100' : mod.contentType === 'video' ? 'bg-red-50' : 'bg-gray-100'
+                                            {/* Decorative corner accent */}
+                                            <div className={`absolute top-0 right-0 w-16 h-16 rounded-full blur-2xl opacity-40 -translate-y-6 translate-x-6 ${
+                                              isCompleted ? 'bg-emerald-300' : mod.contentType === 'video' ? 'bg-rose-200' : 'bg-emerald-200'
+                                            }`} />
+                                            <div className="flex items-center gap-3 relative z-10">
+                                              <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 relative shadow-sm ${
+                                                isCompleted
+                                                  ? 'bg-gradient-to-br from-emerald-400 to-teal-500'
+                                                  : mod.contentType === 'video'
+                                                    ? 'bg-gradient-to-br from-rose-400 to-red-500'
+                                                    : 'bg-gradient-to-br from-slate-400 to-slate-500'
                                               }`}>
                                                 {isCompleted ? (
-                                                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                                                  <CheckCircle2 className="w-5 h-5 text-white" />
                                                 ) : mod.contentType === 'video' ? (
-                                                  <MonitorPlay className="w-4 h-4 text-red-500" />
+                                                  <MonitorPlay className="w-5 h-5 text-white" />
                                                 ) : (
-                                                  <ModIcon className="w-4 h-4 text-gray-400" />
+                                                  <ModIcon className="w-5 h-5 text-white" />
                                                 )}
+                                                {/* Order number badge */}
+                                                <span className="absolute -top-1.5 -left-1.5 w-5 h-5 rounded-full bg-white border-2 border-gray-200 text-[10px] font-bold text-gray-600 flex items-center justify-center shadow-sm">
+                                                  {mod.order}
+                                                </span>
                                               </div>
                                               <div className="flex-1 min-w-0">
-                                                <div className="flex items-center gap-2">
-                                                  <p className={`text-sm font-medium ${isCompleted ? 'text-emerald-700' : 'text-gray-700'} group-hover:text-emerald-700 transition-colors`}>
-                                                    {mod.order}. {mod.title}
+                                                <div className="flex items-center gap-2 flex-wrap">
+                                                  <p className={`text-sm font-semibold ${isCompleted ? 'text-emerald-800' : 'text-gray-800'} group-hover:text-emerald-700 transition-colors`}>
+                                                    {mod.title}
                                                   </p>
                                                   {isCompleted && modScore !== null && modScore !== undefined && (
-                                                    <Badge className="bg-emerald-100 text-emerald-700 text-xs">
-                                                      {modScore}%
+                                                    <Badge className="bg-emerald-100 text-emerald-700 text-xs border border-emerald-200">
+                                                      <Star className="w-2.5 h-2.5 mr-0.5" />{modScore}%
                                                     </Badge>
                                                   )}
                                                 </div>
-                                                <div className="flex items-center gap-2 mt-0.5">
+                                                <div className="flex items-center gap-1.5 mt-1 flex-wrap">
                                                   {mod.duration && (
-                                                    <span className="text-xs text-gray-400 flex items-center gap-1">
+                                                    <span className="text-xs text-gray-400 flex items-center gap-1 bg-gray-50 px-1.5 py-0.5 rounded-md">
                                                       <Clock2 className="w-3 h-3" />{mod.duration} min
                                                     </span>
                                                   )}
                                                   {mod.contentType && (
-                                                    <Badge variant="outline" className={`text-xs px-1.5 py-0 ${mod.contentType === 'video' ? 'border-red-200 text-red-600 bg-red-50' : ''}`}>
+                                                    <Badge variant="outline" className={`text-xs px-1.5 py-0 ${mod.contentType === 'video' ? 'border-rose-200 text-rose-600 bg-rose-50' : ''}`}>
                                                       {mod.contentType === 'video' ? '🎬 Video' : mod.contentType}
                                                     </Badge>
                                                   )}
                                                   {/* Show available content types */}
                                                   <div className="flex items-center gap-1">
                                                     {mod.contentType === 'video' && mod.contentUrl && (
-                                                      <Badge variant="outline" className="text-[10px] px-1 py-0 border-blue-200 text-blue-600 bg-blue-50">▶ Watch</Badge>
+                                                      <Badge variant="outline" className="text-[10px] px-1.5 py-0.5 border-blue-200 text-blue-600 bg-blue-50 font-medium">▶ Watch</Badge>
                                                     )}
                                                     {mod.pdfUrl && (
-                                                      <Badge variant="outline" className="text-[10px] px-1 py-0 border-amber-200 text-amber-600 bg-amber-50">📄 PDF</Badge>
+                                                      <Badge variant="outline" className="text-[10px] px-1.5 py-0.5 border-amber-200 text-amber-600 bg-amber-50 font-medium">📄 PDF</Badge>
                                                     )}
                                                     {mod.content && (
-                                                      <Badge variant="outline" className="text-[10px] px-1 py-0 border-teal-200 text-teal-600 bg-teal-50">📖 Read</Badge>
+                                                      <Badge variant="outline" className="text-[10px] px-1.5 py-0.5 border-teal-200 text-teal-600 bg-teal-50 font-medium">📖 Read</Badge>
                                                     )}
                                                   </div>
                                                 </div>
                                               </div>
-                                              <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all shrink-0" />
+                                              <div className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 ${
+                                                isCompleted
+                                                  ? 'bg-emerald-100 text-emerald-700 group-hover:bg-emerald-200'
+                                                  : 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-500 group-hover:text-white'
+                                              }`}>
+                                                {isCompleted ? 'Review' : 'Start →'}
+                                              </div>
                                             </div>
-                                          </div>
+                                          </motion.div>
                                         )
                                       })}
                                   </div>

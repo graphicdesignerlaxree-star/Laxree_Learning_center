@@ -16,7 +16,8 @@ import {
   MessageSquare, Star, CheckCircle2, AlertCircle, ChevronRight,
   Play, Volume2, Users, Building2, Package, Wrench, TrendingUp,
   Handshake, Award, Brain, Zap, BarChart3, RefreshCw, X, ArrowRight,
-  Timer, Sparkles, RotateCcw, ChevronDown, ChevronUp
+  Timer, Sparkles, RotateCcw, ChevronDown, ChevronUp,
+  Home, Hammer, Layers, Flame
 } from 'lucide-react'
 
 // ==================== TYPES ====================
@@ -44,7 +45,8 @@ interface CallHistory {
 
 // ==================== DATA ====================
 
-const CALL_SCENARIOS: CallScenario[] = [
+// AMENITIES scenarios (hospitality — safe boxes, RFID, minibars, kettles)
+const AMENITIES_CALL_SCENARIOS: CallScenario[] = [
   {
     id: 'minibar-pitch',
     title: 'Mini Bar Product Pitch',
@@ -179,7 +181,7 @@ const CALL_SCENARIOS: CallScenario[] = [
   },
 ]
 
-const CALL_HISTORY: CallHistory[] = [
+const AMENITIES_CALL_HISTORY: CallHistory[] = [
   {
     id: '1',
     scenario: 'Mini Bar Product Pitch',
@@ -206,7 +208,7 @@ const CALL_HISTORY: CallHistory[] = [
   },
 ]
 
-const BEST_PRACTICES = [
+const AMENITIES_BEST_PRACTICES = [
   {
     title: 'The 30-Second Opening',
     description: 'Start every call with a clear, confident introduction. State your name, company, and purpose within 30 seconds.',
@@ -230,6 +232,199 @@ const BEST_PRACTICES = [
     description: 'Never end a call without clear next steps. Always propose a specific date, time, and action.',
     icon: CheckCircle2,
     color: 'from-cyan-500 to-blue-500'
+  },
+]
+
+// ==================== ROOFING DATA ====================
+// Laxree Roofing scenarios — shown when the logged-in user's company is ROOFING.
+// Existing AMENITIES scenarios above are NOT modified.
+
+const ROOFING_CALL_SCENARIOS: CallScenario[] = [
+  {
+    id: 'roofing-stone-coated-pitch',
+    title: 'Stone Coated Tiles Pitch',
+    description: 'Pitch Laxree stone-coated roofing tiles to a homeowner building a premium villa — highlight profiles, durability and aesthetics',
+    difficulty: 'Intermediate',
+    duration: '8-10 min',
+    academy: 'PRODUCT_ACADEMY',
+    tips: [
+      'Open by asking about their villa design, slope style and location climate',
+      'Walk them through the 6 profiles — Classic, Classic Pro, Shingle, Nosen, Wood, Tudor Pro',
+      'Emphasise 30+ year life, fire-resistance and UV-resistant stone coating',
+      'Share colour palette options that match their facade',
+      'Close by proposing a free site measurement & sample visit'
+    ],
+    objectives: [
+      'Identify roof area, slope and design preference',
+      'Present 2-3 most relevant profiles with samples',
+      'Address at least 2 objections on cost vs clay tiles',
+      'Schedule a site measurement visit'
+    ],
+    icon: Home
+  },
+  {
+    id: 'roofing-thatch-objection',
+    title: 'Thatch Tiles Objection Handling',
+    description: 'Handle objections from an architect who thinks artificial thatch is outdated or a fire risk',
+    difficulty: 'Advanced',
+    duration: '10-15 min',
+    academy: 'SALES_ACADEMY',
+    tips: [
+      'Acknowledge the perception — natural thatch genuinely had these issues',
+      'Clarify Laxree artificial thatch is UV-resistant and fire-resistant (certified)',
+      'Quote the 30+ year service life and zero-maintenance claim',
+      'Explain the 500mm & 1000mm tile sizes for design flexibility',
+      'Offer to send fire-rating certificate and sample tiles'
+    ],
+    objectives: [
+      'Reframe "thatch = risk" without being defensive',
+      'Present at least 3 technical proof points (fire, UV, lifespan)',
+      'Use certification and project references as evidence',
+      'Secure a sample handover or design meeting'
+    ],
+    icon: Flame
+  },
+  {
+    id: 'roofing-shingle-cross-sell',
+    title: 'Shingle Tiles Cross-Sell',
+    description: 'While discussing stone-coated tiles for the main roof, cross-sell asphalt shingles for a gazebo, garage or porch section',
+    difficulty: 'Advanced',
+    duration: '10-12 min',
+    academy: 'CROSS_SELLING',
+    tips: [
+      'Wait until main roof discussion is settled before pivoting',
+      'Identify secondary roof areas — gazebo, porch, garage, pergola',
+      'Present the 3 shingle lines — Laminated, Mosaic, 3-Tab',
+      'Bundle the two products for margin flexibility',
+      'Highlight single-installation convenience for the contractor'
+    ],
+    objectives: [
+      'Spot the cross-sell opportunity naturally',
+      'Quantify the bundle savings vs separate purchases',
+      'Address concerns about visual mismatch',
+      'Get commitment for both products'
+    ],
+    icon: Layers
+  },
+  {
+    id: 'roofing-inbound-inquiry',
+    title: 'Roofing Inbound Inquiry',
+    description: 'Handle an incoming call from a builder who is sourcing roofing tiles for a 50-villa housing project',
+    difficulty: 'Beginner',
+    duration: '5-8 min',
+    academy: 'INBOUND_SALES',
+    tips: [
+      'Greet professionally with "Laxree Roofing, this is..."',
+      'Ask qualifying questions early — project size, timeline, profile preference',
+      'Note the scale (50 villas = bulk order) and capture full project address',
+      'Offer to email the catalogue and schedule a site meeting',
+      'Get decision-maker name, contact details and budget range'
+    ],
+    objectives: [
+      'Answer initial product questions confidently',
+      'Qualify the lead properly (scale, timeline, budget)',
+      'Collect complete contact information',
+      'Schedule a follow-up site visit'
+    ],
+    icon: PhoneCall
+  },
+  {
+    id: 'roofing-installation-followup',
+    title: 'Installation Follow-Up',
+    description: 'Follow up after a roofing installation demo, address remaining concerns and close the order',
+    difficulty: 'Intermediate',
+    duration: '8-10 min',
+    academy: 'FIELD_SALES',
+    tips: [
+      'Reference specific profiles and colours they liked during the demo',
+      'Ask if they have new questions after seeing the install',
+      'Remind them of the No-MOQ promise and fast delivery',
+      'Create urgency with a limited-time bundle offer',
+      'Propose clear next steps — PO date and delivery slot'
+    ],
+    objectives: [
+      'Recap demo highlights to reinforce value',
+      'Address all remaining objections',
+      'Create a sense of urgency',
+      'Get verbal commitment or purchase order'
+    ],
+    icon: Hammer
+  },
+  {
+    id: 'roofing-bulk-negotiation',
+    title: 'Bulk Roofing Order Negotiation',
+    description: 'Negotiate pricing for a 200-home township project with a purchase manager who wants maximum discount',
+    difficulty: 'Advanced',
+    duration: '12-15 min',
+    academy: 'NEGOTIATION',
+    tips: [
+      'Never lead with your best price — anchor high on value',
+      'Bundle profiles (stone-coated + shingle) for margin flexibility',
+      'Use value-based pricing tied to 30+ year lifecycle savings',
+      'Offer value-adds (free delivery, installer training) instead of deep discounts',
+      'Know your walk-away number before the call'
+    ],
+    objectives: [
+      'Maintain margin above minimum threshold',
+      'Close the deal without excessive discounting',
+      'Add at least one cross-sell product line',
+      'Set payment terms favourable to Laxree'
+    ],
+    icon: TrendingUp
+  },
+]
+
+const ROOFING_BEST_PRACTICES = [
+  {
+    title: 'The 30-Second Roofing Intro',
+    description: 'Open with "Laxree Roofing — premium stone-coated, thatch and shingle tiles." State purpose, name and how you can help within 30 seconds.',
+    icon: Zap,
+    color: 'from-amber-500 to-orange-500'
+  },
+  {
+    title: 'Discover Before Pitching',
+    description: 'Ask 3 discovery questions first — roof area & slope, climate zone, and design style. The right profile depends on the answers.',
+    icon: Target,
+    color: 'from-rose-500 to-red-500'
+  },
+  {
+    title: 'The Lifecycle Cost Frame',
+    description: 'When cost comes up, compare 30+ year Laxree life vs clay/concrete replacement cycles. Lifecycle cost is the real number.',
+    icon: Lightbulb,
+    color: 'from-orange-500 to-amber-600'
+  },
+  {
+    title: 'Bundle & Close',
+    description: 'Propose a main-roof + gazebo + garage bundle (stone-coated + shingle or thatch). Bundle pricing makes the deal stickier.',
+    icon: CheckCircle2,
+    color: 'from-teal-500 to-emerald-600'
+  },
+]
+
+const ROOFING_CALL_HISTORY: CallHistory[] = [
+  {
+    id: '1',
+    scenario: 'Stone Coated Tiles Pitch',
+    date: '2025-12-28',
+    score: 82,
+    duration: '9:34',
+    feedback: 'Good profile knowledge. Improve objection handling on cost vs clay tiles.'
+  },
+  {
+    id: '2',
+    scenario: 'Roofing Inbound Inquiry',
+    date: '2025-12-25',
+    score: 91,
+    duration: '6:12',
+    feedback: 'Excellent qualifying questions on project scope and timeline.'
+  },
+  {
+    id: '3',
+    scenario: 'Thatch Tiles Objection Handling',
+    date: '2025-12-22',
+    score: 68,
+    duration: '11:45',
+    feedback: 'Need more confidence citing fire-rating certification. Practice the 30+ year lifecycle pitch.'
   },
 ]
 
@@ -648,6 +843,11 @@ function PracticeSession({
 // ==================== MAIN COMPONENT ====================
 
 export function CallPractice() {
+  const user = useAuthStore((s) => s.user)
+  const isRoofing = user?.company === 'ROOFING'
+  const CALL_SCENARIOS = isRoofing ? ROOFING_CALL_SCENARIOS : AMENITIES_CALL_SCENARIOS
+  const CALL_HISTORY = isRoofing ? ROOFING_CALL_HISTORY : AMENITIES_CALL_HISTORY
+  const BEST_PRACTICES = isRoofing ? ROOFING_BEST_PRACTICES : AMENITIES_BEST_PRACTICES
   const [selectedScenario, setSelectedScenario] = useState<CallScenario | null>(null)
   const [tipsDialogOpen, setTipsDialogOpen] = useState(false)
   const [activePractice, setActivePractice] = useState<CallScenario | null>(null)

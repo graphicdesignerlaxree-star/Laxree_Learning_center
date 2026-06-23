@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import { useAuthStore } from '@/stores/auth-store'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -53,11 +54,12 @@ export function MockSimulationsView() {
   const [activeTab, setActiveTab] = useState('overview')
   const [expandedEmployee, setExpandedEmployee] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const user = useAuthStore((s) => s.user)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch('/api/admin-scores?viewType=simulation-scores')
+        const res = await fetch(`/api/admin-scores?viewType=simulation-scores${user?.id ? `&userId=${user.id}` : ''}`)
         if (res.ok) {
           const json = await res.json()
           setEmployees(json.employees || [])

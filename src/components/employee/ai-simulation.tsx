@@ -39,7 +39,8 @@ interface SimulationScenario {
 
 // ==================== SCENARIOS ====================
 
-const SIMULATION_SCENARIOS: SimulationScenario[] = [
+// AMENITIES scenarios (hospitality)
+const AMENITIES_SIMULATION_SCENARIOS: SimulationScenario[] = [
   {
     id: 'hotel-gm',
     title: 'Hotel GM Meeting',
@@ -78,7 +79,47 @@ const SIMULATION_SCENARIOS: SimulationScenario[] = [
   },
 ]
 
-const SUGGESTED_PROMPTS = [
+// ROOFING scenarios (premium roofing — stone-coated, thatch, shingle tiles)
+const ROOFING_SIMULATION_SCENARIOS: SimulationScenario[] = [
+  {
+    id: 'homeowner-villa',
+    title: 'Homeowner Villa Meeting',
+    description: 'Practice pitching stone-coated tiles to a homeowner building a premium villa in Pune',
+    icon: Building2,
+    color: 'from-amber-500 to-orange-600',
+    systemPrompt: 'You are Vikram Mehta, a homeowner building a premium 5,000 sq ft villa in Pune. You want a roof that looks elegant and lasts decades. You have heard of clay tiles and metal sheets but not stone-coated tiles. You are budget-conscious but willing to spend for quality. Ask about profiles (Classic, Shingle, Tudor Pro), colors, lifespan, weather resistance, and warranty. Be realistic, curious, and slightly skeptical about newer roofing tech.',
+    starterMessage: 'Hello, I\'m Vikram Mehta. We\'re building a villa in Pune and the architect suggested we look at premium roofing. I\'ve only used clay tiles before. What is this stone-coated tile you\'re offering?'
+  },
+  {
+    id: 'builder-negotiation',
+    title: 'Builder Negotiation',
+    description: 'Negotiate a bulk roofing order with a builder working on a 50-villa project',
+    icon: Handshake,
+    color: 'from-amber-500 to-yellow-600',
+    systemPrompt: 'You are Rajiv Khanna, Project Director at Skyline Builders, constructing a 50-villa gated township in Bangalore. You need roofing for all 50 villas. You\'re comparing Laxree Roofing with 2 competitors (one clay tile, one concrete tile supplier). Your budget is ₹1.2 crore but you want to close at ₹1 crore. Push for bulk discounts, extended warranty, free site survey, and flexible payment terms. Negotiate firmly but professionally.',
+    starterMessage: 'Hi, I\'m Rajiv Khanna from Skyline Builders. We\'re building 50 premium villas in Bangalore and need roofing for all of them. I\'ve got quotes from two of your competitors. What\'s your best price for stone-coated tiles in this volume?'
+  },
+  {
+    id: 'roofing-cross-sell',
+    title: 'Roofing Cross-Sell Practice',
+    description: 'Transition from stone-coated tiles to cross-sell artificial thatch or asphalt shingles for other roof sections',
+    icon: RefreshCw,
+    color: 'from-orange-500 to-red-600',
+    systemPrompt: 'You are Priya Nair, an architect designing a resort in Kerala with 30 cottages. You called about stone-coated tiles for the main buildings, but the resort also has gazebos, poolside cabanas, and a spa. You don\'t know that Laxree also sells artificial thatch tiles and asphalt shingles. Be curious when complementary products are mentioned. Ask about lifespan, fire resistance, and design fit. Moderate budget, wants aesthetic value.',
+    starterMessage: 'Hello, I\'m Priya Nair, architect for a resort project in Kerala. We need stone-coated tiles for 20 main buildings. Can you tell me about your profiles and colors?'
+  },
+  {
+    id: 'roofing-objection-handler',
+    title: 'Roofing Objection Handler',
+    description: 'Practice handling roofing objections: "too expensive", "prefer traditional clay", "never heard of stone-coated"',
+    icon: TrendingUp,
+    color: 'from-rose-500 to-red-600',
+    systemPrompt: 'You are a skeptical homeowner/builder who raises every common roofing objection: 1) "Stone-coated tiles are too expensive vs. clay" 2) "I\'ve never heard of stone-coated roofing" 3) "I prefer traditional clay tiles, they\'re proven" 4) "Let me think about it" 5) "Your competitor is cheaper". Push back on every selling point. Only get convinced if the salesperson uses proper techniques: Feel-Felt-Found, ROI/lifespan comparison, value bundling, or warranty demonstration. Be challenging but not rude.',
+    starterMessage: 'Hi, I got your call. But honestly, we\'ve always used clay tiles — my father used them, my grandfather used them. I\'ve never even heard of stone-coated tiles. Why should I switch?'
+  },
+]
+
+const AMENITIES_SUGGESTED_PROMPTS = [
   'How should I handle price objections?',
   'What are the best cross-selling techniques?',
   'Help me practice my elevator pitch',
@@ -87,10 +128,22 @@ const SUGGESTED_PROMPTS = [
   'How to close a deal after a demo?',
 ]
 
+const ROOFING_SUGGESTED_PROMPTS = [
+  'How do I handle price objections for premium roofing?',
+  'What are the best cross-selling techniques for roofing tiles?',
+  'Help me explain stone-coated tile benefits vs clay tiles',
+  'How do I qualify a roofing lead?',
+  'What questions should I ask a homeowner about their roof?',
+  'How to close a roofing deal after a site visit?',
+]
+
 // ==================== MAIN COMPONENT ====================
 
 export function AISimulation() {
   const user = useAuthStore((s) => s.user)
+  const isRoofing = user?.company === 'ROOFING'
+  const SIMULATION_SCENARIOS = isRoofing ? ROOFING_SIMULATION_SCENARIOS : AMENITIES_SIMULATION_SCENARIOS
+  const SUGGESTED_PROMPTS = isRoofing ? ROOFING_SUGGESTED_PROMPTS : AMENITIES_SUGGESTED_PROMPTS
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [inputValue, setInputValue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
