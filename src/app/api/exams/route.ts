@@ -12,6 +12,13 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ exams: [], userAttempts: [] })
     }
 
+    // Resolve the requester's company from userId for company-scoped filtering
+    let requesterCompany: any = undefined
+    if (userId) {
+      const requester = await db.user.findUnique({ where: { id: userId }, select: { company: true } })
+      if (requester) requesterCompany = requester.company
+    }
+
     // Get specific exam with questions
     if (examId) {
       const exam = await db.exam.findUnique({
@@ -24,6 +31,11 @@ export async function GET(request: NextRequest) {
         }
       })
       if (!exam) return NextResponse.json({ error: 'Exam not found' }, { status: 404 })
+
+      // Company isolation: if we know the requester's company, the exam must match it
+      if (requesterCompany && exam.company !== requesterCompany) {
+        return NextResponse.json({ error: 'Exam not available for your segment' }, { status: 403 })
+      }
 
       // Get user's previous attempts for this exam
       let attempts: any[] = []
@@ -114,7 +126,7 @@ export async function GET(request: NextRequest) {
 
     // Get all exams grouped by type
     const exams = await db.exam.findMany({
-      where: { isActive: true },
+      where: { isActive: true, ...(requesterCompany ? { company: requesterCompany } : {}) },
       include: { _count: { select: { questions: true, attempts: true } } },
       orderBy: [{ examType: 'asc' }, { stage: 'asc' }],
     })

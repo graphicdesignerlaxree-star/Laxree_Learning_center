@@ -434,3 +434,62 @@ Additional cleanup (Task 9 continued):
 - Verified dashboard API for emp002 returns COMPLETELY EMPTY data: assessments=[], scorecards=[], mockSimulations=[], certifications=[], badges=[], activities=0.
 - Only remaining non-empty field is aiReadinessScore (60.2, a seeded user profile metric) — NOT shown as an exam score on My Performance page (verified via grep: aiReadinessScore only appears in interface definition, not rendered as a score).
 - End-to-end verified: dev server started against Neon DB, /api/dashboard?userId=emp002&role=EMPLOYEE returns all empty arrays for exam/score/sim/badge data.
+
+---
+Task ID: 6
+Agent: API-Company-Filter Agent
+Task: Add company filtering to employee/admin APIs so Amenities and Roofing data stay isolated
+
+Work Log:
+- Read worklog.md to understand prior task context (Tasks 1-9), and confirmed Prisma schema has `enum Company { AMENITIES, ROOFING }` plus a `company Company @default(AMENITIES)` field on User, Department, LearningPath, Course, QuestionBank, Assessment, Certification, Exam, MockSimulation, ProductCategory. Verified relational models (Activity, Enrollment, AssessmentAttempt, CertificationAttempt, ExamAttempt, MockSimulationAttempt, Scorecard, LoginHistory, Notification, UserBadge, ImprovementPlan) connect through `user`/`course`/`assessment`/`certification`/`simulation` relations and so must be filtered via Prisma nested filters.
+- Edited 6 API route files with the same pattern: (a) fetch the requester's company from userId (or adminId/requesterId), (b) add `company` to every company-scoped `where` clause. POST/PUT/DELETE handlers were untouched. When the requester can't be resolved (or no admin identity is supplied) the API falls back to the previous unfiltered behavior, so Amenities users see identical results to before (since all existing data has company=AMENITIES).
+
+FILE-BY-FILE CHANGES:
+
+1. src/app/api/exams/route.ts (GET only)
+   - Added an early `db.user.findUnique({ where: { id: userId }, select: { company: true } })` lookup to resolve `requesterCompany`.
+   - Single-exam branch: after fetching the exam, added a 403 guard — if `requesterCompany && exam.company !== requesterCompany`, returns `{ error: 'Exam not available for your segment' }`.
+   - List branch: changed `where: { isActive: true }` to `where: { isActive: true, ...(requesterCompany ? { company: requesterCompany } : {}) }`.
+   - POST (exam submission) untouched.
+
+2. src/app/api/dashboard/route.ts (GET only)
+   - SUPER_ADMIN branch: added `const adminUser = await db.user.findUnique({ where: { id: userId }, select: { company: true } })` + `const company = adminUser?.company` at the top. Added `company` to: user counts (total/active/newJoiners/fieldReady/inboundReady), `db.department.findMany({ where: { company } ... })` (both the count-version and the deptStats version), `db.course.count({ where: { company } })`, `db.assessment.count({ where: { company } })`, `db.certification.count({ where: { company } })`, `db.certificationAttempt.count({ where: { status: 'pending'|'approved', certification: { company } } })` (and the unfiltered total count), `db.activity.findMany({ where: { user: { company } } })`, topPerformers and lowPerformers `db.user.findMany({ where: { role: 'EMPLOYEE', company } ... })`, `db.enrollment.findMany/count({ where: { ..., course: { company } } })`, `db.assessmentAttempt.findMany({ where: { assessment: { company } } })`, `db.mockSimulationAttempt.findMany({ where: { user: { company } } })`, and `db.questionBank.count({ where: { company } })`. `db.document.count()` left untouched (Document model has no `company` field). Cache-Control no-store header preserved.
+   - TRAINING_MANAGER branch: added `tmUser` lookup + `company`. Filtered user counts, `course.findMany({ where: { company } })`, `assessment.findMany({ where: { company } })`, `certification.findMany({ where: { company } })`, `enrollment.findMany({ where: { course: { company } } })`, `certificationAttempt.count({ where: { status: 'pending', certification: { company } } })`, and `activity.findMany({ where: { user: { company } } })`.
+   - TEAM_LEADER branch: derived `company` from the existing `user` lookup, then added `company` to the teamMembers `where: { reportingManagerId: userId, role: 'EMPLOYEE', company }`.
+   - EMPLOYEE branch: added `company: true` to the user `select` and added `company: user.company` to the response `user` object. All other queries (enrollments, assessments, scorecards, mock sims, activities, badges, notifications, improvement plans) are already `userId`-scoped so they're inherently isolated; no other changes needed.
+
+3. src/app/api/users/route.ts (GET only)
+   - Added `requesterId = userId || requesterId` query-param read.
+   - After building the existing `where` object, if `requesterId` resolves to a real user, set `where.company = requester.company`. Falls back to unfiltered when no/unknown requester.
+   - POST/PUT/DELETE untouched.
+
+4. src/app/api/courses/route.ts (GET only)
+   - After the existing `where` build, if `userId` resolves to a real user, set `where.company = requester.company`. Falls back to unfiltered when no/unknown requester.
+   - POST (enrollment upsert) untouched.
+
+5. src/app/api/admin/employee-scorecard/route.ts (GET only)
+   - Added `adminId = adminId || requesterId` query-param read at the top, with `const adminUser = adminId ? await db.user.findUnique({ where: { id: adminId }, select: { company: true } }) : null` and `const company = adminUser?.company`.
+   - Employee-list branch: changed `where: { role: 'EMPLOYEE' }` to `where: { role: 'EMPLOYEE', ...(company ? { company } : {}) }`.
+   - Single-employee branch: added `company: true` to the user `select`, and added a 403 guard — if `company && user.company !== company`, returns `{ error: 'Employee not available for your segment' }`.
+   - Frontend (src/components/admin/employee-scorecard.tsx) does not currently send adminId, so existing Amenities callers keep working unchanged; a follow-up frontend task can pass `adminId` to enable strict filtering.
+
+6. src/app/api/admin/login-history/route.ts (GET only)
+   - Added `adminId = adminId || userId || requesterId` query-param read with the same `adminUser` lookup + `company`.
+   - In the logs `where` clause, when `company` is known, set `where.user = { company }`; when `search` is also set, spread the existing `where.user` so the company filter is preserved alongside the OR search predicates.
+   - For the summary stats (todayCount, weekCount, uniqueUsersToday, uniqueUsersWeek), introduced `statsWhere = company ? { user: { company } } : {}` and merged it into each `loginHistory.count/findMany` `where` so the stats also respect company isolation.
+
+VERIFICATION:
+- Ran `cd /home/z/my-project && bun run lint 2>&1 | tail -30`. Result: 20 errors total, ALL pre-existing `@typescript-eslint/no-require-imports` errors in `.cjs`/`.js` helper scripts (e.g. scripts/seed-neon.cjs, smart-proxy.js, server-wrapper.js, verify-company.cjs). ZERO errors in any of the 6 edited `route.ts` files or any other `.ts`/`.tsx` file. Confirmed via grep filtering: no edited file appears in the lint output.
+
+AMENITIES SAFETY:
+- Every edit was designed so that when `company` is `undefined` (no requester, unknown requester, or no admin identity supplied), Prisma treats it as no filter — exactly the previous behavior. Since all existing data has `company = AMENITIES` (the schema default), an Amenities user passing their real userId will get `company: 'AMENITIES'` in every where clause, which matches all existing rows. Result: Amenities users see identical data to before.
+- POST/PUT/DELETE handlers were NOT touched (per task instructions); new records will continue to be created with the implicit Prisma default of `company = AMENITIES` until a follow-up task starts setting `company` explicitly from the requester's company on write paths.
+
+Stage Summary:
+- 6 API route files updated to filter reads by the requester's company: src/app/api/exams/route.ts, src/app/api/dashboard/route.ts, src/app/api/users/route.ts, src/app/api/courses/route.ts, src/app/api/admin/employee-scorecard/route.ts, src/app/api/admin/login-history/route.ts.
+- All edits are minimal/targeted (no full rewrites). Pattern: resolve `company` from userId/adminId, then add it to `where` clauses — direct `company` for company-owned tables, nested `{ user: { company } }` / `{ course: { company } }` / `{ assessment: { company } }` / `{ certification: { company } }` for relational tables.
+- 403 guards added for cross-segment single-record access (exams, employee-scorecard).
+- Cache-Control no-store headers preserved on all affected responses.
+- Lint clean for all `.ts`/`.tsx` files (only pre-existing `.cjs`/`.js` helper script errors remain).
+- Existing Amenities behavior preserved: every filter is conditional on `company` being truthy, and all existing data has `company = AMENITIES`.
+- Frontend follow-up recommended: pass `userId`/`adminId` query param from admin pages (employee-scorecard, login-history) so strict filtering is enforced end-to-end. The dashboard already sends `userId` so its filtering is fully active immediately.

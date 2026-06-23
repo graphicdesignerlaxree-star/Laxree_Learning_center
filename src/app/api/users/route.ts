@@ -18,6 +18,8 @@ export async function GET(request: NextRequest) {
     const role = searchParams.get('role')
     const departmentId = searchParams.get('departmentId')
     const search = searchParams.get('search')
+    // Requester's userId used to resolve company for segment isolation
+    const requesterId = searchParams.get('userId') || searchParams.get('requesterId')
 
     const where: any = {}
     if (role) where.role = role
@@ -27,6 +29,14 @@ export async function GET(request: NextRequest) {
       { email: { contains: search } },
       { employeeId: { contains: search } },
     ]
+
+    // Resolve requester's company so Amenities and Roofing users stay isolated.
+    // If we can't resolve a company (e.g. anonymous request), fall back to unfiltered
+    // behavior to preserve existing Amenities functionality.
+    if (requesterId) {
+      const requester = await db.user.findUnique({ where: { id: requesterId }, select: { company: true } })
+      if (requester) where.company = requester.company
+    }
 
     const users = await db.user.findMany({
       where,

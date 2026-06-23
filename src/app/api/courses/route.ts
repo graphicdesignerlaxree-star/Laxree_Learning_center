@@ -41,6 +41,14 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ courses: [] })
     }
 
+    // Resolve requester's company so Amenities and Roofing catalogs stay isolated.
+    // If we can't resolve a company, fall back to unfiltered behavior to preserve
+    // existing Amenities functionality.
+    if (userId) {
+      const requester = await db.user.findUnique({ where: { id: userId }, select: { company: true } })
+      if (requester) where.company = requester.company
+    }
+
     const courses = await db.course.findMany({
       where,
       include: {

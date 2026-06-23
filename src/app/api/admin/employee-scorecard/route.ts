@@ -8,11 +8,19 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get('userId')
+    // Optional admin identity for company-scoped filtering. When omitted the
+    // API falls back to unfiltered behavior so existing Amenities callers keep
+    // working unchanged.
+    const adminId = searchParams.get('adminId') || searchParams.get('requesterId')
+    const adminUser = adminId
+      ? await db.user.findUnique({ where: { id: adminId }, select: { company: true } })
+      : null
+    const company = adminUser?.company
 
     // ---- Employee list for the selector ----
     if (!userId) {
       const employees = await db.user.findMany({
-        where: { role: 'EMPLOYEE' },
+        where: { role: 'EMPLOYEE', ...(company ? { company } : {}) },
         select: {
           id: true,
           fullName: true,
@@ -44,7 +52,7 @@ export async function GET(request: NextRequest) {
         salesExperience: true, technicalExperience: true,
         aiReadinessScore: true, currentLevel: true,
         fieldReady: true, inboundReady: true,
-        leaderboardPosition: true, isActive: true,
+        leaderboardPosition: true, isActive: true, company: true,
         department: { select: { name: true } },
         reportingManager: { select: { fullName: true, email: true } },
       },
@@ -52,6 +60,11 @@ export async function GET(request: NextRequest) {
 
     if (!user) {
       return NextResponse.json({ error: 'Employee not found' }, { status: 404 })
+    }
+
+    // Company isolation: if we know the admin's company, the selected employee must match it
+    if (company && user.company !== company) {
+      return NextResponse.json({ error: 'Employee not available for your segment' }, { status: 403 })
     }
 
     // Fetch all performance-related data in parallel

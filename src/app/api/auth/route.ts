@@ -3,7 +3,7 @@ import { db } from '@/lib/db'
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json()
+    const { email, password, company } = await request.json()
 
     if (!email || !password) {
       return NextResponse.json({ error: 'Email and password are required' }, { status: 400 })
@@ -19,6 +19,15 @@ export async function POST(request: NextRequest) {
 
     if (!user || user.password !== password) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
+    }
+
+    // Validate company segment matches the user's assigned company
+    // (employee of AMENITIES cannot log in via ROOFING segment and vice versa)
+    if (company && user.company !== company) {
+      return NextResponse.json(
+        { error: `This account belongs to the ${user.company === 'AMENITIES' ? 'Laxree Amenities' : 'Laxree Roofing'} segment. Please select the correct segment to log in.` },
+        { status: 403 }
+      )
     }
 
     if (!user.isActive || user.isSuspended) {
@@ -40,6 +49,7 @@ export async function POST(request: NextRequest) {
         email: user.email,
         fullName: user.fullName,
         role: user.role,
+        company: user.company,
         profilePhoto: user.profilePhoto,
         isFirstLogin: user.isFirstLogin,
         department: user.department?.name || null,

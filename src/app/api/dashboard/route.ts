@@ -12,53 +12,56 @@ export async function GET(request: NextRequest) {
     }
 
     if (role === 'SUPER_ADMIN') {
+      // Resolve admin's company so Amenities and Roofing data stay isolated
+      const adminUser = await db.user.findUnique({ where: { id: userId }, select: { company: true } })
+      const company = adminUser?.company
       const [
         totalEmployees, activeEmployees, newJoiners, departments,
         courses, assessments, certifications, pendingCertifications,
         recentActivities, topPerformers, deptStats
       ] = await Promise.all([
-        db.user.count({ where: { role: 'EMPLOYEE' } }),
-        db.user.count({ where: { role: 'EMPLOYEE', isActive: true } }),
-        db.user.count({ where: { role: 'EMPLOYEE', joiningDate: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } } }),
-        db.department.findMany({ include: { _count: { select: { users: true } } } }),
-        db.course.count(),
-        db.assessment.count(),
-        db.certification.count(),
-        db.certificationAttempt.count({ where: { status: 'pending' } }),
-        db.activity.findMany({ take: 10, orderBy: { createdAt: 'desc' }, include: { user: { select: { fullName: true, email: true } } } }),
-        db.user.findMany({ where: { role: 'EMPLOYEE' }, orderBy: { aiReadinessScore: 'desc' }, take: 5, select: { id: true, fullName: true, aiReadinessScore: true, designation: true } }),
-        db.department.findMany({ include: { users: { where: { role: 'EMPLOYEE' }, select: { aiReadinessScore: true } } } }),
+        db.user.count({ where: { role: 'EMPLOYEE', company } }),
+        db.user.count({ where: { role: 'EMPLOYEE', isActive: true, company } }),
+        db.user.count({ where: { role: 'EMPLOYEE', joiningDate: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) }, company } }),
+        db.department.findMany({ where: { company }, include: { _count: { select: { users: true } } } }),
+        db.course.count({ where: { company } }),
+        db.assessment.count({ where: { company } }),
+        db.certification.count({ where: { company } }),
+        db.certificationAttempt.count({ where: { status: 'pending', certification: { company } } }),
+        db.activity.findMany({ where: { user: { company } }, take: 10, orderBy: { createdAt: 'desc' }, include: { user: { select: { fullName: true, email: true } } } }),
+        db.user.findMany({ where: { role: 'EMPLOYEE', company }, orderBy: { aiReadinessScore: 'desc' }, take: 5, select: { id: true, fullName: true, aiReadinessScore: true, designation: true } }),
+        db.department.findMany({ where: { company }, include: { users: { where: { role: 'EMPLOYEE' }, select: { aiReadinessScore: true } } } }),
       ])
 
       const avgReadiness = topPerformers.length > 0 ? Math.round(topPerformers.reduce((a: number, b: any) => a + b.aiReadinessScore, 0) / topPerformers.length) : 0
 
       // Calculate training completion
-      const enrollments = await db.enrollment.findMany({ where: { status: 'completed' } })
-      const totalEnrollments = await db.enrollment.count()
+      const enrollments = await db.enrollment.findMany({ where: { status: 'completed', course: { company } } })
+      const totalEnrollments = await db.enrollment.count({ where: { course: { company } } })
       const trainingCompletion = totalEnrollments > 0 ? Math.round((enrollments.length / totalEnrollments) * 100) : 0
 
       // Assessment scores
-      const assessmentAttempts = await db.assessmentAttempt.findMany()
+      const assessmentAttempts = await db.assessmentAttempt.findMany({ where: { assessment: { company } } })
       const avgAssessmentScore = assessmentAttempts.length > 0 ? Math.round(assessmentAttempts.reduce((a: number, b: any) => a + b.percentage, 0) / assessmentAttempts.length) : 0
 
       // Certification rate
-      const certifiedAttempts = await db.certificationAttempt.count({ where: { status: 'approved' } })
-      const totalCertAttempts = await db.certificationAttempt.count()
+      const certifiedAttempts = await db.certificationAttempt.count({ where: { status: 'approved', certification: { company } } })
+      const totalCertAttempts = await db.certificationAttempt.count({ where: { certification: { company } } })
       const certRate = totalCertAttempts > 0 ? Math.round((certifiedAttempts / totalCertAttempts) * 100) : 0
 
       // Field and Inbound ready counts
-      const fieldReadyCount = await db.user.count({ where: { role: 'EMPLOYEE', fieldReady: true } })
-      const inboundReadyCount = await db.user.count({ where: { role: 'EMPLOYEE', inboundReady: true } })
+      const fieldReadyCount = await db.user.count({ where: { role: 'EMPLOYEE', fieldReady: true, company } })
+      const inboundReadyCount = await db.user.count({ where: { role: 'EMPLOYEE', inboundReady: true, company } })
 
       // Low performers
-      const lowPerformers = await db.user.findMany({ where: { role: 'EMPLOYEE' }, orderBy: { aiReadinessScore: 'asc' }, take: 5, select: { id: true, fullName: true, aiReadinessScore: true, designation: true } })
+      const lowPerformers = await db.user.findMany({ where: { role: 'EMPLOYEE', company }, orderBy: { aiReadinessScore: 'asc' }, take: 5, select: { id: true, fullName: true, aiReadinessScore: true, designation: true } })
 
       // Mock simulation scores
-      const mockAttempts = await db.mockSimulationAttempt.findMany()
+      const mockAttempts = await db.mockSimulationAttempt.findMany({ where: { user: { company } } })
       const avgMockScore = mockAttempts.length > 0 ? Math.round(mockAttempts.reduce((a: number, b: any) => a + b.score, 0) / mockAttempts.length) : 0
 
       // Pending approvals
-      const pendingApprovals = await db.certificationAttempt.count({ where: { status: 'pending' } })
+      const pendingApprovals = await db.certificationAttempt.count({ where: { status: 'pending', certification: { company } } })
 
       const response = NextResponse.json({
         totalEmployees, activeEmployees, newJoiners,
@@ -74,7 +77,7 @@ export async function GET(request: NextRequest) {
         recentActivities, avgReadiness,
         courses: courses, assessments, certifications,
         totalDocuments: await db.document.count(),
-        totalQuestionBanks: await db.questionBank.count(),
+        totalQuestionBanks: await db.questionBank.count({ where: { company } }),
       })
       response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
       response.headers.set('Pragma', 'no-cache')
@@ -83,20 +86,22 @@ export async function GET(request: NextRequest) {
     }
 
     if (role === 'TRAINING_MANAGER') {
+      const tmUser = await db.user.findUnique({ where: { id: userId }, select: { company: true } })
+      const company = tmUser?.company
       const [totalEmployees, activeEmployees, courses, assessments, certifications] = await Promise.all([
-        db.user.count({ where: { role: 'EMPLOYEE' } }),
-        db.user.count({ where: { role: 'EMPLOYEE', isActive: true } }),
-        db.course.findMany({ include: { _count: { select: { enrollments: true, modules: true } } } }),
-        db.assessment.findMany({ include: { _count: { select: { attempts: true } } } }),
-        db.certification.findMany(),
+        db.user.count({ where: { role: 'EMPLOYEE', company } }),
+        db.user.count({ where: { role: 'EMPLOYEE', isActive: true, company } }),
+        db.course.findMany({ where: { company }, include: { _count: { select: { enrollments: true, modules: true } } } }),
+        db.assessment.findMany({ where: { company }, include: { _count: { select: { attempts: true } } } }),
+        db.certification.findMany({ where: { company } }),
       ])
 
-      const enrollments = await db.enrollment.findMany()
+      const enrollments = await db.enrollment.findMany({ where: { course: { company } } })
       const completedEnrollments = enrollments.filter(e => e.status === 'completed').length
       const trainingCompletion = enrollments.length > 0 ? Math.round((completedEnrollments / enrollments.length) * 100) : 0
 
-      const pendingCerts = await db.certificationAttempt.count({ where: { status: 'pending' } })
-      const recentActivities = await db.activity.findMany({ take: 10, orderBy: { createdAt: 'desc' }, include: { user: { select: { fullName: true } } } })
+      const pendingCerts = await db.certificationAttempt.count({ where: { status: 'pending', certification: { company } } })
+      const recentActivities = await db.activity.findMany({ where: { user: { company } }, take: 10, orderBy: { createdAt: 'desc' }, include: { user: { select: { fullName: true } } } })
 
       return NextResponse.json({
         totalEmployees, activeEmployees, trainingCompletion,
@@ -106,8 +111,9 @@ export async function GET(request: NextRequest) {
 
     if (role === 'TEAM_LEADER') {
       const user = await db.user.findUnique({ where: { id: userId } })
+      const company = user?.company
       const teamMembers = await db.user.findMany({
-        where: { reportingManagerId: userId, role: 'EMPLOYEE' },
+        where: { reportingManagerId: userId, role: 'EMPLOYEE', company },
         include: {
           department: { select: { name: true } },
           enrollments: true,
@@ -142,7 +148,7 @@ export async function GET(request: NextRequest) {
           employeeId: true, isFirstLogin: true, location: true, mobileNumber: true,
           joiningDate: true, experienceLevel: true, previousIndustryExp: true,
           salesExperience: true, technicalExperience: true, preferredLanguage: true,
-          leaderboardPosition: true,
+          leaderboardPosition: true, company: true,
           department: { select: { name: true } },
         }
       })
@@ -177,6 +183,7 @@ export async function GET(request: NextRequest) {
           joiningDate: user.joiningDate, experienceLevel: user.experienceLevel,
           previousIndustryExp: user.previousIndustryExp, salesExperience: user.salesExperience,
           technicalExperience: user.technicalExperience, preferredLanguage: user.preferredLanguage,
+          company: user.company,
         },
         trainingCompletion,
         enrollments: enrollments.map(e => ({

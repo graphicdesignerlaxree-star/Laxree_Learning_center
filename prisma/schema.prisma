@@ -17,11 +17,17 @@ enum Role {
   EMPLOYEE
 }
 
+enum Company {
+  AMENITIES
+  ROOFING
+}
+
 model User {
   id                    String    @id @default(cuid())
   email                 String    @unique
   password              String
   role                  Role      @default(EMPLOYEE)
+  company               Company   @default(AMENITIES)
   
   // Profile fields
   fullName              String?
@@ -83,7 +89,8 @@ model User {
 
 model Department {
   id          String   @id @default(cuid())
-  name        String   @unique
+  name        String
+  company     Company  @default(AMENITIES)
   description String?
   headId      String?   @unique
   createdAt   DateTime @default(now())
@@ -92,11 +99,14 @@ model Department {
   head        User?    @relation("DepartmentHead", fields: [headId], references: [id])
   users       User[]   @relation("DepartmentUsers")
   courses     Course[]
+  
+  @@unique([company, name])
 }
 
 model ProductCategory {
   id          String   @id @default(cuid())
   name        String
+  company     Company  @default(AMENITIES)
   description String?
   icon        String?
   createdAt   DateTime @default(now())
@@ -127,6 +137,7 @@ enum ModuleType {
 model LearningPath {
   id          String   @id @default(cuid())
   name        String
+  company     Company  @default(AMENITIES)
   description String?
   targetRole  String?
   createdAt   DateTime @default(now())
@@ -139,6 +150,7 @@ model Course {
   id             String       @id @default(cuid())
   title          String
   description    String?
+  company        Company      @default(AMENITIES)
   moduleType     ModuleType   @default(ORIENTATION)
   departmentId   String?
   learningPathId String?
@@ -230,6 +242,7 @@ model QuestionBank {
   id                String       @id @default(cuid())
   question          String
   questionType      QuestionType @default(MCQ)
+  company           Company      @default(AMENITIES)
   optionA           String?
   optionB           String?
   optionC           String?
@@ -249,6 +262,7 @@ model QuestionBank {
 model Assessment {
   id              String   @id @default(cuid())
   title           String
+  company         Company  @default(AMENITIES)
   description     String?
   moduleType      ModuleType?
   duration        Int?     // in minutes
@@ -295,6 +309,7 @@ model AssessmentAttempt {
 model Certification {
   id              String    @id @default(cuid())
   name            String
+  company         Company   @default(AMENITIES)
   description     String?
   moduleType      ModuleType?
   requiredScore   Float     @default(70)
@@ -355,6 +370,7 @@ model Exam {
   id              String     @id @default(cuid())
   examType        ExamType
   stage           ExamStage
+  company         Company    @default(AMENITIES)
   title           String
   description     String?
   duration        Int        @default(60)  // in minutes
@@ -368,7 +384,7 @@ model Exam {
   questions       ExamQuestion[]
   attempts        ExamAttempt[]
   
-  @@unique([examType, stage])
+  @@unique([company, examType, stage])
 }
 
 model ExamQuestion {
@@ -410,6 +426,7 @@ model ExamAttempt {
 model MockSimulation {
   id          String   @id @default(cuid())
   title       String
+  company     Company  @default(AMENITIES)
   description String?
   type        String?  // field_sales, inbound_sales, negotiation, customer_discovery
   scenario    String?  // JSON scenario data

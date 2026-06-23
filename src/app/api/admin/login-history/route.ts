@@ -6,10 +6,20 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const search = searchParams.get('search') || ''
     const limit = parseInt(searchParams.get('limit') || '100', 10)
+    // Optional admin identity for company-scoped filtering. When omitted the
+    // API falls back to unfiltered behavior so existing Amenities callers keep
+    // working unchanged.
+    const adminId = searchParams.get('adminId') || searchParams.get('userId') || searchParams.get('requesterId')
+    const adminUser = adminId
+      ? await db.user.findUnique({ where: { id: adminId }, select: { company: true } })
+      : null
+    const company = adminUser?.company
 
     const where: any = {}
+    if (company) where.user = { company }
     if (search) {
       where.user = {
+        ...(where.user || {}),
         OR: [
           { fullName: { contains: search, mode: 'insensitive' } },
           { email: { contains: search, mode: 'insensitive' } },
@@ -42,16 +52,17 @@ export async function GET(request: NextRequest) {
     const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000)
     const last7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
 
+    const statsWhere = company ? { user: { company } } : {}
     const [todayCount, weekCount, uniqueUsersToday, uniqueUsersWeek] = await Promise.all([
-      db.loginHistory.count({ where: { loginAt: { gte: last24h } } }),
-      db.loginHistory.count({ where: { loginAt: { gte: last7d } } }),
+      db.loginHistory.count({ where: { loginAt: { gte: last24h }, ...statsWhere } }),
+      db.loginHistory.count({ where: { loginAt: { gte: last7d }, ...statsWhere } }),
       db.loginHistory.findMany({
-        where: { loginAt: { gte: last24h } },
+        where: { loginAt: { gte: last24h }, ...statsWhere },
         select: { userId: true },
         distinct: ['userId'],
       }),
       db.loginHistory.findMany({
-        where: { loginAt: { gte: last7d } },
+        where: { loginAt: { gte: last7d }, ...statsWhere },
         select: { userId: true },
         distinct: ['userId'],
       }),
