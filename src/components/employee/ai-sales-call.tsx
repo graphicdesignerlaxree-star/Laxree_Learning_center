@@ -12,7 +12,7 @@ import {
   Phone, PhoneOff, Send, Sparkles, Building2, Hotel, Wrench,
   ChevronRight, Clock, Star, TrendingUp, MessageSquare, Target,
   Award, Zap, CheckCircle2, AlertCircle, ArrowRight, RotateCcw,
-  Mic, MicOff, Volume2
+  Mic, MicOff, Volume2, Home, Hammer, Compass
 } from 'lucide-react'
 
 // ─── Types ───────────────────────────────────────────────────────────
@@ -51,9 +51,10 @@ interface ScenarioInfo {
 
 type CallPhase = 'setup' | 'active' | 'ended'
 
-// ─── Scenarios (local fallback) ──────────────────────────────────────
+// ─── Scenarios (segment-aware) ───────────────────────────────────────
 
-const LOCAL_SCENARIOS: ScenarioInfo[] = [
+// AMENITIES scenarios (hospitality / hotel) — original LAXREE Hospitality line
+const AMENITIES_SCENARIOS: ScenarioInfo[] = [
   {
     id: 'luxury_resort',
     name: 'Luxury Resort',
@@ -77,6 +78,31 @@ const LOCAL_SCENARIOS: ScenarioInfo[] = [
   },
 ]
 
+// ROOFING scenarios (Laxree Roofing — premium stone-coated, thatch, asphalt shingle roof tiles)
+const ROOFING_SCENARIOS: ScenarioInfo[] = [
+  {
+    id: 'homeowner_villa',
+    name: 'Homeowner — Premium Villa',
+    difficulty: 'Advanced',
+    focusAreas: ['Premium positioning', 'Lifespan & warranty', 'Aesthetics & profiles', 'Weather resistance'],
+    openingMessage: `Hello, I'm Vikram Mehta. We're building a 5,000 sq ft villa in Pune and our architect suggested premium roofing instead of regular clay tiles. Honestly, I've only ever used clay tiles on previous homes and I'm not familiar with stone-coated roofing. I want something elegant and long-lasting, but I need to understand why I should pay more. What can you tell me about your Laxree tiles?`,
+  },
+  {
+    id: 'builder_bulk',
+    name: 'Builder — 50-Villa Township',
+    difficulty: 'Intermediate',
+    focusAreas: ['Bulk pricing', 'Competitive differentiation', 'Warranty terms', 'Payment flexibility'],
+    openingMessage: `Hi, this is Rajiv Khanna, Project Director at Skyline Builders. We're constructing a 50-villa gated township in Bangalore and we need roofing for every villa. I'm already talking to two of your competitors — one offering clay tiles, one concrete — and I have a budget of around ₹1.2 Cr. I want to close this at ₹1 Cr. If you want this order, you'll need to offer a sharp bulk price, an extended warranty, and flexible payment terms. What's your best offer?`,
+  },
+  {
+    id: 'architect_resort',
+    name: 'Architect — Resort Project',
+    difficulty: 'Beginner',
+    focusAreas: ['Consultative discovery', 'Cross-product solutioning', 'Specification support', 'Site visit proposal'],
+    openingMessage: `Good day. I'm Priya Nair, an architect designing a resort in Kerala with 20 cottage-style buildings. I came across the Laxree Roofing website and I'm quite interested. I'm thinking stone-coated tiles for the main cottage roofs and your artificial thatch for the gazebos and poolside cabanas. Can you walk me through how the two product lines work together and what specification support you provide to architects?`,
+  },
+]
+
 const difficultyColors: Record<string, string> = {
   Beginner: 'bg-emerald-100 text-emerald-700',
   Intermediate: 'bg-amber-100 text-amber-700',
@@ -84,9 +110,14 @@ const difficultyColors: Record<string, string> = {
 }
 
 const scenarioIcons: Record<string, React.ComponentType<{ className?: string }>> = {
+  // Amenities
   luxury_resort: Star,
   business_hotel: Building2,
   budget_hotel_renovation: Wrench,
+  // Roofing
+  homeowner_villa: Home,
+  builder_bulk: Hammer,
+  architect_resort: Compass,
 }
 
 const scoreColors = (score: number) => {
@@ -111,6 +142,23 @@ const progressClass = (score: number) => {
 
 export function AISalesCall() {
   const user = useAuthStore((s) => s.user)
+  const isRoofing = user?.company === 'ROOFING'
+  const LOCAL_SCENARIOS_LOCAL = isRoofing ? ROOFING_SCENARIOS : AMENITIES_SCENARIOS
+  const brand = isRoofing ? 'Laxree Roofing' : 'LAXREE Hospitality'
+
+  // Theme tokens — amber/orange for Roofing, emerald/teal for Amenities
+  const accentBg = isRoofing ? 'bg-amber-100' : 'bg-emerald-100'
+  const accentText = isRoofing ? 'text-amber-600' : 'text-emerald-600'
+  const accentTextStrong = isRoofing ? 'text-amber-700' : 'text-emerald-700'
+  const accentBtn = isRoofing ? 'bg-amber-600 hover:bg-amber-700' : 'bg-emerald-600 hover:bg-emerald-700'
+  const accentGradientFrom = isRoofing ? 'from-amber-50' : 'from-emerald-50'
+  const accentGradientTo = isRoofing ? 'to-orange-50' : 'to-teal-50'
+  const accentBorder = isRoofing ? 'border-amber-100' : 'border-emerald-100'
+  const accentBorderStrong = isRoofing ? 'border-amber-200' : 'border-emerald-200'
+  const accentInputBorder = isRoofing ? 'focus:ring-amber-300 focus:border-amber-400' : 'focus:ring-emerald-300 focus:border-emerald-400'
+  const accentUserBubble = isRoofing ? 'bg-amber-600 text-white' : 'bg-emerald-600 text-white'
+  const accentLiveDot = isRoofing ? 'bg-amber-500' : 'bg-emerald-500'
+
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -154,7 +202,7 @@ export function AISalesCall() {
   // ── Start Call ───────────────────────────────────────────────────
 
   const startCall = useCallback((scenarioId: string) => {
-    const scenario = LOCAL_SCENARIOS.find(s => s.id === scenarioId)
+    const scenario = LOCAL_SCENARIOS_LOCAL.find(s => s.id === scenarioId)
     if (!scenario) return
 
     setSelectedScenario(scenarioId)
@@ -171,7 +219,7 @@ export function AISalesCall() {
     ])
     setScores(null)
     setIsEnding(false)
-  }, [])
+  }, [LOCAL_SCENARIOS_LOCAL])
 
   // ── Send Message ─────────────────────────────────────────────────
 
@@ -201,6 +249,7 @@ export function AISalesCall() {
         body: JSON.stringify({
           messages: chatHistory,
           scenarioId: selectedScenario,
+          segment: isRoofing ? 'ROOFING' : 'AMENITIES',
         }),
       })
 
@@ -218,18 +267,21 @@ export function AISalesCall() {
       setMessages(prev => [...prev, aiMessage])
     } catch (error) {
       console.error('Failed to send message:', error)
-      // Fallback response
+      // Fallback response — segment-aware tone
+      const fallbackText = isRoofing
+        ? "I see. Could you tell me more about the specific roofing profiles you'd recommend for our project? I'm particularly interested in understanding how they'd handle our local climate and what kind of warranty you offer."
+        : "I see. Could you tell me more about the specific products you'd recommend for our property? I'm particularly interested in understanding how they'd fit our requirements."
       const fallbackMessage: ChatMessage = {
         id: `ai-${Date.now()}`,
         role: 'ai',
-        content: "I see. Could you tell me more about the specific products you'd recommend for our property? I'm particularly interested in understanding how they'd fit our requirements.",
+        content: fallbackText,
         timestamp: new Date(),
       }
       setMessages(prev => [...prev, fallbackMessage])
     } finally {
       setIsTyping(false)
     }
-  }, [input, isTyping, phase, selectedScenario, messages])
+  }, [input, isTyping, phase, selectedScenario, messages, isRoofing])
 
   // ── End Call ─────────────────────────────────────────────────────
 
@@ -256,6 +308,7 @@ export function AISalesCall() {
           messages: [...chatHistory, closingMessage],
           scenarioId: selectedScenario,
           endCall: true,
+          segment: isRoofing ? 'ROOFING' : 'AMENITIES',
         }),
       })
 
@@ -279,7 +332,13 @@ export function AISalesCall() {
       }
     } catch (error) {
       console.error('Failed to end call with scoring:', error)
-      // Provide fallback scores
+      // Provide fallback scores — segment-aware key questions
+      const missedQuestions = isRoofing
+        ? ['Project type', 'Roof area / number of villas', 'Location', 'Timeline']
+        : ['Average room rent', 'Number of rooms', 'Property stage', 'Location']
+      const fallbackFeedback = isRoofing
+        ? 'The conversation showed potential but needs improvement in key areas. Focus on asking project-specific qualifying questions — project type, roof area, location/climate zone, and timeline — and build a stronger value proposition tailored to the customer.'
+        : 'The conversation showed potential but needs improvement in key areas. Focus on asking property-specific qualifying questions and building a stronger value proposition tailored to the customer.'
       setScores({
         communication: 60,
         salesTechnique: 55,
@@ -290,17 +349,17 @@ export function AISalesCall() {
         closingEffectiveness: 52,
         excitementLevel: 60,
         keyQuestionsAsked: [],
-        keyQuestionsMissed: ['Average room rent', 'Number of rooms', 'Property stage', 'Location'],
+        keyQuestionsMissed: missedQuestions,
         strengths: ['Completed the conversation', 'Showed interest in customer needs'],
         improvements: ['Ask more qualifying questions', 'Improve closing techniques', 'Practice objection handling'],
-        detailedFeedback: 'The conversation showed potential but needs improvement in key areas. Focus on asking property-specific qualifying questions and building a stronger value proposition tailored to the customer.',
+        detailedFeedback: fallbackFeedback,
         nextSteps: ['Review the sales call framework', 'Practice qualifying questions', 'Re-attempt this scenario'],
       })
     } finally {
       setPhase('ended')
       setIsEnding(false)
     }
-  }, [selectedScenario, messages, isEnding])
+  }, [selectedScenario, messages, isEnding, isRoofing])
 
   // ── Reset ────────────────────────────────────────────────────────
 
@@ -324,34 +383,34 @@ export function AISalesCall() {
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-            <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-              <Phone className="w-5 h-5 text-emerald-600" />
+            <div className={`w-10 h-10 ${accentBg} rounded-xl flex items-center justify-center`}>
+              <Phone className={`w-5 h-5 ${accentText}`} />
             </div>
             AI Sales Call
           </h1>
-          <p className="text-gray-500 mt-1 ml-13">Practice your sales call skills with an AI hotel customer</p>
+          <p className="text-gray-500 mt-1 ml-13">Practice your sales call skills with an AI {isRoofing ? 'roofing' : 'hotel'} customer</p>
         </div>
 
         {/* How It Works */}
-        <Card className="bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-100">
+        <Card className={`bg-gradient-to-r ${accentGradientFrom} ${accentGradientTo} ${accentBorder}`}>
           <CardContent className="p-4">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center shrink-0">
-                <Sparkles className="w-5 h-5 text-emerald-600" />
+              <div className={`w-10 h-10 ${accentBg} rounded-xl flex items-center justify-center shrink-0`}>
+                <Sparkles className={`w-5 h-5 ${accentText}`} />
               </div>
               <div>
-                <p className="text-sm font-semibold text-emerald-800">How It Works</p>
-                <p className="text-xs text-emerald-600">AI plays the customer, you practice selling</p>
+                <p className={`text-sm font-semibold ${accentTextStrong}`}>How It Works</p>
+                <p className={`text-xs ${accentText}`}>AI plays the customer, you practice selling</p>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-3">
               {[
-                { step: '1', title: 'Pick a Scenario', desc: 'Choose your hotel type' },
+                { step: '1', title: 'Pick a Scenario', desc: `Choose your ${isRoofing ? 'customer' : 'hotel'} type` },
                 { step: '2', title: 'Have the Call', desc: 'Chat with the AI customer' },
                 { step: '3', title: 'Get Scored', desc: 'See your detailed analysis' },
               ].map((item) => (
                 <div key={item.step} className="text-center p-2 bg-white/60 rounded-lg">
-                  <div className="w-7 h-7 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold mx-auto mb-1">
+                  <div className={`w-7 h-7 ${accentBtn} text-white rounded-full flex items-center justify-center text-xs font-bold mx-auto mb-1`}>
                     {item.step}
                   </div>
                   <p className="text-xs font-medium text-gray-700">{item.title}</p>
@@ -365,11 +424,11 @@ export function AISalesCall() {
         {/* Scenario Cards */}
         <div>
           <h2 className="text-sm font-medium text-gray-500 mb-3 flex items-center gap-2">
-            <Target className="w-4 h-4 text-emerald-500" /> Choose a Scenario to Start
+            <Target className={`w-4 h-4 ${accentText}`} /> Choose a Scenario to Start
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {LOCAL_SCENARIOS.map((scenario) => {
-              const ScenarioIcon = scenarioIcons[scenario.id] || Hotel
+            {LOCAL_SCENARIOS_LOCAL.map((scenario) => {
+              const ScenarioIcon = scenarioIcons[scenario.id] || (isRoofing ? Home : Hotel)
               return (
                 <motion.div
                   key={scenario.id}
@@ -381,8 +440,8 @@ export function AISalesCall() {
                   >
                     <CardContent className="p-5 flex flex-col h-full">
                       <div className="flex items-start justify-between mb-3">
-                        <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
-                          <ScenarioIcon className="w-6 h-6 text-emerald-600" />
+                        <div className={`w-12 h-12 ${accentBg} rounded-xl flex items-center justify-center`}>
+                          <ScenarioIcon className={`w-6 h-6 ${accentText}`} />
                         </div>
                         <Badge className={difficultyColors[scenario.difficulty]}>
                           {scenario.difficulty}
@@ -399,7 +458,7 @@ export function AISalesCall() {
                           </span>
                         ))}
                       </div>
-                      <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white gap-2">
+                      <Button className={`w-full ${accentBtn} text-white gap-2`}>
                         <Phone className="w-4 h-4" /> Start Call
                       </Button>
                     </CardContent>
@@ -416,24 +475,24 @@ export function AISalesCall() {
   // ── Render: Active Call ──────────────────────────────────────────
 
   if (phase === 'active') {
-    const scenario = LOCAL_SCENARIOS.find(s => s.id === selectedScenario)
-    const ScenarioIcon = scenarioIcons[selectedScenario || ''] || Hotel
+    const scenario = LOCAL_SCENARIOS_LOCAL.find(s => s.id === selectedScenario)
+    const ScenarioIcon = scenarioIcons[selectedScenario || ''] || (isRoofing ? Home : Hotel)
 
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
         {/* Call Header */}
-        <Card className="border-emerald-200 bg-gradient-to-r from-emerald-50 to-white">
+        <Card className={`${accentBorderStrong} bg-gradient-to-r ${accentGradientFrom} to-white`}>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-                  <ScenarioIcon className="w-5 h-5 text-emerald-600" />
+                <div className={`w-10 h-10 ${accentBg} rounded-xl flex items-center justify-center`}>
+                  <ScenarioIcon className={`w-5 h-5 ${accentText}`} />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <p className="text-sm font-semibold text-gray-800">{scenario?.name || 'Sales Call'}</p>
                     <Badge variant="outline" className="text-xs">
-                      <div className="w-2 h-2 bg-emerald-500 rounded-full mr-1.5 animate-pulse" />
+                      <div className={`w-2 h-2 ${accentLiveDot} rounded-full mr-1.5 animate-pulse`} />
                       Live
                     </Badge>
                   </div>
@@ -470,15 +529,15 @@ export function AISalesCall() {
                 <div className={`max-w-[80%] ${msg.role === 'user' ? 'order-2' : 'order-1'}`}>
                   {msg.role === 'ai' && (
                     <div className="flex items-center gap-2 mb-1">
-                      <div className="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center">
-                        <Phone className="w-3 h-3 text-emerald-600" />
+                      <div className={`w-6 h-6 ${accentBg} rounded-full flex items-center justify-center`}>
+                        <Phone className={`w-3 h-3 ${accentText}`} />
                       </div>
                       <span className="text-xs text-gray-500">Customer</span>
                     </div>
                   )}
                   <div className={`px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
                     msg.role === 'user'
-                      ? 'bg-emerald-600 text-white rounded-tr-sm'
+                      ? `${accentUserBubble} rounded-tr-sm`
                       : 'bg-gray-100 text-gray-700 rounded-tl-sm'
                   }`}>
                     {msg.content}
@@ -496,8 +555,8 @@ export function AISalesCall() {
                 animate={{ opacity: 1 }}
                 className="flex items-center gap-2"
               >
-                <div className="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center">
-                  <Phone className="w-3 h-3 text-emerald-600" />
+                <div className={`w-6 h-6 ${accentBg} rounded-full flex items-center justify-center`}>
+                  <Phone className={`w-3 h-3 ${accentText}`} />
                 </div>
                 <div className="bg-gray-100 px-4 py-3 rounded-2xl rounded-tl-sm">
                   <div className="flex gap-1">
@@ -522,19 +581,21 @@ export function AISalesCall() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
-                className="flex-1 px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400"
+                className={`flex-1 px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 ${accentInputBorder}`}
                 disabled={isTyping || isEnding}
               />
               <Button
                 onClick={sendMessage}
                 disabled={!input.trim() || isTyping || isEnding}
-                className="bg-emerald-600 hover:bg-emerald-700 rounded-xl px-4"
+                className={`${accentBtn} rounded-xl px-4`}
               >
                 <Send className="w-4 h-4" />
               </Button>
             </div>
             <p className="text-xs text-gray-400 mt-2 text-center">
-              Practice your sales pitch — ask about their property, present solutions, and try to close!
+              {isRoofing
+                ? 'Practice your sales pitch — ask about their project, present Laxree Roofing solutions, and try to close!'
+                : 'Practice your sales pitch — ask about their property, present solutions, and try to close!'}
             </p>
           </div>
         </Card>
@@ -545,8 +606,8 @@ export function AISalesCall() {
   // ── Render: Call Ended / Results ─────────────────────────────────
 
   if (phase === 'ended' && scores) {
-    const scenario = LOCAL_SCENARIOS.find(s => s.id === selectedScenario)
-    const ScenarioIcon = scenarioIcons[selectedScenario || ''] || Hotel
+    const scenario = LOCAL_SCENARIOS_LOCAL.find(s => s.id === selectedScenario)
+    const ScenarioIcon = scenarioIcons[selectedScenario || ''] || (isRoofing ? Home : Hotel)
 
     const scoreCategories = [
       { label: 'Communication', value: scores.communication, icon: MessageSquare },
@@ -564,12 +625,12 @@ export function AISalesCall() {
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
         {/* Call Summary Header */}
-        <Card className="bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-100">
+        <Card className={`bg-gradient-to-r ${accentGradientFrom} ${accentGradientTo} ${accentBorder}`}>
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
-                  <ScenarioIcon className="w-6 h-6 text-emerald-600" />
+                <div className={`w-12 h-12 ${accentBg} rounded-xl flex items-center justify-center`}>
+                  <ScenarioIcon className={`w-6 h-6 ${accentText}`} />
                 </div>
                 <div>
                   <p className="text-base font-semibold text-gray-800">Call Complete — {scenario?.name}</p>
@@ -596,7 +657,7 @@ export function AISalesCall() {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-gray-500 flex items-center gap-2">
-                <Star className="w-4 h-4 text-emerald-500" /> Score Breakdown
+                <Star className={`w-4 h-4 ${accentText}`} /> Score Breakdown
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -635,7 +696,7 @@ export function AISalesCall() {
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium text-gray-500 flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-teal-500" /> Call Analysis
+                  <TrendingUp className={`w-4 h-4 ${accentText}`} /> Call Analysis
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -644,8 +705,8 @@ export function AISalesCall() {
                     const CardIcon = card.icon
                     return (
                       <div key={card.label} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                        <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center shrink-0">
-                          <CardIcon className="w-5 h-5 text-emerald-600" />
+                        <div className={`w-10 h-10 ${accentBg} rounded-lg flex items-center justify-center shrink-0`}>
+                          <CardIcon className={`w-5 h-5 ${accentText}`} />
                         </div>
                         <div className="flex-1">
                           <p className="text-xs text-gray-500">{card.label}</p>
@@ -752,14 +813,14 @@ export function AISalesCall() {
         </div>
 
         {/* Detailed Feedback */}
-        <Card className="bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-100">
+        <Card className={`bg-gradient-to-br ${accentGradientFrom} ${accentGradientTo} ${accentBorder}`}>
           <CardContent className="p-5">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center shrink-0">
-                <Sparkles className="w-5 h-5 text-emerald-600" />
+              <div className={`w-10 h-10 ${accentBg} rounded-xl flex items-center justify-center shrink-0`}>
+                <Sparkles className={`w-5 h-5 ${accentText}`} />
               </div>
               <div>
-                <p className="text-sm font-semibold text-emerald-800 mb-1">AI Feedback</p>
+                <p className={`text-sm font-semibold ${accentTextStrong} mb-1`}>AI Feedback</p>
                 <p className="text-sm text-gray-700 leading-relaxed">{scores.detailedFeedback}</p>
               </div>
             </div>
@@ -770,14 +831,14 @@ export function AISalesCall() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-gray-500 flex items-center gap-2">
-              <ArrowRight className="w-4 h-4 text-teal-500" /> Recommended Next Steps
+              <ArrowRight className={`w-4 h-4 ${accentText}`} /> Recommended Next Steps
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
               {scores.nextSteps.map((step, i) => (
                 <div key={i} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                  <div className="w-7 h-7 bg-emerald-100 rounded-full flex items-center justify-center text-xs font-bold text-emerald-600 shrink-0">
+                  <div className={`w-7 h-7 ${accentBg} rounded-full flex items-center justify-center text-xs font-bold ${accentText} shrink-0`}>
                     {i + 1}
                   </div>
                   <span className="text-sm text-gray-700">{step}</span>
@@ -791,7 +852,7 @@ export function AISalesCall() {
         <div className="flex items-center gap-3">
           <Button
             onClick={resetCall}
-            className="bg-emerald-600 hover:bg-emerald-700 gap-2"
+            className={`${accentBtn} gap-2`}
           >
             <RotateCcw className="w-4 h-4" /> Try Again
           </Button>
@@ -811,7 +872,7 @@ export function AISalesCall() {
   return (
     <div className="flex flex-col items-center justify-center py-20">
       <p className="text-gray-500 mb-4">Loading results...</p>
-      <Button onClick={resetCall} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
+      <Button onClick={resetCall} className={`${accentBtn} gap-2`}>
         <RotateCcw className="w-4 h-4" /> Start Over
       </Button>
     </div>

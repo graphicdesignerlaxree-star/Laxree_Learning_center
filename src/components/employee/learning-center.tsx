@@ -340,6 +340,24 @@ const STUDY_CHAPTERS: StudyChapter[] = [
   },
 ]
 
+// Per-chapter gradient + accent styling (derived from each chapter's color family).
+// Keeps the existing color theme per chapter but elevates it with a richer gradient + accent tokens.
+const CHAPTER_GRADIENTS: Record<string, {
+  gradient: string
+  accentBorder: string
+  numBg: string
+  numText: string
+  hoverBorder: string
+}> = {
+  ch1: { gradient: 'from-emerald-500 to-teal-600', accentBorder: 'border-emerald-300', numBg: 'bg-emerald-100', numText: 'text-emerald-700', hoverBorder: 'hover:border-emerald-300' },
+  ch2: { gradient: 'from-blue-500 to-indigo-600',  accentBorder: 'border-blue-300',   numBg: 'bg-blue-100',   numText: 'text-blue-700',   hoverBorder: 'hover:border-blue-300' },
+  ch3: { gradient: 'from-violet-500 to-purple-600', accentBorder: 'border-violet-300', numBg: 'bg-violet-100', numText: 'text-violet-700', hoverBorder: 'hover:border-violet-300' },
+  ch4: { gradient: 'from-teal-500 to-cyan-600',    accentBorder: 'border-teal-300',   numBg: 'bg-teal-100',   numText: 'text-teal-700',   hoverBorder: 'hover:border-teal-300' },
+  ch5: { gradient: 'from-orange-500 to-amber-600', accentBorder: 'border-orange-300', numBg: 'bg-orange-100', numText: 'text-orange-700', hoverBorder: 'hover:border-orange-300' },
+  ch6: { gradient: 'from-rose-500 to-pink-600',    accentBorder: 'border-rose-300',   numBg: 'bg-rose-100',   numText: 'text-rose-700',   hoverBorder: 'hover:border-rose-300' },
+  ch7: { gradient: 'from-amber-500 to-yellow-600', accentBorder: 'border-amber-300',  numBg: 'bg-amber-100',  numText: 'text-amber-700',  hoverBorder: 'hover:border-amber-300' },
+}
+
 interface VideoLesson {
   id: string
   title: string
@@ -1122,49 +1140,92 @@ function StudyMaterialsSection() {
 
             {/* Tab: Study Guide */}
             <TabsContent value="study-guide" className="p-4 mt-0">
-              <div className="mb-4">
-                <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                  <BookOpen className="w-4 h-4 text-teal-600" />
-                  Product Knowledge Chapters
-                </h3>
-                <p className="text-sm text-gray-500 mt-1">Click on any chapter to expand its content</p>
+              <div className="mb-5">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                      <BookOpen className="w-5 h-5 text-teal-600" />
+                      Product Knowledge Chapters
+                    </h3>
+                    <p className="text-sm text-gray-500 mt-1 max-w-2xl">
+                      Master the LAXREE product portfolio — from company introduction to competitive intelligence.
+                      Tap any chapter to dive in and read at your own pace.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <Badge className="bg-teal-50 text-teal-700 border-teal-200 hover:bg-teal-50 px-2.5 py-1 text-xs">
+                      <BookMarked className="w-3 h-3" />
+                      {STUDY_CHAPTERS.length} Chapters
+                    </Badge>
+                    <Badge variant="outline" className="px-2.5 py-1 text-xs text-gray-600 border-gray-200">
+                      <Clock className="w-3 h-3" />
+                      {STUDY_CHAPTERS.reduce(
+                        (sum, ch) => sum + Math.max(1, Math.ceil(ch.content.join(' ').split(/\s+/).filter(Boolean).length / 200)),
+                        0
+                      )} min total
+                    </Badge>
+                  </div>
+                </div>
+                {/* Visual progress hint — slot reserved for future per-chapter read tracking */}
+                <div className="mt-3 flex items-center gap-3">
+                  <span className="text-[11px] font-medium text-gray-500 whitespace-nowrap">
+                    0 of {STUDY_CHAPTERS.length} read
+                  </span>
+                  <Progress value={0} className="h-1.5 flex-1 max-w-[200px]" />
+                </div>
               </div>
-              <Accordion type="multiple" className="space-y-2">
+              <Accordion type="multiple" className="space-y-2.5">
                 {STUDY_CHAPTERS.map((chapter, idx) => {
                   const Icon = chapter.icon
+                  const g = CHAPTER_GRADIENTS[chapter.id] ?? CHAPTER_GRADIENTS.ch1
+                  const wordCount = chapter.content.join(' ').split(/\s+/).filter(Boolean).length
+                  const readMin = Math.max(1, Math.ceil(wordCount / 200))
                   return (
                     <AccordionItem
                       key={chapter.id}
                       value={chapter.id}
-                      className={`border rounded-xl px-4 ${chapter.borderColor} ${chapter.bgColor}/30 hover:${chapter.bgColor}/60 transition-colors`}
+                      className={`group border rounded-xl ${chapter.borderColor} ${g.hoverBorder} bg-white hover:shadow-md hover:-translate-y-0.5 data-[state=open]:shadow-sm transition-all duration-200 overflow-hidden`}
                     >
-                      <AccordionTrigger className="py-3 hover:no-underline">
-                        <div className="flex items-center gap-3 text-left">
-                          <div className={`w-9 h-9 rounded-lg ${chapter.bgColor} flex items-center justify-center shrink-0`}>
-                            <Icon className={`w-4 h-4 ${chapter.color}`} />
+                      <AccordionTrigger className="py-3 px-4 hover:no-underline">
+                        <div className="flex items-center gap-3.5 text-left">
+                          {/* Gradient icon tile with floating chapter-number badge */}
+                          <div className={`relative w-12 h-12 rounded-xl bg-gradient-to-br ${g.gradient} flex items-center justify-center shrink-0 shadow-sm group-data-[state=open]:shadow-md group-data-[state=open]:brightness-110 transition-all duration-200`}>
+                            <Icon className="w-5 h-5 text-white" />
+                            <span className={`absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-white text-[10px] font-bold shadow-sm flex items-center justify-center border border-gray-100 ${g.numText}`}>
+                              {String(idx + 1).padStart(2, '0')}
+                            </span>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2">
-                              <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-gray-200 text-gray-500">
-                                Ch. {idx + 1}
-                              </Badge>
-                              <span className="font-semibold text-sm text-gray-900">{chapter.title}</span>
+                            <span className="font-bold text-base text-gray-900 group-hover:text-emerald-700 transition-colors block">
+                              {chapter.title}
+                            </span>
+                            <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{chapter.description}</p>
+                            {/* Meta row — hidden when chapter is expanded to reduce clutter */}
+                            <div className="mt-1.5 flex items-center gap-2 text-[11px] text-gray-400 group-data-[state=open]:hidden">
+                              <Clock className="w-3 h-3" />
+                              <span>{readMin} min read</span>
+                              <span className="text-gray-300">•</span>
+                              <BookOpen className="w-3 h-3" />
+                              <span>{chapter.content.length} sections</span>
+                              <span className="text-gray-300">•</span>
+                              <span>{wordCount.toLocaleString()} words</span>
                             </div>
-                            <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">{chapter.description}</p>
                           </div>
                         </div>
                       </AccordionTrigger>
-                      <AccordionContent className="pb-4">
-                        <div className="ml-12 space-y-3">
+                      <AccordionContent className="pb-4 pt-1">
+                        <div className={`ml-2 mt-2 border-l-2 ${g.accentBorder} pl-4 space-y-3`}>
                           {chapter.content.map((paragraph, pIdx) => (
                             <motion.div
                               key={pIdx}
                               initial={{ opacity: 0, x: -8 }}
                               animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: pIdx * 0.05 }}
-                              className="flex items-start gap-2"
+                              transition={{ delay: pIdx * 0.08 }}
+                              className="flex items-start gap-3"
                             >
-                              <div className="w-1.5 h-1.5 rounded-full bg-teal-400 mt-2 shrink-0" />
+                              <div className={`w-5 h-5 rounded-full ${g.numBg} ${g.numText} text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5`}>
+                                {pIdx + 1}
+                              </div>
                               <p className="text-sm text-gray-700 leading-relaxed">{paragraph}</p>
                             </motion.div>
                           ))}

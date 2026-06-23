@@ -930,29 +930,31 @@ export function CallPractice() {
         </div>
       </motion.div>
 
-      {/* Call Recording AI — prominent CTA banner */}
+      {/* Call Recording AI — prominent CTA banner (segment-aware) */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
       >
-        <Card className="border-emerald-200 bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 overflow-hidden">
+        <Card className={`overflow-hidden ${isRoofing ? 'border-amber-200 bg-gradient-to-r from-amber-50 via-orange-50 to-yellow-50' : 'border-emerald-200 bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50'}`}>
           <CardContent className="p-4 sm:p-5">
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-md shrink-0">
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-md shrink-0 ${isRoofing ? 'bg-gradient-to-br from-amber-500 to-orange-500' : 'bg-gradient-to-br from-emerald-500 to-teal-500'}`}>
                 <Mic className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-sm font-bold text-emerald-900 flex items-center gap-2">
+                <h3 className={`text-sm font-bold flex items-center gap-2 ${isRoofing ? 'text-amber-900' : 'text-emerald-900'}`}>
                   Want AI to analyze your real sales calls?
-                  <Badge className="bg-emerald-500 text-white text-[10px] border-0">NEW</Badge>
+                  <Badge className={`text-white text-[10px] border-0 ${isRoofing ? 'bg-amber-500' : 'bg-emerald-500'}`}>NEW</Badge>
                 </h3>
-                <p className="text-xs text-emerald-700 mt-1 leading-relaxed">
-                  Upload a recording of your actual sales call and our Expert AI Sales Assistant will analyze your pitch, identify the client&apos;s hotel profile (ARR, property type, stage, location), give you a short &amp; sweet recommended pitch, and guide you on building interest.
+                <p className={`text-xs mt-1 leading-relaxed ${isRoofing ? 'text-amber-700' : 'text-emerald-700'}`}>
+                  {isRoofing
+                    ? <>Upload a recording of your actual sales call and our Expert AI Sales Assistant will analyze your pitch, identify the client&apos;s project profile (project type, roof area, location, timeline), give you a short &amp; sweet recommended pitch, and guide you on building interest.</>
+                    : <>Upload a recording of your actual sales call and our Expert AI Sales Assistant will analyze your pitch, identify the client&apos;s hotel profile (ARR, property type, stage, location), give you a short &amp; sweet recommended pitch, and guide you on building interest.</>}
                 </p>
               </div>
               <Button
-                className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-md font-semibold text-sm gap-2 shrink-0"
+                className={`text-white shadow-md font-semibold text-sm gap-2 shrink-0 ${isRoofing ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600' : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600'}`}
                 onClick={() => useAuthStore.getState().setCurrentView('call-analysis')}
               >
                 <Mic className="w-4 h-4" />
