@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
+import { db, withDbRetry } from '@/lib/db'
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,13 +9,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Email and password are required' }, { status: 400 })
     }
 
-    const user = await db.user.findUnique({
-      where: { email },
-      include: {
-        department: { select: { name: true } },
-        headedDepartment: { select: { name: true } },
-      }
-    })
+    // Retry on Neon cold-start auth/connection failures
+    const user = await withDbRetry(() =>
+      db.user.findUnique({
+        where: { email },
+        include: {
+          department: { select: { name: true } },
+          headedDepartment: { select: { name: true } },
+        }
+      })
+    )
 
     if (!user || user.password !== password) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
@@ -34,14 +37,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Account is suspended or inactive' }, { status: 403 })
     }
 
-    // Update last login
-    await db.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } })
+    // Update last login (retry on Neon cold-start)
+    await withDbRetry(() =>
+      db.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } })
+    )
 
-    // Create login history
-    await db.loginHistory.create({ data: { userId: user.id } })
+    // Create login history (retry on Neon cold-start)
+    await withDbRetry(() =>
+      db.loginHistory.create({ data: { userId: user.id } })
+    )
 
-    // Create audit log
-    await db.auditLog.create({ data: { userId: user.id, action: 'LOGIN', targetType: 'user', targetId: user.id, details: 'User logged in' } })
+    // Create audit log (retry on Neon cold-start)
+    await withDbRetry(() =>
+      db.auditLog.create({ data: { userId: user.id, action: 'LOGIN', targetType: 'user', targetId: user.id, details: 'User logged in' } })
+    )
 
     return NextResponse.json({
       user: {
