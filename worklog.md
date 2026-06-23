@@ -525,3 +525,37 @@ Stage Summary:
 - Amenities data 100% untouched — same 12 users, 5 depts, 14 courses, 8 exams, 390 questions as before
 - Roofing segment has full content: 14 courses, 28 modules, 100 questions, 8 exams (100 questions each), 5 enrolled employees
 - All APIs filter by company — no cross-segment data leakage
+
+---
+Task ID: 11
+Agent: Main Agent
+Task: Fix "Environment variable not found: DATABASE_URL" error occurring while logging in to the Roofing segment
+
+Work Log:
+- User reported Prisma error on Roofing login: `Invalid prisma.user.findUnique() invocation: error: Environment variable not found: DATABASE_URL` (schema.prisma line 7, provider=postgresql, url=env("DATABASE_URL"))
+- Diagnosed root cause — TWO overlapping problems:
+  1. `.env` file had been reverted to a SQLite path: `DATABASE_URL=file:/home/z/my-project/db/custom.db` — but `schema.prisma` uses `provider = "postgresql"`. The referenced SQLite file (`db/custom.db`) no longer existed either.
+  2. The shell environment ALSO had the stale SQLite path exported as `DATABASE_URL=file:/home/z/my-project/db/custom.db`, which OVERRIDES the `.env` file value (shell env takes precedence over .env in bun/Next.js loading). This is why even after fixing `.env`, Prisma still saw the wrong URL.
+- Fix applied (config-only, no code/data changes):
+  1. Restored `/home/z/my-project/.env` to the Neon PostgreSQL URL:
+     - DATABASE_URL = postgresql://...@ep-fragrant-brook-adhkdpuc-pooler...neon.tech/neondb?sslmode=require&connect_timeout=30&pool_timeout=30
+     - DIRECT_URL    = postgresql://...@ep-fragrant-brook-adhkdpuc...neon.tech/neondb?sslmode=require&connect_timeout=30
+  2. Unset the stale `DATABASE_URL` and `DIRECT_URL` from the shell environment (`unset DATABASE_URL DIRECT_URL`) so the correct `.env` values are used.
+  3. Ran `bunx prisma generate` — Prisma client regenerated successfully and loaded the correct env from `.env`.
+  4. Restarted the dev server with a clean env (watchdog wrapper unsets the stale vars before each `bun run dev`).
+- Verified end-to-end via direct Prisma script (bypassing flaky dev server):
+  * `roofing.admin@laxree.com` found in DB, password=admin123 matches, company=ROOFING, isActive=true, isSuspended=false → LOGIN WOULD SUCCEED
+  * `admin@laxree.com` (Amenities) still present, company=AMENITIES, role=SUPER_ADMIN
+  * User counts: ROOFING=6 (1 admin + 5 employees), AMENITIES=12 (unchanged)
+- Verified end-to-end via actual HTTP /api/auth endpoint (after dev server restart):
+  * Roofing admin login (roofing.admin@laxree.com / admin123 / ROOFING) → HTTP 200, returns user with company:ROOFING, role:SUPER_ADMIN ✓
+  * Amenities admin login (admin@laxree.com / admin123 / AMENITIES) → HTTP 200, returns user with company:AMENITIES ✓ (no regression)
+  * Cross-segment block (amenities admin trying ROOFING segment) → HTTP 403 "This account belongs to the Laxree Amenities segment..." ✓
+  * Roofing employee login (roofing.emp001@laxree.com / emp123 / ROOFING) → HTTP 200, returns Arjun Roofing, EMPLOYEE, ROOFING ✓
+- Note: Dev server in this sandbox is unstable (process gets killed every ~30-60s, especially during route compilation + Neon cold-start). The watchdog auto-restarts it. This is an environment limitation, not a code/config issue. The login fix itself is confirmed working via both direct DB test and HTTP endpoint test.
+
+Stage Summary:
+- ROOT CAUSE: `.env` had been reverted to a SQLite path AND the same stale SQLite path was exported in the shell env (overriding `.env`). With `provider = "postgresql"` in schema.prisma, Prisma could not resolve a valid DATABASE_URL → "Environment variable not found: DATABASE_URL" on every `db.user.findUnique()` call (login).
+- FIX: Restored `.env` to Neon PostgreSQL URL (DATABASE_URL + DIRECT_URL) and unset the stale shell env vars. Regenerated Prisma client. Restarted dev server with clean env.
+- VERIFIED: Roofing admin + Roofing employee logins succeed (HTTP 200). Amenities admin login still works (HTTP 200, no regression). Cross-segment login correctly blocked (HTTP 403).
+- NO code files, NO Amenities data, NO schema was changed in this task — only the `.env` config file was restored to its correct Neon PostgreSQL value and a stale shell env var was unset. This was a pure config-regression fix.
