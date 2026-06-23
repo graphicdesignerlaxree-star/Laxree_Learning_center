@@ -29,7 +29,7 @@ import {
   ExternalLink, FileDown, BookMarked, Trophy, RefreshCw,
   HelpCircle, MessageCircle, CirclePlay, Volume2, ShoppingCart,
   Shield, Refrigerator, Flame, ArrowRight, XCircle, Target,
-  Lightbulb, RotateCcw, Clock, Star
+  Lightbulb, RotateCcw, Clock, Star, Layers, Home, Leaf
 } from 'lucide-react'
 import { ModuleQuiz } from './module-quiz'
 import { LessonViewer } from './lesson-viewer'
@@ -171,7 +171,7 @@ interface StudyChapter {
   content: string[]
 }
 
-const STUDY_CHAPTERS: StudyChapter[] = [
+const AMENITIES_STUDY_CHAPTERS: StudyChapter[] = [
   {
     id: 'ch1',
     title: 'Company Introduction',
@@ -356,6 +356,12 @@ const CHAPTER_GRADIENTS: Record<string, {
   ch5: { gradient: 'from-orange-500 to-amber-600', accentBorder: 'border-orange-300', numBg: 'bg-orange-100', numText: 'text-orange-700', hoverBorder: 'hover:border-orange-300' },
   ch6: { gradient: 'from-rose-500 to-pink-600',    accentBorder: 'border-rose-300',   numBg: 'bg-rose-100',   numText: 'text-rose-700',   hoverBorder: 'hover:border-rose-300' },
   ch7: { gradient: 'from-amber-500 to-yellow-600', accentBorder: 'border-amber-300',  numBg: 'bg-amber-100',  numText: 'text-amber-700',  hoverBorder: 'hover:border-amber-300' },
+  // Roofing segment chapter gradients (amber/orange/emerald/rose/cyan families)
+  'r-ch1': { gradient: 'from-amber-500 to-orange-600',   accentBorder: 'border-amber-300',   numBg: 'bg-amber-100',   numText: 'text-amber-700',   hoverBorder: 'hover:border-amber-300' },
+  'r-ch2': { gradient: 'from-orange-500 to-amber-600',   accentBorder: 'border-orange-300',  numBg: 'bg-orange-100',  numText: 'text-orange-700',  hoverBorder: 'hover:border-orange-300' },
+  'r-ch3': { gradient: 'from-emerald-500 to-teal-600',   accentBorder: 'border-emerald-300', numBg: 'bg-emerald-100', numText: 'text-emerald-700', hoverBorder: 'hover:border-emerald-300' },
+  'r-ch4': { gradient: 'from-rose-500 to-pink-600',      accentBorder: 'border-rose-300',    numBg: 'bg-rose-100',    numText: 'text-rose-700',    hoverBorder: 'hover:border-rose-300' },
+  'r-ch5': { gradient: 'from-cyan-500 to-blue-500',      accentBorder: 'border-cyan-300',    numBg: 'bg-cyan-100',    numText: 'text-cyan-700',    hoverBorder: 'hover:border-cyan-300' },
 }
 
 interface VideoLesson {
@@ -370,7 +376,7 @@ interface VideoLesson {
   youtubeId: string
 }
 
-const VIDEO_LESSONS: VideoLesson[] = [
+const AMENITIES_VIDEO_LESSONS: VideoLesson[] = [
   {
     id: 'v1',
     title: 'Safe Box Installation & Operation',
@@ -696,7 +702,7 @@ const VIDEO_LESSONS: VideoLesson[] = [
   },
 ]
 
-const FAQ_ITEMS = [
+const AMENITIES_FAQ_ITEMS = [
   {
     q: 'What is LAXREE?',
     a: 'LAXREE is a leading manufacturer and supplier of premium hotel amenities, dedicated to elevating the guest experience through innovative and reliable products. We provide a comprehensive range of hotel room equipment including safe boxes, RFID door locks, minibars, electric kettles, mirrors, hair dryers, digital signage, dispensers, luggage racks, hangers, dustbins, rollaway beds, and various add-on products.',
@@ -728,6 +734,318 @@ const FAQ_ITEMS = [
   {
     q: 'What are the key differentiators of LAXREE vs competitors?',
     a: 'Key LAXREE differentiators: (1) One-Stop Solution — Complete hotel amenities range from a single supplier, eliminating multi-vendor complexity. (2) Integrated Technology — Locks, safes, and minibars share a unified management platform. (3) Premium Value Positioning — 15-25% more affordable than European luxury brands with comparable quality. (4) Superior Warranty — 3-year standard vs. 1-2 year industry average. (5) 24/7 Support — Round-the-clock technical hotline. (6) Customization — Brand-specific finishes, colors, and logo engraving available.',
+  },
+]
+
+// ==================== ROOFING STUDY MATERIALS DATA ====================
+
+const ROOFING_STUDY_CHAPTERS: StudyChapter[] = [
+  {
+    id: 'r-ch1',
+    title: 'Company Introduction — Laxree Roofing',
+    icon: Building2,
+    color: 'text-amber-600',
+    bgColor: 'bg-amber-50',
+    borderColor: 'border-amber-200',
+    description: 'Learn about Laxree Roofing — a premium roofing solutions brand offering stone-coated, thatch, and asphalt shingle tiles for the Indian and global market.',
+    content: [
+      `Laxree Roofing Solutions was established with a singular vision: to bring world-class luxury roofing products to the Indian market at competitive price points. Where homeowners, architects, and builders previously had to choose between expensive European imports and cheap local alternatives that compromised on durability and aesthetics, Laxree Roofing eliminated that compromise. The brand's founders brought together decades of experience in building materials, manufacturing excellence, and global supply chain management to deliver roofing tiles that combine premium aesthetics with proven performance in India's demanding climate conditions.`,
+      `The Laxree Roofing product portfolio is organized around three primary product lines, each engineered for a distinct aesthetic and functional purpose. Stone-coated metal roof tiles form the flagship — a steel-base tile coated with aluminum-zinc (AZ) for corrosion resistance, layered with acrylic resin adhesive and colored stone chips finished with an overglaze for shine. Artificial thatch tiles made from polyethylene (PE) offer the tropical/resort aesthetic without the maintenance burden of natural thatch. Asphalt shingles provide a versatile, waterproof solution ideal for sloped roofs on residential and commercial projects. Together, these three lines cover virtually every premium roofing application.`,
+      `Laxree Roofing products are currently OEM-manufactured in Korea under the Luxury brand, with a manufacturing unit planned in India within 5-6 months to reduce costs and expand color variety. The products have been tested extensively in Rajasthan's harsh climate — characterized by extreme heat (45°C+ summers), heavy monsoon rainfall, and cold desert winters — and installed at resorts and premium properties across India including Jodhpur, Kerala, Lakshadweep, Daman, and Goa. These field-proven installations provide solid selling points for confidence in durability and performance.`,
+      `Warehousing and pan-India delivery are managed centrally from Ajmer, with pan-India delivery available even for small orders. This centralized logistics model keeps costs low and ensures consistent availability. The dealership program offers two entry options: a stand-based dealership (₹25,000 refundable deposit for display stands with samples — no warehousing required, suitable for new resellers) and a stock dealership (₹2,00,000 inventory commitment with free stands and full dealership benefits, suitable for experienced dealers with an existing client base).`,
+      `The target market for Laxree Roofing is fundamentally different from the hospitality-focused Amenities segment. Roofing customers are primarily homeowners building premium villas, architects specifying roofing for resort and residential projects, and building material dealers serving the construction industry. This means the sales approach is more direct — consultative selling to individual property owners and design professionals — rather than the B2B hospitality procurement model. Sales representatives must be fluent in roofing terminology, coverage calculations, installation requirements, and climate-appropriate product selection.`,
+      `Pricing follows a three-tier model: MRP (Maximum Retail Price — the suggested retail, e.g., approx. ₹440 for stone-coated tiles, ₹150 for asphalt shingles), SSP (Suggested Selling Price — dealers are advised not to sell below this for sustainability), and DP (Dealer Price — the fixed cost to the dealer, typically 20% below MRP). Dealers enjoy complete flexibility on final resale pricing with no fixed MRP enforcement, since roofing tiles are bulk building materials. Significant additional discounts are available for large bulk orders exceeding 3,000-4,000 tiles (valued at approximately ₹15 lakhs and above).`,
+    ],
+  },
+  {
+    id: 'r-ch2',
+    title: 'Stone-Coated Metal Roof Tiles',
+    icon: Layers,
+    color: 'text-orange-600',
+    bgColor: 'bg-orange-50',
+    borderColor: 'border-orange-200',
+    description: 'The flagship product — steel-base tiles with aluminum-zinc coating and colored stone chips. 20-30 year lifespan, 90% noise reduction, fire and corrosion resistant.',
+    content: [
+      `Stone-coated metal roof tiles are Laxree Roofing's flagship product, also called the Classic or European tile. The tile consists fundamentally of a steel base metal sheet sandwiched between corrosion-resistant layers of aluminum-zinc (AZ) coating on both sides. The top surface has an acrylic resin adhesive layer onto which colored stone chips are glued, finished with an overglaze that adds shine and durability. The stone chips not only provide aesthetics but also act as a protective barrier and a sound-dampening layer.`,
+      `Two thickness options are offered — 0.4 mm and 0.5 mm — which describe only the metal sheet thickness, excluding the stone chips and coatings. Market misconceptions about intermediate thicknesses like 0.38 mm or 0.42 mm must be firmly corrected: these are not genuine and are often misrepresented for higher pricing. The 0.4 mm tile is more flexible and weighs approximately 2.7 kg; the 0.5 mm tile is stiffer and weighs 3.1-3.2 kg, recommended for areas where roofs are exposed to heavy impacts such as falling coconuts or fruits. Tiles weighing less than approximately 2.4-2.5 kg are considered inferior quality, with fewer stone chips and increased corrosion risk — always verify weight as a quality indicator.`,
+      `The AZ coating value refers to the aluminum-zinc coating's weight and protection efficiency, typically offered in 90 AZ and 150 AZ options (also referred to as GSM or GMS). Although 150 AZ is somewhat more durable, the quality differences are minor and the price difference is marginal (approximately ₹20-30 per tile). For most projects, 90 AZ is sufficient; 150 AZ is recommended for coastal or highly corrosive environments. Size-wise, each tile measures approximately 420 mm by 1340 mm (17" x 52"), covering about 6 sq ft before installation, but actual roofing coverage reduces to 5 to 5.5 sq ft after accounting for a mandatory 2-inch overlap on three sides (top, left, right).`,
+      `Proper estimation of tile quantity is essential for project quoting. For example, a 1,500 sq ft roof requires roughly 300 tiles (1500 ÷ 5) plus an additional 5-10 tiles as a buffer against damage during installation. The mandatory overlapping ensures a waterproof and secure roof surface and must be maintained as shown in the installation diagrams. Eight standard color options are available: Brown Black, Terracotta, Red Black, Cement Gray, Blue Black, Coffee, Blue White, and a new Green option — enabling clients to select suitable aesthetic finishes for any architectural style.`,
+      `Lifespan varies by model and maintenance, ranging from 20 years for the base 0.4 mm / 90 AZ tile to up to 30 years for the premium 0.5 mm / 150 AZ tile. Warranty is 10 years, covering color fading and stone chips fallout only — physical damage, breakage, or tearing from impacts are explicitly excluded. Stone chips falling out typically occurs only after 10-15 years and can be repaired with a repair kit that includes adhesive and matching stone chips for minor repairs. Note that repainting is NOT possible due to the stone-chip surface.`,
+      `Key features include UV resistance (protects against color fading), noise reduction by approximately 90% compared to bare tin sheets (the stone chip layer acts as a sound barrier), fire resistance, storm and corrosion resistance, water resistance, and high wind resistance. These features give stone-coated tiles significant advantages over conventional Tata steel sheets in both noise reduction and long-term durability. Stone-coated tiles can be installed directly on MS frames without additional support structures, unlike thatch and shingles which require underlying support.`,
+    ],
+  },
+  {
+    id: 'r-ch3',
+    title: 'Artificial Thatch Tiles',
+    icon: Leaf,
+    color: 'text-emerald-600',
+    bgColor: 'bg-emerald-50',
+    borderColor: 'border-emerald-200',
+    description: 'Synthetic polyethylene thatch tiles for tropical/resort aesthetics. UV-resistant, pest-proof, zero maintenance. Fire-retardant variants available for living areas.',
+    content: [
+      `Artificial thatch tiles are Laxree Roofing's second product line, made primarily from polyethylene (PE) — a recyclable and safe plastic. When speaking with customers, always emphasize 'PE' rather than 'plastic' to avoid negative perceptions. The smaller tile measures 500 mm × 500 mm and the larger variant provides approximate coverage of 4 sq ft. Thickness is secondary but noted at 1.6 mm and 1.2 mm respectively. The smaller tile is heavier due to a galvanized iron binder on top that adds weight and stiffness, whereas the larger tile is lighter and more flexible with only PE profiling on top.`,
+      `Coverage typically is around 4 sq ft but varies with installation overlap preferences — greater overlap gives a denser appearance but reduces coverage, demonstrating an inverse relationship between overlap and effective coverage. Two variants exist for both sizes: fire retardant (FR) and non-fire retardant (Non-FR). Fire retardant options are more expensive and strongly preferred in cottages, resorts, or any place used for resting or sleeping, as they do not catch fire, melt, or spread fire. Non-fire retardant versions are still safer than traditional thatch, with slower burning or self-extinguishing features, suitable for less critical applications like cafes and gazebos.`,
+      `Other notable features include UV resistance maintaining color integrity over the tile's lifespan, corrosion and rust resistance due to the galvanized binders, and complete avoidance of insect and pest attraction — a major drawback of natural thatch. The tiles are water resistant ensuring minimal maintenance post-rain, and offer high wind resistance. The expected lifespan is 10 to 20 years with a 5-year warranty covering color fading (physical damage is excluded).`,
+      `Color options for the smaller tiles include cream and gray, while the larger tiles offer two textures: vertical and leaf patterns. Unlike natural thatch which requires frequent maintenance, replacement, and pest control, artificial thatch is truly zero-maintenance — rain is sufficient to keep it clean. This makes it ideal for resorts, beach properties, and tropical-themed installations where the aesthetic of thatch is desired without the operational burden.`,
+      `Installation requires supporting underlying structures such as plywood, OSB boards, RCC slabs, ACP boards, or fiber cement boards to provide rigidity and proper fastening — unlike stone-coated tiles which can be installed directly on MS frames. Insulation is strongly recommended beneath thatch tiles to improve heat resistance, especially in hotter Indian regions. Common insulation methods include spray insulation, bitumen sheets, reflective sheets, and wool insulation.`,
+      `The primary use cases for artificial thatch are resort cottages, beachside cabanas, poolside gazebos, garden pergolas, and tropical-themed restaurants. The fire-retardant variant is mandatory for any structure used for sleeping (resort cottages, villas) while non-FR is acceptable for non-residential structures like cafes and shade structures. When pitching thatch tiles, lead with the aesthetic (tropical luxury without maintenance), then address safety (FR certification), then close on the long-term value (zero maintenance vs. natural thatch replacement every 3-5 years).`,
+    ],
+  },
+  {
+    id: 'r-ch4',
+    title: 'Asphalt Shingles',
+    icon: Home,
+    color: 'text-rose-600',
+    bgColor: 'bg-rose-50',
+    borderColor: 'border-rose-200',
+    description: 'Asphalt-fiberglass shingles for versatile sloped roofs. Waterproof, algae-resistant, fireproof. -40°C to +100°C temperature tolerance. 10-year warranty.',
+    content: [
+      `Asphalt shingles are Laxree Roofing's third product line, composed of an asphalt sheet layered with a fiberglass mat for strength and topped with stone granules for texture and aesthetics — similar surface treatment to stone-coated metal tiles. A distinguishing feature is a self-adhesive bitumen strip underneath the upper edge, which thermally bonds when heated during installation, creating a waterproof interlocking seal. Some variants include a bitumen bottom layer enhancing waterproofing further. Asphalt shingles serve as an upgraded, aesthetically pleasing alternative to traditional bitumen waterproofing sheets widely used in roofing.`,
+      `Standard dimensions are approximately 1000 mm by 333 mm (3 ft × 1 ft) with a thickness of about 2.7 mm. Due to the approximately 50% overlap during installation, the exposure (coverage) per tile is just 1.3 sq ft — demanding a large number of tiles for bigger roofs. For example, a 1,300 sq ft roof requires approximately 1,000 tiles. This coverage math must be clearly communicated to customers during quoting to avoid quantity shortfalls.`,
+      `Asphalt shingles are highly versatile and can be applied on various sloping surfaces, including RCC (Reinforced Cement Concrete), wooden, or fiber cement roofs of varying slopes from 15° to 90°. The self-adhesive strip ensures water-tightness post-installation. The tiles are flexible, unbreakable, and require zero maintenance. They exhibit resistance to algae (important in humid climates), high winds, impacts, fire, and extreme temperatures ranging from -40°C to +100°C — making them suitable for everything from Himalayan winters to Rajasthan summers.`,
+      `Four pattern/color options are commonly available: mosaic, fish-scale, three-tab, and laminated architectural shingles. The laminated architectural variant is the premium option, offering a dimensional appearance that mimics wood shake or slate at a fraction of the cost. Three-tab is the economical choice with a flat, uniform appearance. Mosaic and fish-scale patterns are chosen for distinctive aesthetic statements on premium properties.`,
+      `Pricing is generally uniform across patterns: MRP approximately ₹150 per tile, SSP ₹135, and dealer price ₹120 per tile. The 10-year warranty covers color fading and stone chips fallout, with physical damage, breakage, or tearing excluded. Installation requires supporting underlying structures (plywood, OSB, RCC slabs, ACP boards, or fiber cement boards) — asphalt shingles cannot be installed directly on MS frames like stone-coated tiles.`,
+      `Insulation is strongly recommended beneath asphalt shingles, particularly in hotter Indian regions. The same insulation methods apply: spray insulation (applied beneath tiles post-installation), bitumen sheet insulation (providing both waterproofing and heat resistance), reflective sheets (laid prior to tile installation), and wool insulation. Asphalt shingles are the ideal choice for sloped RCC roofs on premium villas, bungalows, and residential projects where the homeowner wants a clean, modern aesthetic with proven 10+ year performance.`,
+    ],
+  },
+  {
+    id: 'r-ch5',
+    title: 'Installation, Insulation & Dealership',
+    icon: Wrench,
+    color: 'text-cyan-600',
+    bgColor: 'bg-cyan-50',
+    borderColor: 'border-cyan-200',
+    description: 'Installation methods, insulation requirements, warranty terms, and dealership program details. Everything needed to support customers post-sale.',
+    content: [
+      `Installation requirements differ significantly across the three product lines. Stone-coated metal tiles can be installed directly on MS (Mild Steel) frames without additional support structures — the inherent rigidity of the steel-base tile allows this. In contrast, artificial thatch and asphalt shingles require supporting underlying structures such as cement boards, plywood, RCC slabs, OSB (Oriented Strand Board) boards, or ACP (Aluminum Composite Panel) boards to provide rigidity and proper fastening. Always assess the existing or planned roof structure before recommending a product — recommending thatch or shingles for an MS-frame-only roof will require additional substrate cost.`,
+      `Laxree Roofing does not provide direct installation services — this is a deliberate decision to keep customer costs low. Instead, customers are encouraged to hire local fabricators, with references provided where possible. Assistance is limited to phone guidance and the installation videos shared in the team group. Sales representatives should familiarize themselves with the installation process (via the videos pinned in the team group) so they can confidently guide customers and answer basic installation questions during the sales process.`,
+      `Insulation is strongly emphasized as a must-have in all regions, particularly in hotter climates (northwestern and southern India), despite the tiles' inherent heat resistance. Four common insulation methods are recommended: (1) Spray insulation — applied beneath tiles post-installation, offers excellent coverage and gap-filling; (2) Bitumen sheet insulation — provides dual benefit of waterproofing and heat resistance, often used in conjunction with shingles; (3) Reflective sheets — laid prior to tile installation, reflects radiant heat; (4) Wool insulation — similar installation to reflective sheets but uses wool for superior thermal performance. The choice depends on budget, roof structure, and climate severity.`,
+      `Warranty terms across the three products: Stone-coated metal tile — 10 years covering color fading and stone chips fallout (excludes physical damage, breakage, tearing); Artificial thatch tile — 5 years covering color fading (excludes physical damage); Asphalt shingles — 10 years covering color fading and stone chips fallout (excludes physical damage, breakage). Stone chips falling out typically occurs only after 10-15 years and can be repaired with a free repair kit that includes adhesive and matching stone chips for minor repairs. Note that stone-coated tiles CANNOT be repainted due to the stone-chip surface — only repaired with the matching kit.`,
+      `The dealership program offers two entry models. The Basic (Stand-based) dealership requires a ₹25,000 refundable deposit and includes two big display stands with samples, catalogues, and full support — with NO compulsory stock holding. This is suitable for new resellers testing the roofing market. The Stock-based dealership requires a ₹2,00,000 inventory commitment and includes free stands plus full dealership benefits with stock holding — suitable for resellers with an existing client base who can move inventory quickly. Both models include pan-India delivery support from the Ajmer warehouse.`,
+      `Dealers enjoy complete pricing flexibility with no strict MRP enforcement — unlike some other Laxree product lines. Margins are significant, sometimes exceeding 50%, and dealers can price above SSP or MRP to increase profitability on premium projects. Cash discounts are typically offered for large orders exceeding 3,000-4,000 tiles (valued at approximately ₹15 lakhs and above). Billing flexibility exists too: dealers can choose whether invoicing is done directly to them or passed on to the end customer, enabling reseller margin protection. This makes the roofing dealership one of the most attractive in the Laxree portfolio for ambitious resellers.`,
+    ],
+  },
+]
+
+const ROOFING_VIDEO_LESSONS: VideoLesson[] = [
+  {
+    id: 'rv1',
+    title: 'Stone-Coated Tile Installation — Valley Detail',
+    duration: '8:24',
+    category: 'Stone-Coated',
+    image: '/roofing-products/stone-coated-tile.jpg',
+    description: 'Step-by-step installation of stone-coated metal roof tiles in a valley, showing proper overlap and waterproofing technique.',
+    transcript: [
+      `Welcome to this stone-coated metal roof tile installation tutorial focused on valley detailing. Valleys are one of the most leak-prone areas of any roof, so proper technique here is critical for a waterproof installation.`,
+      `PREPARATION: Before laying tiles in the valley, install a pre-fabricated valley flashing made of the same AZ-coated steel as the tiles. The valley flashing should extend at least 100mm under the tiles on each side. Secure the flashing to the MS frame with screws at 200mm intervals.`,
+      `TILE LAYOUT: Start from the bottom of the valley and work upward. Each tile must overlap the one below by at least 2 inches (50mm) on three sides — top, left, and right. When two roof planes meet at the valley, the tiles from each plane should converge at the valley centerline with a closed-cut or woven pattern.`,
+      `FASTENING & FINISHING: Use the manufacturer-provided screws with EPDM washers to fasten each tile at the corners. Never over-tighten — the washer should be just compressed. After all tiles are laid, apply a bead of acrylic sealant along the valley centerline as a secondary waterproofing measure. Inspect the entire valley from below to confirm no gaps are visible.`,
+    ],
+    keyPoints: [
+      'Install pre-fabricated valley flashing before laying tiles',
+      'Maintain 2-inch (50mm) overlap on top, left, and right sides',
+      'Use EPDM-washer screws at every corner — never over-tighten',
+      'Apply acrylic sealant along valley centerline as secondary waterproofing',
+    ],
+    youtubeId: 'NcoaiGbEeAI',
+  },
+  {
+    id: 'rv2',
+    title: 'DECRA Villa Tile Installation Guide',
+    duration: '12:10',
+    category: 'Stone-Coated',
+    image: '/roofing-products/stone-coated-classic.jpg',
+    description: 'Complete installation walkthrough of DECRA-style stone-coated Villa tiles on a residential roof.',
+    transcript: [
+      `This video walks through a complete DECRA Villa Tile installation on a residential roof. Villa tiles are a premium stone-coated profile with a distinctive scalloped bottom edge that mimics traditional European clay tiles.`,
+      `ROOF PREPARATION: Verify the MS frame is solid, properly spaced (typically 600mm centers), and free of rust. Install breathable underlayment across the entire roof deck before laying any tiles. The underlayment provides a secondary weather barrier behind the tiles.`,
+      `TILE INSTALLATION: Start at the bottom-left corner and work upward in a diagonal pattern. Each Villa tile interlocks with the next via a left-edge hook. Fasten each tile with 4-6 screws (depending on wind zone) at the marked fastening points. The bottom-edge scallop creates the characteristic shadow line.`,
+      `RIDGE & HIP: Finish the roof with matching ridge caps and hip caps. Use ridge vents under the ridge cap to allow attic ventilation. Apply butyl tape at all hip/ridge joints for a watertight seal. Final inspection: walk the roof (carefully, on the screws) and check for any movement or loose tiles.`,
+    ],
+    keyPoints: [
+      'Install breathable underlayment before laying Villa tiles',
+      'Start at bottom-left, work diagonally upward',
+      'Use 4-6 screws per tile depending on wind zone',
+      'Install ridge vents under ridge caps for attic ventilation',
+    ],
+    youtubeId: 'qaHsC-COyTg',
+  },
+  {
+    id: 'rv3',
+    title: 'Stone-Coated Sheet Step-by-Step Install',
+    duration: '15:32',
+    category: 'Stone-Coated',
+    image: '/roofing-products/stone-coated-tudor.jpg',
+    description: 'Full step-by-step guide to installing stone-coated roofing sheets — frame, fastening, and finishing.',
+    transcript: [
+      `This is a complete step-by-step installation guide for stone-coated roofing sheets (Tudor profile). The Tudor profile features a flat-tile appearance with a defined shadow line between tiles for a classic European look.`,
+      `FRAME PREPARATION: The MS frame must be welded to specification — typically 50x50x3mm MS tubes at 600mm centers for rafters and 400mm centers for purlins. Apply two coats of red oxide primer followed by one coat of enamel paint to prevent corrosion.`,
+      `SHEET LAYOUT & FASTENING: Begin at the bottom eave and work up to the ridge. Each sheet overlaps the one below by 2 inches. Side laps are 1 corrugation. Use AZ-coated screws with EPDM washers, fastening at every purlin intersection. A string line helps keep rows straight.`,
+      `FINISHING: Install eave closures (foam or AZ-coated metal) to prevent pest entry. Apply ridge caps with butyl tape sealant. Walk only on the screw lines to avoid denting the flat sections. After installation, sweep the roof with a soft broom to remove any stone chips loosened during handling.`,
+    ],
+    keyPoints: [
+      'MS frame: 50x50x3mm tubes, 600mm rafter centers, 400mm purlin centers',
+      'Prime and paint MS frame before installation (2 oxide + 1 enamel)',
+      'Maintain 2-inch vertical lap and 1-corrugation side lap',
+      'Walk only on screw lines to avoid denting flat sections',
+    ],
+    youtubeId: 'dPznayY99ec',
+  },
+  {
+    id: 'rv4',
+    title: 'Synthetic Thatch — Four-Sided Roof Install',
+    duration: '9:45',
+    category: 'Thatch',
+    image: '/roofing-products/thatch-tile.jpg',
+    description: 'Installation tutorial for synthetic thatch tiles on a four-sided roof structure with underlying substrate.',
+    transcript: [
+      `This tutorial covers synthetic thatch tile installation on a four-sided (hip) roof. The four-sided hip design is common for resort cottages, gazebos, and poolside cabanas.`,
+      `SUBSTRATE PREPARATION: Synthetic thatch requires a solid substrate — typically plywood (min 12mm), OSB board, or fiber cement board. Install the substrate over the MS frame, ensuring all joints are taped. Install underlayment over the substrate for additional waterproofing.`,
+      `THATCH TILE LAYOUT: Start at the bottom eave and work upward. Each thatch tile (500x500mm) is fastened with 6-8 screws through the pre-marked holes. The tiles should overlap by 50-75mm to achieve a dense, natural appearance. At the hips, cut tiles at the appropriate angle with a utility knife.`,
+      `RIDGE FINISH: Install a synthetic thatch ridge roll along the hip ridges. Fasten the ridge roll every 200mm. The ridge roll conceals the top edge of the field tiles and provides a finished appearance. Final inspection: check that no substrate is visible from any angle.`,
+    ],
+    keyPoints: [
+      'Synthetic thatch requires a solid substrate (plywood/OSB/fiber cement)',
+      'Install underlayment over substrate for additional waterproofing',
+      'Overlap tiles by 50-75mm for dense, natural appearance',
+      'Install synthetic thatch ridge roll on all hip ridges',
+    ],
+    youtubeId: 'ZHPn8ScNz68',
+  },
+  {
+    id: 'rv5',
+    title: 'Thatch Tiles — How To Install',
+    duration: '6:18',
+    category: 'Thatch',
+    image: '/roofing-products/thatch-umbrella.jpg',
+    description: 'Quick practical demonstration of installing artificial thatch tiles with proper overlap and fastening.',
+    transcript: [
+      `This is a quick practical demonstration of installing artificial thatch tiles on a small umbrella structure. The same principles apply to larger roofs.`,
+      `TILE PREPARATION: Inspect each thatch tile before installation. The PE strands should be uniform in color and length. Reject any tile with visible manufacturing defects.`,
+      `FASTENING: Use 25mm AZ-coated screws with washers. Fasten through the pre-marked holes — 4 holes per 500x500mm tile. Do not over-tighten, as this can crack the PE base. The tile should sit flat against the substrate.`,
+      `OVERLAP PATTERN: For a natural thatch appearance, overlap tiles so the strands of the upper tile cover the fasteners of the lower tile. This conceals all screws and creates a seamless look. Trim any excess strands with scissors for a clean edge.`,
+    ],
+    keyPoints: [
+      'Inspect each tile for uniform color and length before installation',
+      'Use 25mm AZ-coated screws with washers, 4 per 500x500mm tile',
+      'Do not over-tighten — PE base can crack',
+      'Overlap to conceal fasteners and create a seamless look',
+    ],
+    youtubeId: 'A1toKD41BAU',
+  },
+  {
+    id: 'rv6',
+    title: 'VIVA Palm Thatch — Installation Training',
+    duration: '11:22',
+    category: 'Thatch',
+    image: '/roofing-products/thatch-tile.jpg',
+    description: 'Professional installation training for VIVA Palm synthetic thatch on cabana and gazebo structures.',
+    transcript: [
+      `This professional installation training covers VIVA Palm synthetic thatch on cabana and gazebo structures. VIVA Palm is a premium PE thatch product with a palm-leaf texture, ideal for high-end resort installations.`,
+      `STRUCTURE PREP: Ensure the cabana frame is sturdy enough to support the substrate and thatch load (approx 8-10 kg/sqm). Install 15mm marine plywood over the frame, sealed at all joints with butyl tape.`,
+      `INSTALLATION PATTERN: VIVA Palm tiles are designed for a staggered installation pattern. Row 1: full tiles. Row 2: half-tile offset. This staggered pattern mimics natural palm thatch and prevents visible seam lines. Fasten each tile with 6 screws at the marked points.`,
+      `DETAILING: At the cabana crown (top), install a custom thatch crown piece. At the eave edge, allow the thatch strands to overhang 50mm for a natural drip edge. Inspect the finished roof from all sides — no substrate should be visible. Clean any debris with a leaf blower (low setting).`,
+    ],
+    keyPoints: [
+      'VIVA Palm tiles use a staggered (half-tile offset) installation pattern',
+      'Install 15mm marine plywood substrate, sealed with butyl tape',
+      'Fasten each tile with 6 screws at marked points',
+      'Allow 50mm thatch overhang at eaves for natural drip edge',
+    ],
+    youtubeId: '5wBuw0gpaUE',
+  },
+  {
+    id: 'rv7',
+    title: 'How to Install Roof Shingles — Full Guide',
+    duration: '18:05',
+    category: 'Shingles',
+    image: '/roofing-products/asphalt-shingles.jpg',
+    description: 'Complete asphalt shingle installation from underlayment to ridge cap, including flashing details.',
+    transcript: [
+      `This is a complete asphalt shingle installation guide, covering everything from underlayment to ridge cap. Asphalt shingles are the most versatile residential roofing product, suitable for slopes from 15° to 90°.`,
+      `UNDERLAYMENT: Install a self-adhesive modified bitumen underlayment (minimum 2mm thickness) over the prepared substrate (plywood, OSB, or fiber cement board). The underlayment provides the primary waterproofing layer. Overlap each row by 100mm.`,
+      `STARTER COURSE: Cut the tabs off a full shingle to create the starter course. Lay the starter course along the eave, with the self-adhesive strip facing up. This provides a sealed edge at the eave.`,
+      `FIELD SHINGLES: Start at the bottom-left and work upward in a diagonal pattern. Each shingle overlaps the one below by half its exposure (approx 167mm). Fasten each shingle with 4-6 nails (depending on wind zone) at the marked nail line. Never nail through the self-adhesive strip.`,
+      `RIDGE CAP: Cut shingles into thirds along the perforations. Bend each piece over the ridge and fasten with 2 nails per side. Overlay each ridge cap piece by half. Apply a small dab of asphalt cement under each ridge cap for additional wind resistance.`,
+    ],
+    keyPoints: [
+      'Install self-adhesive bitumen underlayment (min 2mm) as primary waterproofing',
+      'Use a starter course with tabs removed along the eave',
+      'Fasten with 4-6 nails per shingle, never through the adhesive strip',
+      'Cut ridge caps from field shingles, fasten with 2 nails per side',
+    ],
+    youtubeId: '4z0_QHE7a4w',
+  },
+  {
+    id: 'rv8',
+    title: 'Shingle Install — Beginners Step-by-Step',
+    duration: '14:40',
+    category: 'Shingles',
+    image: '/roofing-products/asphalt-shingles-3tab.jpg',
+    description: 'Beginner-friendly step-by-step guide to installing asphalt roofing shingles correctly the first time.',
+    transcript: [
+      `This is a beginner-friendly step-by-step guide to installing 3-tab asphalt shingles. 3-tab shingles are the most economical shingle type, with a flat, uniform appearance.`,
+      `TOOLS NEEDED: Hammer or nail gun, utility knife with hook blades, chalk line, tape measure, roofing shovel (for tear-offs), and a good pair of gloves.`,
+      `CHALK LINES: Snap horizontal chalk lines every 5 inches (the exposure for 3-tab shingles) to keep rows straight. Snap vertical chalk lines every 36 inches to align tab cutouts. These reference lines are critical for a professional-looking installation.`,
+      `INSTALLATION: Start at the bottom-left with the starter course. For each subsequent row, offset the cutouts by 6 inches (half a tab) to prevent water migration through the joints. Fasten each shingle with 4 nails — 2 near each end, just above the cutout. Drive nails straight, not angled.`,
+      `COMMON MISTAKES: Avoid overdriving nails (which cuts the shingle), underdriving nails (which prevents sealing), nailing too high (above the nail line), and ignoring the offset pattern. Take time to get the first row perfectly straight — it sets the alignment for the entire roof.`,
+    ],
+    keyPoints: [
+      '3-tab shingles have a 5-inch exposure — snap chalk lines for alignment',
+      'Offset each row by half a tab (6 inches) to prevent water migration',
+      'Use 4 nails per shingle, driven straight (not angled)',
+      'Avoid overdriving, underdriving, and high nailing',
+    ],
+    youtubeId: 'p0VM9L-0SYE',
+  },
+  {
+    id: 'rv9',
+    title: 'Shingle Roof Install — Pro Guide',
+    duration: '16:12',
+    category: 'Shingles',
+    image: '/roofing-products/asphalt-shingles-laminated.jpg',
+    description: 'Professional shingle roof installation guide covering patterns, sealing, and quality finishing.',
+    transcript: [
+      `This professional guide covers laminated architectural shingle installation. Laminated shingles have a dimensional, multi-layer appearance that mimics wood shake or slate — they are the premium choice for high-end residential roofs.`,
+      `PATTERN LAYOUT: Unlike 3-tab shingles, laminated shingles have a random, multi-layer appearance. The key is to avoid aligning the notch patterns between adjacent rows. Use a 4-row pattern: rows 1-4 use full, half, quarter, three-quarter offsets respectively, then repeat.`,
+      `FASTENING: Laminated shingles typically require 6 nails per shingle (vs 4 for 3-tab) due to their larger size. Drive nails at the marked nail line, which is higher than on 3-tab shingles. Use 1.25-inch roofing nails minimum.`,
+      `SEALING: The self-adhesive strip activates at temperatures above 25°C. In cooler weather, hand-seal each shingle with a small dab of asphalt cement under each corner. This prevents wind lift-off before the adhesive activates naturally.`,
+      `QUALITY FINISHING: Install step flashing at all wall intersections. Install ice and water shield in valleys (under the underlayment). Use a hip/ridge blade in a circular saw for clean ridge cap cuts. Final cleanup: remove all debris, stray nails, and inspect every fastener.`,
+    ],
+    keyPoints: [
+      'Use a 4-row offset pattern (full, half, quarter, three-quarter) for laminated shingles',
+      'Laminated shingles need 6 nails per shingle with 1.25-inch roofing nails',
+      'Hand-seal corners with asphalt cement in cool weather (< 25°C)',
+      'Install step flashing at walls, ice & water shield in valleys',
+    ],
+    youtubeId: 'd2yMg__T7Cw',
+  },
+]
+
+const ROOFING_FAQ_ITEMS = [
+  {
+    q: `Can stone-coated tiles be painted after the warranty period?`,
+    a: `No, repainting is not possible due to the stone-chip surface. Repairs involve applying a repair kit with adhesive and matching stone chips for minor stone-fall areas. The repair kit is provided free of charge during the warranty period.`,
+  },
+  {
+    q: `Are the tiles noise-proof during heavy rain?`,
+    a: `Yes — stone-coated tiles provide approximately 90% noise reduction compared to plain tin/metal sheets, thanks to the stone-chip layer acting as a sound barrier. Artificial thatch and asphalt shingles also offer good acoustic insulation due to their composition.`,
+  },
+  {
+    q: `Is insulation really needed given the tiles' heat resistance?`,
+    a: `Yes, insulation is strongly recommended across all three roof types, especially in hotter Indian regions (Rajasthan, Gujarat, South India). Common methods include spray insulation, bitumen sheets, reflective sheets, and wool insulation. Insulation dramatically improves indoor comfort and reduces cooling costs.`,
+  },
+  {
+    q: `Does Laxree Roofing provide installation services?`,
+    a: `No direct installation services are provided — this is a deliberate decision to keep customer costs low. Customers are encouraged to hire local fabricators, with references provided where possible. Phone guidance and installation videos are shared in the team group for self-installation support.`,
+  },
+  {
+    q: `Are the tiles suitable for residential roofs and cottages?`,
+    a: `Yes, all three products are suitable for residential use. For cottages and living areas, fire-retardant variants of artificial thatch are strongly recommended. Stone-coated and asphalt shingles are inherently fire-resistant. The products have been tested extensively in Rajasthan's harsh climate and installed at premium properties across India.`,
+  },
+  {
+    q: `What do the warranty terms cover?`,
+    a: `Stone-coated metal tile: 10 years covering color fading and stone chips fallout. Artificial thatch tile: 5 years covering color fading. Asphalt shingles: 10 years covering color fading and stone chips fallout. All warranties explicitly exclude physical damage, breakage, or tearing from impacts. Stone-fall typically begins after 10-15 years and is repairable with the free repair kit.`,
   },
 ]
 
@@ -982,6 +1300,10 @@ const VIDEO_CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
   'Dustbin': { bg: 'bg-gray-100', text: 'text-gray-700' },
   'Bed': { bg: 'bg-lime-100', text: 'text-lime-700' },
   'Add-ons': { bg: 'bg-fuchsia-100', text: 'text-fuchsia-700' },
+  // Roofing segment video categories
+  'Stone-Coated': { bg: 'bg-orange-100', text: 'text-orange-700' },
+  'Thatch': { bg: 'bg-emerald-100', text: 'text-emerald-700' },
+  'Shingles': { bg: 'bg-rose-100', text: 'text-rose-700' },
 }
 
 // Product module icon mapping
@@ -1029,6 +1351,38 @@ function LearningSkeleton() {
 // ==================== STUDY MATERIALS SECTION ====================
 
 function StudyMaterialsSection() {
+  // Segment-aware content + accent tokens
+  // Roofing (ROOFING company) → amber/orange accents + roofing product data
+  // Amenities (default) → teal/emerald accents + hotel amenities data
+  const user = useAuthStore((s) => s.user)
+  const isRoofing = user?.company === 'ROOFING'
+  const STUDY_CHAPTERS = isRoofing ? ROOFING_STUDY_CHAPTERS : AMENITIES_STUDY_CHAPTERS
+  const VIDEO_LESSONS = isRoofing ? ROOFING_VIDEO_LESSONS : AMENITIES_VIDEO_LESSONS
+  const FAQ_ITEMS = isRoofing ? ROOFING_FAQ_ITEMS : AMENITIES_FAQ_ITEMS
+
+  // Accent token map — keeps the rendering JSX clean
+  const accentColor = isRoofing ? 'text-amber-600' : 'text-teal-600'
+  const accentBadgeBg = isRoofing ? 'bg-amber-50' : 'bg-teal-50'
+  const accentBadgeText = isRoofing ? 'text-amber-700' : 'text-teal-700'
+  const accentBadgeBorder = isRoofing ? 'border-amber-200 hover:bg-amber-50' : 'border-teal-200 hover:bg-teal-50'
+  const accentHoverText = isRoofing ? 'group-hover:text-amber-700' : 'group-hover:text-emerald-700'
+  const accentFaqIconBg = isRoofing ? 'bg-amber-100' : 'bg-teal-100'
+  const accentFaqIconText = isRoofing ? 'text-amber-600' : 'text-teal-600'
+  const accentSectionGradient = isRoofing
+    ? 'from-amber-600 via-orange-600 to-amber-700'
+    : 'from-emerald-600 via-teal-600 to-cyan-600'
+  const studyGuideTitle = isRoofing ? 'Roofing Product Chapters' : 'Product Knowledge Chapters'
+  const studyGuideDesc = isRoofing
+    ? 'Master the Laxree Roofing product portfolio — stone-coated tiles, thatch, asphalt shingles, and the dealership program. Tap any chapter to dive in and read at your own pace.'
+    : 'Master the LAXREE product portfolio — from company introduction to competitive intelligence. Tap any chapter to dive in and read at your own pace.'
+  const videoTitle = isRoofing ? 'Roofing Installation Videos' : 'Product Video Lessons'
+  const videoDesc = isRoofing
+    ? 'Watch real installation tutorials for stone-coated, thatch, and asphalt shingle roofs.'
+    : 'Watch product training lessons with detailed transcripts and key learning points'
+  const faqDesc = isRoofing
+    ? 'Quick answers to common questions about Laxree Roofing products'
+    : 'Quick answers to common questions about LAXREE products'
+
   const [videoDialogOpen, setVideoDialogOpen] = useState(false)
   const [selectedVideo, setSelectedVideo] = useState<VideoLesson | null>(null)
   const [practiceIdx, setPracticeIdx] = useState(0)
@@ -1093,7 +1447,7 @@ function StudyMaterialsSection() {
     >
       <Card className="border-0 shadow-lg overflow-hidden">
         {/* Section Header */}
-        <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 p-5 relative overflow-hidden">
+        <div className={`bg-gradient-to-r ${accentSectionGradient} p-5 relative overflow-hidden`}>
           <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-12 translate-x-12" />
           <div className="absolute bottom-0 left-0 w-28 h-28 bg-white/5 rounded-full translate-y-8 -translate-x-8" />
           <div className="relative flex items-center gap-3">
@@ -1101,8 +1455,8 @@ function StudyMaterialsSection() {
               <BookMarked className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">Study Materials</h2>
-              <p className="text-white/80 text-sm">Prepare with comprehensive learning resources</p>
+              <h2 className="text-lg font-bold text-white">{isRoofing ? 'Roofing Learning Center' : 'Study Materials'}</h2>
+              <p className="text-white/80 text-sm">{isRoofing ? 'Master Laxree Roofing products, installation, and dealership' : 'Prepare with comprehensive learning resources'}</p>
             </div>
           </div>
         </div>
@@ -1144,16 +1498,15 @@ function StudyMaterialsSection() {
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0">
                     <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                      <BookOpen className="w-5 h-5 text-teal-600" />
-                      Product Knowledge Chapters
+                      <BookOpen className={`w-5 h-5 ${accentColor}`} />
+                      {studyGuideTitle}
                     </h3>
                     <p className="text-sm text-gray-500 mt-1 max-w-2xl">
-                      Master the LAXREE product portfolio — from company introduction to competitive intelligence.
-                      Tap any chapter to dive in and read at your own pace.
+                      {studyGuideDesc}
                     </p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    <Badge className="bg-teal-50 text-teal-700 border-teal-200 hover:bg-teal-50 px-2.5 py-1 text-xs">
+                    <Badge className={`${accentBadgeBg} ${accentBadgeText} ${accentBadgeBorder} px-2.5 py-1 text-xs`}>
                       <BookMarked className="w-3 h-3" />
                       {STUDY_CHAPTERS.length} Chapters
                     </Badge>
@@ -1196,7 +1549,7 @@ function StudyMaterialsSection() {
                             </span>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <span className="font-bold text-base text-gray-900 group-hover:text-emerald-700 transition-colors block">
+                            <span className={`font-bold text-base text-gray-900 ${accentHoverText} transition-colors block`}>
                               {chapter.title}
                             </span>
                             <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{chapter.description}</p>
@@ -1241,10 +1594,10 @@ function StudyMaterialsSection() {
             <TabsContent value="video-chapters" className="p-4 mt-0">
               <div className="mb-4">
                 <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                  <Video className="w-4 h-4 text-teal-600" />
-                  Product Video Lessons
+                  <Video className={`w-4 h-4 ${accentColor}`} />
+                  {videoTitle}
                 </h3>
-                <p className="text-sm text-gray-500 mt-1">Watch product training lessons with detailed transcripts and key learning points</p>
+                <p className="text-sm text-gray-500 mt-1">{videoDesc}</p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {VIDEO_LESSONS.map((video, idx) => {
@@ -1268,7 +1621,13 @@ function StudyMaterialsSection() {
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           onError={(e) => {
                             (e.target as HTMLImageElement).style.display = 'none'
-                            ;(e.target as HTMLImageElement).parentElement!.classList.add('bg-gradient-to-br', 'from-teal-800', 'to-emerald-900')
+                            // Segment-aware fallback gradient — amber for roofing, teal for amenities.
+                            // Both branches use literal class strings so Tailwind includes them in the build.
+                            if (isRoofing) {
+                              ;(e.target as HTMLImageElement).parentElement!.classList.add('bg-gradient-to-br', 'from-amber-800', 'to-orange-900')
+                            } else {
+                              ;(e.target as HTMLImageElement).parentElement!.classList.add('bg-gradient-to-br', 'from-teal-800', 'to-emerald-900')
+                            }
                           }}
                         />
                         <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors" />
@@ -1290,7 +1649,7 @@ function StudyMaterialsSection() {
                         </div>
                       </div>
                       <div className="p-3">
-                        <h4 className="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-teal-700 transition-colors">
+                        <h4 className={`text-sm font-semibold text-gray-900 line-clamp-2 ${accentHoverText} transition-colors`}>
                           {video.title}
                         </h4>
                         <p className="text-[11px] text-gray-500 mt-1 line-clamp-2">{video.description}</p>
@@ -1309,10 +1668,10 @@ function StudyMaterialsSection() {
             <TabsContent value="faq" className="p-4 mt-0">
               <div className="mb-4">
                 <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                  <HelpCircle className="w-4 h-4 text-teal-600" />
+                  <HelpCircle className={`w-4 h-4 ${accentColor}`} />
                   Frequently Asked Questions
                 </h3>
-                <p className="text-sm text-gray-500 mt-1">Quick answers to common questions about LAXREE products</p>
+                <p className="text-sm text-gray-500 mt-1">{faqDesc}</p>
               </div>
               <Accordion type="single" collapsible className="space-y-2">
                 {FAQ_ITEMS.map((faq, idx) => (
@@ -1323,8 +1682,8 @@ function StudyMaterialsSection() {
                   >
                     <AccordionTrigger className="py-3 hover:no-underline">
                       <div className="flex items-center gap-3 text-left">
-                        <div className="w-7 h-7 rounded-lg bg-teal-100 flex items-center justify-center shrink-0">
-                          <MessageCircle className="w-3.5 h-3.5 text-teal-600" />
+                        <div className={`w-7 h-7 rounded-lg ${accentFaqIconBg} flex items-center justify-center shrink-0`}>
+                          <MessageCircle className={`w-3.5 h-3.5 ${accentFaqIconText}`} />
                         </div>
                         <span className="font-medium text-sm text-gray-900">{faq.q}</span>
                       </div>

@@ -786,3 +786,85 @@ Stage Summary:
 - Amenities behaviour 100% preserved — only ADDED roofing branch and switched on segment. No Amenities scenarios, personas, fallbacks, or copy were modified.
 - Theme tokens match sibling components exactly (amber/orange for Roofing, emerald/teal for Amenities). All Tailwind class strings are static literals so the purger keeps them.
 - Dev server route compiles cleanly (verified via tsc --noEmit — no errors in changed files; bun run lint — no errors in changed files). The /agent-ctx work record follows the established {task-id}-{agent-name}.md convention.
+
+---
+Task ID: 4
+Agent: full-stack-developer
+Task: Add roofing product content (chapters + product images + YouTube installation videos) to Learning Center for ROOFING segment
+
+Work Log:
+- Read worklog.md for prior context and located learning-center.tsx (~2640 lines, grew to ~2998 lines after edits)
+- Read existing StudyChapter interface (line ~163), STUDY_CHAPTERS array (line ~174), VideoLesson interface (line ~361), VIDEO_LESSONS array (line ~373), CHAPTER_GRADIENTS map (line ~345), VIDEO_CATEGORY_COLORS map (line ~970), FAQ_ITEMS array (line ~699)
+- Verified roofing product images already extracted to /home/z/my-project/public/roofing-products/ (11 images confirmed present)
+- Verified `user?.company === 'ROOFING'` is the correct segment check (auth-store.ts: AuthUser.company: Company = 'AMENITIES' | 'ROOFING')
+- Verified same isRoofing/accent-token pattern is already used in ai-chat-simulation.tsx
+- Added `Layers`, `Home`, `Leaf` to lucide-react imports (needed for chapters 2, 4, 3 respectively — these icons did NOT exist in the import list despite the spec saying they were already imported)
+- Renamed three global constant declarations (declarations ONLY — usages in render code unchanged so the local consts I add later shadow them correctly):
+  * `STUDY_CHAPTERS` → `AMENITIES_STUDY_CHAPTERS` (line 174)
+  * `VIDEO_LESSONS` → `AMENITIES_VIDEO_LESSONS` (line 373)
+  * `FAQ_ITEMS` → `AMENITIES_FAQ_ITEMS` (line 699)
+- Extended CHAPTER_GRADIENTS map with 5 new entries for roofing chapters (r-ch1 through r-ch5), each with gradient + accentBorder + numBg + numText + hoverBorder (matching the existing amenities entries' shape)
+  * r-ch1: from-amber-500 to-orange-600 (amber family)
+  * r-ch2: from-orange-500 to-amber-600 (orange family)
+  * r-ch3: from-emerald-500 to-teal-600 (emerald family)
+  * r-ch4: from-rose-500 to-pink-600 (rose family)
+  * r-ch5: from-cyan-500 to-blue-500 (cyan family)
+- Extended VIDEO_CATEGORY_COLORS map with 3 new entries for roofing video categories:
+  * 'Stone-Coated': orange family (matches r-ch2)
+  * 'Thatch': emerald family (matches r-ch3)
+  * 'Shingles': rose family (matches r-ch4)
+- Added ROOFING_STUDY_CHAPTERS array (5 chapters) after AMENITIES_FAQ_ITEMS:
+  * r-ch1: Company Introduction — Laxree Roofing (icon: Building2, amber theme) — 6 paragraphs covering vision, product portfolio, manufacturing/testing, warehousing/dealership, target market, pricing model
+  * r-ch2: Stone-Coated Metal Roof Tiles (icon: Layers, orange theme) — 6 paragraphs covering construction, thickness/weight, AZ coating, quantity estimation, lifespan/warranty, key features
+  * r-ch3: Artificial Thatch Tiles (icon: Leaf, emerald theme) — 6 paragraphs covering PE material, coverage/variants, features, colors/maintenance, installation/insulation, use cases
+  * r-ch4: Asphalt Shingles (icon: Home, rose theme) — 6 paragraphs covering composition, dimensions/coverage, versatility, patterns, pricing/warranty, insulation
+  * r-ch5: Installation, Insulation & Dealership (icon: Wrench, cyan theme) — 6 paragraphs covering installation requirements, no-install policy, insulation methods, warranty terms, dealership program, dealer pricing flexibility
+- Added ROOFING_VIDEO_LESSONS array (9 videos) using the 9 verified real YouTube IDs and roofing product images:
+  * rv1: Stone-Coated Valley Detail (NcoaiGbEeAI, stone-coated-tile.jpg)
+  * rv2: DECRA Villa Tile (qaHsC-COyTg, stone-coated-classic.jpg)
+  * rv3: Stone-Coated Step-by-Step (dPznayY99ec, stone-coated-tudor.jpg)
+  * rv4: Synthetic Thatch Four-Sided Roof (ZHPn8ScNz68, thatch-tile.jpg)
+  * rv5: Thatch How To Install (A1toKD41BAU, thatch-umbrella.jpg)
+  * rv6: VIVA Palm Training (5wBuw0gpaUE, thatch-tile.jpg)
+  * rv7: How to Install Roof Shingles (4z0_QHE7a4w, asphalt-shingles.jpg)
+  * rv8: Shingle Beginners Step-by-Step (p0VM9L-0SYE, asphalt-shingles-3tab.jpg)
+  * rv9: Shingle Pro Guide (d2yMg__T7Cw, asphalt-shingles-laminated.jpg)
+  Each video includes 3-5 transcript paragraphs and 4 key points (transcript/keyPoints fields are required by the VideoLesson interface)
+- Added ROOFING_FAQ_ITEMS array (6 FAQs) covering painting, noise, insulation, installation services, residential suitability, warranty terms
+- Used template literals (backticks) for all roofing chapter content and FAQ strings to avoid apostrophe-escaping issues (the spec content has many apostrophes like "Rajasthan's", "Roofing's", "tiles'", "coating's", "tile's")
+- Added segment-aware logic to StudyMaterialsSection component:
+  * `const user = useAuthStore((s) => s.user)` — pulls the logged-in user
+  * `const isRoofing = user?.company === 'ROOFING'`
+  * 3 segment-switching local consts: `STUDY_CHAPTERS`, `VIDEO_LESSONS`, `FAQ_ITEMS` — these shadow the (now-renamed) globals and resolve to either roofing or amenities arrays. The render JSX (which references `STUDY_CHAPTERS.length`, `STUDY_CHAPTERS.map`, `VIDEO_LESSONS.map`, `FAQ_ITEMS.map`) now uses these local consts automatically.
+  * 8 accent tokens: `accentColor`, `accentBadgeBg`, `accentBadgeText`, `accentBadgeBorder`, `accentHoverText`, `accentFaqIconBg`, `accentFaqIconText`, `accentSectionGradient` — amber for roofing, teal for amenities
+  * 5 segment-aware copy tokens: `studyGuideTitle`, `studyGuideDesc`, `videoTitle`, `videoDesc`, `faqDesc`
+- Updated render JSX to use the segment-aware tokens (no structural changes — the chapter accordion redesign from Task ID 3 is fully preserved):
+  * Section header gradient: `bg-gradient-to-r ${accentSectionGradient}` (amber/orange for roofing, emerald/teal/cyan for amenities) + section title now "Roofing Learning Center" vs "Study Materials"
+  * Study Guide tab header: `<BookOpen className={accentColor}>` + `{studyGuideTitle}` ("Roofing Product Chapters" vs "Product Knowledge Chapters") + `{studyGuideDesc}` + chapter count Badge now uses `${accentBadgeBg} ${accentBadgeText} ${accentBadgeBorder}`
+  * Chapter title hover color: `${accentHoverText}` (amber-700 vs emerald-700)
+  * Video Chapters tab header: `<Video className={accentColor}>` + `{videoTitle}` ("Roofing Installation Videos" vs "Product Video Lessons") + `{videoDesc}`
+  * Video card title hover color: `${accentHoverText}` (amber-700 vs teal-700)
+  * Video thumbnail onError fallback: now segment-aware — amber gradient (`from-amber-800 to-orange-900`) for roofing, teal gradient (`from-teal-800 to-emerald-900`) for amenities. Both branches use literal class strings so Tailwind includes them in the CSS build.
+  * FAQ tab header: `<HelpCircle className={accentColor}>` + `{faqDesc}` ("Quick answers to common questions about Laxree Roofing products" vs "...about LAXREE products")
+  * FAQ list item icon: `${accentFaqIconBg}` (bg-amber-100 vs bg-teal-100) + `${accentFaqIconText}` (text-amber-600 vs text-teal-600)
+- Did NOT touch: documents tab, practice-quiz tab, video lesson dialog interior (transcript/key points teal styling is acceptable for both segments since roofing videos primarily use the YouTube embed), AMENITIES chapter content (only renamed the constant), AMENITIES video content (only renamed the constant), AMENITIES FAQ content (only renamed the constant), or any other tabs/files
+- Ran `bun run lint`: 21 errors — all are pre-existing `@typescript-eslint/no-require-imports` warnings in .cjs/.js helper scripts (custom-server.js, dev-watchdog.js, scripts/*.cjs, server-wrapper.js, smart-proxy.js, update-videos.js). ZERO errors in src/ code, ZERO errors in learning-center.tsx.
+- Ran `bunx tsc --noEmit` full project type check: zero TypeScript errors specific to learning-center.tsx. (Pre-existing TS errors in other files: stage-approval route, admin/videos route, call-analysis route, module-quiz route, layout.tsx globals.css, admin-dashboard, call-analysis, employee-dashboard — all unrelated to this task.)
+- Verified counts via grep:
+  * 5 ROOFING_STUDY_CHAPTERS entries (r-ch1..r-ch5) ✓
+  * 9 ROOFING_VIDEO_LESSONS entries (rv1..rv9) ✓
+  * 6 ROOFING_FAQ_ITEMS entries ✓
+  * 7 AMENITIES_STUDY_CHAPTERS entries (ch1..ch7, unchanged) ✓
+  * 15 AMENITIES_VIDEO_LESSONS entries (unchanged) ✓
+  * 8 AMENITIES_FAQ_ITEMS entries (unchanged) ✓
+- Verified dev.log shows no errors related to learning-center.tsx (most recent compile was successful: "GET / 200 in 4.1s")
+- Verified roofing product images are all present in /public/roofing-products/ (11 .jpg files) and are referenced via relative paths like `/roofing-products/stone-coated-tile.jpg` in the roofing video lessons array
+
+Stage Summary:
+- Learning Center is now fully segment-aware: ROOFING users see 5 roofing product chapters (Laxree Roofing company intro, Stone-Coated tiles, Artificial Thatch, Asphalt Shingles, Installation/Dealership), 9 real YouTube installation videos (3 stone-coated, 3 thatch, 3 shingles) using the 11 extracted catalog images, and 6 roofing-specific FAQs — all with amber/orange accent theming
+- AMENITIES users see the exact same content as before (no regressions) — the only change is the constant was renamed from STUDY_CHAPTERS → AMENITIES_STUDY_CHAPTERS (and similarly for VIDEO_LESSONS and FAQ_ITEMS). All 7 amenities chapters, all 15 amenities videos, and all 8 amenities FAQs are byte-for-byte preserved.
+- The chapter accordion redesign from Task ID 3 (gradient icon tiles, numbered badges, meta rows, hover borders) is fully preserved — it renders identically for both segments, just with the roofing chapter gradient/color tokens (amber/orange/emerald/rose/cyan) instead of the amenities ones (emerald/blue/violet/teal/orange/rose/amber)
+- File modified: only `/home/z/my-project/src/components/employee/learning-center.tsx` (grew from ~2640 lines to ~2998 lines, +358 lines for the roofing data arrays and segment-awareness logic)
+- Lint: clean for src/ (only pre-existing require() warnings in .cjs/.js helper scripts)
+- TypeScript: zero new errors introduced
+- No new dependencies added — used only existing shadcn/ui components and lucide-react icons (Layers, Home, Leaf newly imported but already in the lucide-react package)
