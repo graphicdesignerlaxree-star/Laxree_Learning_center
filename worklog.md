@@ -1032,3 +1032,55 @@ Stage Summary:
 - FAQ expanded 6 → 9 items, all with worked examples
 - Files modified: only src/components/employee/learning-center.tsx
 - Pushed to GitHub: d6e51f6 → origin/main (auto-deploys to Vercel if connected)
+
+---
+Task ID: 9
+Agent: Main (welcome video + academy video fix + chapter embedded videos)
+Task: (1) Add uploaded welcome training video to "Choose Your Training Segment" page. (2) Fix academy video sections — Roofing Product Academy, Technical & Installation Learning, and Company Introduction all showed the SAME videos; training videos should only be in the training (Technical) academy. (3) Add Stone Coated Tile Installation video inside the chapter content when user expands the Stone-Coated chapter in Study Materials. (4) Verify content is updated.
+
+Work Log:
+- Verified uploaded video exists at /home/z/my-project/upload/LAXREE_SOLUTIONS_LLP_–_TRAINING_202606241240.mp4 (2.5MB)
+- Copied to /home/z/my-project/public/laxree-training-welcome.mp4 for Next.js static serving
+- Located segment selection screen in src/components/login/login-page.tsx (line 177, `if (!selectedSegment)` block)
+- Added PlayCircle to lucide-react imports
+- Added HTML5 <video> player between hero text and segment cards:
+  * Header bar: "Welcome to Laxree Solutions LLP — Training Introduction" with PlayCircle icon + "Official Training Video" badge
+  * Video element: controls, preload="metadata", poster="/laxree-logo.png", <source src="/laxree-training-welcome.mp4" type="video/mp4">
+  * Caption: "Watch this first: A brief introduction to Laxree Solutions LLP, our two business segments (Amenities & Roofing), and what to expect from your training journey."
+- Fixed getVideosForAcademy() in src/components/employee/learning-center.tsx (was returning ALL videos for ALL academies):
+  * Amenities: unchanged (all amenities video lessons show in all academies)
+  * Roofing ORIENTATION (Company Introduction): returns [] (no installation videos)
+  * Roofing PRODUCT_ACADEMY (Roofing Product Academy): returns [] (no installation videos)
+  * Roofing TECHNICAL (Technical & Installation Learning): returns ROOFING_VIDEO_LESSONS (all 9 installation videos)
+  * All other roofing academies: returns []
+- Updated empty state for roofing academies without videos: "Training Videos in Technical & Installation Learning" with helpful message directing users to the Technical academy
+- Updated video section heading: "Roofing Installation Training Videos" (in Technical academy only)
+- Added "Related Installation Videos" section inside Study Materials chapter accordion content:
+  * Chapter r-ch2 (Stone-Coated): shows 3 stone-coated installation videos at bottom of chapter
+  * Chapter r-ch3 (Thatch): shows 3 thatch installation videos at bottom of chapter
+  * Chapter r-ch4 (Asphalt Shingles): shows 3 shingles installation videos at bottom of chapter
+  * Chapter r-ch5 (Installation/Dealership): shows ALL 9 installation videos at bottom of chapter
+  * Chapters r-ch1 (Company Intro): no videos (appropriate — intro chapter)
+  * Each video card uses amber/orange theme, product image thumbnail, duration badge, category badge
+  * Clicking a video opens the StudyMaterialsSection video dialog (YouTube iframe + transcript + key points)
+  * Uses local setSelectedVideo + setVideoDialogOpen(true) state (NOT setSelectedAcademyVideo which is in the parent LearningCenter component)
+
+Verification (Agent Browser as Roofing user Arjun Roofing):
+- Segment selection page (logged out): welcome video player visible with "Welcome to Laxree Solutions LLP — Training Introduction" heading and "Official Training Video" badge
+- Roofing Product Academy > Videos tab: shows "Training Videos in Technical & Installation Learning" message (NO installation videos here — fixed!)
+- Technical & Installation Learning > Videos tab: shows "Roofing Installation Training Videos" heading with ALL 9 installation videos (stone-coated, thatch, shingles)
+- Study Materials > Chapters > Chapter 2 (Stone-Coated) expanded: shows "Stone-Coated Installation Training Videos" section at bottom with 3 videos (Valley Detail, DECRA Villa, Sheet Step-by-Step)
+- Clicked "Stone-Coated Tile Installation — Valley Detail" video in chapter 2: YouTube iframe dialog opened successfully with "Lesson Transcript" heading
+- Content verified as updated: Chapter 2 shows "2,130 words, 11 min read, 12 sections" with Tata GSW sheet example and full TECHNICAL TERMS EXPLAINED WITH EXAMPLES section visible in the rendered page
+
+Lint: 21 pre-existing errors in .cjs/.js scripts only. ZERO errors in src/ code or learning-center.tsx or login-page.tsx.
+Dev server: HTTP 200, no compile errors.
+Git: committed as 0eff03a, pushed to origin/main successfully.
+
+Stage Summary:
+- Welcome training video now plays on the "Choose Your Training Segment" page (the first page users see)
+- Academy video sections fixed: only Technical & Installation Learning academy shows installation videos; all other roofing academies show a helpful "videos are in Technical academy" message
+- Installation videos embedded inside chapter content: when a user reads Chapter 2 (Stone-Coated), they see the 3 stone-coated installation videos at the bottom of the chapter; same for thatch (Ch3), shingles (Ch4), and all-installation (Ch5)
+- Content from Task 8 (lengthier chapters with Tata GSW examples) is confirmed visible and rendering correctly
+- Files modified: src/components/login/login-page.tsx, src/components/employee/learning-center.tsx, public/laxree-training-welcome.mp4 (new)
+- Pushed to GitHub: 0eff03a → origin/main (auto-deploys to Vercel if connected)
