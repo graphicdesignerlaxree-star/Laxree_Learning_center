@@ -33,6 +33,10 @@ import {
 } from 'lucide-react'
 import { ModuleQuiz } from './module-quiz'
 import { LessonViewer } from './lesson-viewer'
+import {
+  ROOFING_VIDEO_LESSONS,
+  type VideoLesson,
+} from '@/lib/roofing-videos'
 
 // ==================== TYPES ====================
 
@@ -416,17 +420,7 @@ const CHAPTER_GRADIENTS: Record<string, {
   'r-ch5': { gradient: 'from-cyan-500 to-blue-500',      accentBorder: 'border-cyan-300',    numBg: 'bg-cyan-100',    numText: 'text-cyan-700',    hoverBorder: 'hover:border-cyan-300' },
 }
 
-interface VideoLesson {
-  id: string
-  title: string
-  duration: string
-  category: string
-  image: string
-  description: string
-  transcript: string[]
-  keyPoints: string[]
-  youtubeId: string
-}
+// VideoLesson interface and ROOFING_VIDEO_LESSONS array are now imported from @/lib/roofing-videos
 
 const AMENITIES_VIDEO_LESSONS: VideoLesson[] = [
   {
@@ -902,200 +896,6 @@ const ROOFING_STUDY_CHAPTERS: StudyChapter[] = [
   },
 ]
 
-const ROOFING_VIDEO_LESSONS: VideoLesson[] = [
-  {
-    id: 'rv1',
-    title: 'Stone-Coated Tile Installation — Valley Detail',
-    duration: '8:24',
-    category: 'Stone-Coated',
-    image: '/roofing-products/stone-coated-tile.jpg',
-    description: 'Step-by-step installation of stone-coated metal roof tiles in a valley, showing proper overlap and waterproofing technique.',
-    transcript: [
-      `Welcome to this stone-coated metal roof tile installation tutorial focused on valley detailing. Valleys are one of the most leak-prone areas of any roof, so proper technique here is critical for a waterproof installation.`,
-      `PREPARATION: Before laying tiles in the valley, install a pre-fabricated valley flashing made of the same AZ-coated steel as the tiles. The valley flashing should extend at least 100mm under the tiles on each side. Secure the flashing to the MS frame with screws at 200mm intervals.`,
-      `TILE LAYOUT: Start from the bottom of the valley and work upward. Each tile must overlap the one below by at least 2 inches (50mm) on three sides — top, left, and right. When two roof planes meet at the valley, the tiles from each plane should converge at the valley centerline with a closed-cut or woven pattern.`,
-      `FASTENING & FINISHING: Use the manufacturer-provided screws with EPDM washers to fasten each tile at the corners. Never over-tighten — the washer should be just compressed. After all tiles are laid, apply a bead of acrylic sealant along the valley centerline as a secondary waterproofing measure. Inspect the entire valley from below to confirm no gaps are visible.`,
-    ],
-    keyPoints: [
-      'Install pre-fabricated valley flashing before laying tiles',
-      'Maintain 2-inch (50mm) overlap on top, left, and right sides',
-      'Use EPDM-washer screws at every corner — never over-tighten',
-      'Apply acrylic sealant along valley centerline as secondary waterproofing',
-    ],
-    youtubeId: 'NcoaiGbEeAI',
-  },
-  {
-    id: 'rv2',
-    title: 'DECRA Villa Tile Installation Guide',
-    duration: '12:10',
-    category: 'Stone-Coated',
-    image: '/roofing-products/stone-coated-classic.jpg',
-    description: 'Complete installation walkthrough of DECRA-style stone-coated Villa tiles on a residential roof.',
-    transcript: [
-      `This video walks through a complete DECRA Villa Tile installation on a residential roof. Villa tiles are a premium stone-coated profile with a distinctive scalloped bottom edge that mimics traditional European clay tiles.`,
-      `ROOF PREPARATION: Verify the MS frame is solid, properly spaced (typically 600mm centers), and free of rust. Install breathable underlayment across the entire roof deck before laying any tiles. The underlayment provides a secondary weather barrier behind the tiles.`,
-      `TILE INSTALLATION: Start at the bottom-left corner and work upward in a diagonal pattern. Each Villa tile interlocks with the next via a left-edge hook. Fasten each tile with 4-6 screws (depending on wind zone) at the marked fastening points. The bottom-edge scallop creates the characteristic shadow line.`,
-      `RIDGE & HIP: Finish the roof with matching ridge caps and hip caps. Use ridge vents under the ridge cap to allow attic ventilation. Apply butyl tape at all hip/ridge joints for a watertight seal. Final inspection: walk the roof (carefully, on the screws) and check for any movement or loose tiles.`,
-    ],
-    keyPoints: [
-      'Install breathable underlayment before laying Villa tiles',
-      'Start at bottom-left, work diagonally upward',
-      'Use 4-6 screws per tile depending on wind zone',
-      'Install ridge vents under ridge caps for attic ventilation',
-    ],
-    youtubeId: 'qaHsC-COyTg',
-  },
-  {
-    id: 'rv3',
-    title: 'Stone-Coated Sheet Step-by-Step Install',
-    duration: '15:32',
-    category: 'Stone-Coated',
-    image: '/roofing-products/stone-coated-tudor.jpg',
-    description: 'Full step-by-step guide to installing stone-coated roofing sheets — frame, fastening, and finishing.',
-    transcript: [
-      `This is a complete step-by-step installation guide for stone-coated roofing sheets (Tudor profile). The Tudor profile features a flat-tile appearance with a defined shadow line between tiles for a classic European look.`,
-      `FRAME PREPARATION: The MS frame must be welded to specification — typically 50x50x3mm MS tubes at 600mm centers for rafters and 400mm centers for purlins. Apply two coats of red oxide primer followed by one coat of enamel paint to prevent corrosion.`,
-      `SHEET LAYOUT & FASTENING: Begin at the bottom eave and work up to the ridge. Each sheet overlaps the one below by 2 inches. Side laps are 1 corrugation. Use AZ-coated screws with EPDM washers, fastening at every purlin intersection. A string line helps keep rows straight.`,
-      `FINISHING: Install eave closures (foam or AZ-coated metal) to prevent pest entry. Apply ridge caps with butyl tape sealant. Walk only on the screw lines to avoid denting the flat sections. After installation, sweep the roof with a soft broom to remove any stone chips loosened during handling.`,
-    ],
-    keyPoints: [
-      'MS frame: 50x50x3mm tubes, 600mm rafter centers, 400mm purlin centers',
-      'Prime and paint MS frame before installation (2 oxide + 1 enamel)',
-      'Maintain 2-inch vertical lap and 1-corrugation side lap',
-      'Walk only on screw lines to avoid denting flat sections',
-    ],
-    youtubeId: 'dPznayY99ec',
-  },
-  {
-    id: 'rv4',
-    title: 'Synthetic Thatch — Four-Sided Roof Install',
-    duration: '9:45',
-    category: 'Thatch',
-    image: '/roofing-products/thatch-tile.jpg',
-    description: 'Installation tutorial for synthetic thatch tiles on a four-sided roof structure with underlying substrate.',
-    transcript: [
-      `This tutorial covers synthetic thatch tile installation on a four-sided (hip) roof. The four-sided hip design is common for resort cottages, gazebos, and poolside cabanas.`,
-      `SUBSTRATE PREPARATION: Synthetic thatch requires a solid substrate — typically plywood (min 12mm), OSB board, or fiber cement board. Install the substrate over the MS frame, ensuring all joints are taped. Install underlayment over the substrate for additional waterproofing.`,
-      `THATCH TILE LAYOUT: Start at the bottom eave and work upward. Each thatch tile (500x500mm) is fastened with 6-8 screws through the pre-marked holes. The tiles should overlap by 50-75mm to achieve a dense, natural appearance. At the hips, cut tiles at the appropriate angle with a utility knife.`,
-      `RIDGE FINISH: Install a synthetic thatch ridge roll along the hip ridges. Fasten the ridge roll every 200mm. The ridge roll conceals the top edge of the field tiles and provides a finished appearance. Final inspection: check that no substrate is visible from any angle.`,
-    ],
-    keyPoints: [
-      'Synthetic thatch requires a solid substrate (plywood/OSB/fiber cement)',
-      'Install underlayment over substrate for additional waterproofing',
-      'Overlap tiles by 50-75mm for dense, natural appearance',
-      'Install synthetic thatch ridge roll on all hip ridges',
-    ],
-    youtubeId: 'ZHPn8ScNz68',
-  },
-  {
-    id: 'rv5',
-    title: 'Thatch Tiles — How To Install',
-    duration: '6:18',
-    category: 'Thatch',
-    image: '/roofing-products/thatch-umbrella.jpg',
-    description: 'Quick practical demonstration of installing artificial thatch tiles with proper overlap and fastening.',
-    transcript: [
-      `This is a quick practical demonstration of installing artificial thatch tiles on a small umbrella structure. The same principles apply to larger roofs.`,
-      `TILE PREPARATION: Inspect each thatch tile before installation. The PE strands should be uniform in color and length. Reject any tile with visible manufacturing defects.`,
-      `FASTENING: Use 25mm AZ-coated screws with washers. Fasten through the pre-marked holes — 4 holes per 500x500mm tile. Do not over-tighten, as this can crack the PE base. The tile should sit flat against the substrate.`,
-      `OVERLAP PATTERN: For a natural thatch appearance, overlap tiles so the strands of the upper tile cover the fasteners of the lower tile. This conceals all screws and creates a seamless look. Trim any excess strands with scissors for a clean edge.`,
-    ],
-    keyPoints: [
-      'Inspect each tile for uniform color and length before installation',
-      'Use 25mm AZ-coated screws with washers, 4 per 500x500mm tile',
-      'Do not over-tighten — PE base can crack',
-      'Overlap to conceal fasteners and create a seamless look',
-    ],
-    youtubeId: 'A1toKD41BAU',
-  },
-  {
-    id: 'rv6',
-    title: 'VIVA Palm Thatch — Installation Training',
-    duration: '11:22',
-    category: 'Thatch',
-    image: '/roofing-products/thatch-tile.jpg',
-    description: 'Professional installation training for VIVA Palm synthetic thatch on cabana and gazebo structures.',
-    transcript: [
-      `This professional installation training covers VIVA Palm synthetic thatch on cabana and gazebo structures. VIVA Palm is a premium PE thatch product with a palm-leaf texture, ideal for high-end resort installations.`,
-      `STRUCTURE PREP: Ensure the cabana frame is sturdy enough to support the substrate and thatch load (approx 8-10 kg/sqm). Install 15mm marine plywood over the frame, sealed at all joints with butyl tape.`,
-      `INSTALLATION PATTERN: VIVA Palm tiles are designed for a staggered installation pattern. Row 1: full tiles. Row 2: half-tile offset. This staggered pattern mimics natural palm thatch and prevents visible seam lines. Fasten each tile with 6 screws at the marked points.`,
-      `DETAILING: At the cabana crown (top), install a custom thatch crown piece. At the eave edge, allow the thatch strands to overhang 50mm for a natural drip edge. Inspect the finished roof from all sides — no substrate should be visible. Clean any debris with a leaf blower (low setting).`,
-    ],
-    keyPoints: [
-      'VIVA Palm tiles use a staggered (half-tile offset) installation pattern',
-      'Install 15mm marine plywood substrate, sealed with butyl tape',
-      'Fasten each tile with 6 screws at marked points',
-      'Allow 50mm thatch overhang at eaves for natural drip edge',
-    ],
-    youtubeId: '5wBuw0gpaUE',
-  },
-  {
-    id: 'rv7',
-    title: 'How to Install Roof Shingles — Full Guide',
-    duration: '18:05',
-    category: 'Shingles',
-    image: '/roofing-products/asphalt-shingles.jpg',
-    description: 'Complete asphalt shingle installation from underlayment to ridge cap, including flashing details.',
-    transcript: [
-      `This is a complete asphalt shingle installation guide, covering everything from underlayment to ridge cap. Asphalt shingles are the most versatile residential roofing product, suitable for slopes from 15° to 90°.`,
-      `UNDERLAYMENT: Install a self-adhesive modified bitumen underlayment (minimum 2mm thickness) over the prepared substrate (plywood, OSB, or fiber cement board). The underlayment provides the primary waterproofing layer. Overlap each row by 100mm.`,
-      `STARTER COURSE: Cut the tabs off a full shingle to create the starter course. Lay the starter course along the eave, with the self-adhesive strip facing up. This provides a sealed edge at the eave.`,
-      `FIELD SHINGLES: Start at the bottom-left and work upward in a diagonal pattern. Each shingle overlaps the one below by half its exposure (approx 167mm). Fasten each shingle with 4-6 nails (depending on wind zone) at the marked nail line. Never nail through the self-adhesive strip.`,
-      `RIDGE CAP: Cut shingles into thirds along the perforations. Bend each piece over the ridge and fasten with 2 nails per side. Overlay each ridge cap piece by half. Apply a small dab of asphalt cement under each ridge cap for additional wind resistance.`,
-    ],
-    keyPoints: [
-      'Install self-adhesive bitumen underlayment (min 2mm) as primary waterproofing',
-      'Use a starter course with tabs removed along the eave',
-      'Fasten with 4-6 nails per shingle, never through the adhesive strip',
-      'Cut ridge caps from field shingles, fasten with 2 nails per side',
-    ],
-    youtubeId: '4z0_QHE7a4w',
-  },
-  {
-    id: 'rv8',
-    title: 'Shingle Install — Beginners Step-by-Step',
-    duration: '14:40',
-    category: 'Shingles',
-    image: '/roofing-products/asphalt-shingles-3tab.jpg',
-    description: 'Beginner-friendly step-by-step guide to installing asphalt roofing shingles correctly the first time.',
-    transcript: [
-      `This is a beginner-friendly step-by-step guide to installing 3-tab asphalt shingles. 3-tab shingles are the most economical shingle type, with a flat, uniform appearance.`,
-      `TOOLS NEEDED: Hammer or nail gun, utility knife with hook blades, chalk line, tape measure, roofing shovel (for tear-offs), and a good pair of gloves.`,
-      `CHALK LINES: Snap horizontal chalk lines every 5 inches (the exposure for 3-tab shingles) to keep rows straight. Snap vertical chalk lines every 36 inches to align tab cutouts. These reference lines are critical for a professional-looking installation.`,
-      `INSTALLATION: Start at the bottom-left with the starter course. For each subsequent row, offset the cutouts by 6 inches (half a tab) to prevent water migration through the joints. Fasten each shingle with 4 nails — 2 near each end, just above the cutout. Drive nails straight, not angled.`,
-      `COMMON MISTAKES: Avoid overdriving nails (which cuts the shingle), underdriving nails (which prevents sealing), nailing too high (above the nail line), and ignoring the offset pattern. Take time to get the first row perfectly straight — it sets the alignment for the entire roof.`,
-    ],
-    keyPoints: [
-      '3-tab shingles have a 5-inch exposure — snap chalk lines for alignment',
-      'Offset each row by half a tab (6 inches) to prevent water migration',
-      'Use 4 nails per shingle, driven straight (not angled)',
-      'Avoid overdriving, underdriving, and high nailing',
-    ],
-    youtubeId: 'p0VM9L-0SYE',
-  },
-  {
-    id: 'rv9',
-    title: 'Shingle Roof Install — Pro Guide',
-    duration: '16:12',
-    category: 'Shingles',
-    image: '/roofing-products/asphalt-shingles-laminated.jpg',
-    description: 'Professional shingle roof installation guide covering patterns, sealing, and quality finishing.',
-    transcript: [
-      `This professional guide covers laminated architectural shingle installation. Laminated shingles have a dimensional, multi-layer appearance that mimics wood shake or slate — they are the premium choice for high-end residential roofs.`,
-      `PATTERN LAYOUT: Unlike 3-tab shingles, laminated shingles have a random, multi-layer appearance. The key is to avoid aligning the notch patterns between adjacent rows. Use a 4-row pattern: rows 1-4 use full, half, quarter, three-quarter offsets respectively, then repeat.`,
-      `FASTENING: Laminated shingles typically require 6 nails per shingle (vs 4 for 3-tab) due to their larger size. Drive nails at the marked nail line, which is higher than on 3-tab shingles. Use 1.25-inch roofing nails minimum.`,
-      `SEALING: The self-adhesive strip activates at temperatures above 25°C. In cooler weather, hand-seal each shingle with a small dab of asphalt cement under each corner. This prevents wind lift-off before the adhesive activates naturally.`,
-      `QUALITY FINISHING: Install step flashing at all wall intersections. Install ice and water shield in valleys (under the underlayment). Use a hip/ridge blade in a circular saw for clean ridge cap cuts. Final cleanup: remove all debris, stray nails, and inspect every fastener.`,
-    ],
-    keyPoints: [
-      'Use a 4-row offset pattern (full, half, quarter, three-quarter) for laminated shingles',
-      'Laminated shingles need 6 nails per shingle with 1.25-inch roofing nails',
-      'Hand-seal corners with asphalt cement in cool weather (< 25°C)',
-      'Install step flashing at walls, ice & water shield in valleys',
-    ],
-    youtubeId: 'd2yMg__T7Cw',
-  },
-]
 
 const ROOFING_FAQ_ITEMS = [
   {
@@ -1313,7 +1113,7 @@ interface PracticeQuestion {
   explanation: string
 }
 
-const PRACTICE_QUESTIONS: PracticeQuestion[] = [
+const AMENITIES_PRACTICE_QUESTIONS: PracticeQuestion[] = [
   {
     q: 'What is the default master code for LAXREE safe box?',
     options: ['1234', '0000', '9999', '1111'],
@@ -1373,6 +1173,105 @@ const PRACTICE_QUESTIONS: PracticeQuestion[] = [
     options: ['R134a', 'R410A', 'R600a', 'R22'],
     correct: 2,
     explanation: 'All LAXREE minibars use eco-friendly R600a refrigerant, which has a low Global Warming Potential (GWP) and meets environmental regulations.',
+  },
+]
+
+const ROOFING_PRACTICE_QUESTIONS: PracticeQuestion[] = [
+  {
+    q: 'What is the lifespan of Laxree stone-coated metal roof tiles?',
+    options: ['5-8 years', '10-15 years', '20-30 years', '50+ years'],
+    correct: 2,
+    explanation: 'Stone-coated tiles last 20-30 years thanks to the AZ (Aluminum-Zinc) coating, which lasts 2-6x longer than pure zinc (GI) coating. In coastal Mumbai air, GI rusts in 5 years; AZ-coated steel lasts 25+ years.',
+  },
+  {
+    q: 'What does "AZ coating" on stone-coated tiles consist of?',
+    options: ['100% Zinc (GI)', '55% Aluminum, 43.5% Zinc, 1.5% Silicon', '100% Aluminum', 'Epoxy resin'],
+    correct: 1,
+    explanation: 'AZ coating = 55% Aluminum (forms a barrier Al2O3 oxide layer), 43.5% Zinc (galvanic/sacrificial protection), 1.5% Silicon (bonding agent). This dual-protection lasts 2-6x longer than pure zinc GI coating.',
+  },
+  {
+    q: 'What is the standard steel thickness for stone-coated roof tiles?',
+    options: ['0.25 mm', '0.4 mm', '0.8 mm', '1.2 mm'],
+    correct: 1,
+    explanation: '0.4 mm is the international standard (used by DECRA, Gerard, etc.). The strength comes from the corrugated profile + AZ coating, not thickness. Tiles thinner than 0.4 mm (e.g., 0.38 mm) are non-standard and inferior.',
+  },
+  {
+    q: 'A bare Tata GSW sheet roof transfers ~80 dB of rain noise. What does a stone-coated tile roof reduce this to?',
+    options: ['70 dB', '50 dB', '30 dB', '10 dB'],
+    correct: 2,
+    explanation: 'Stone-coated tiles reduce rain noise to ~30 dB (quieter than a whisper). The stone-chip layer acts as a sound barrier. This is the difference between impossible-to-sleep and comfortable during monsoon.',
+  },
+  {
+    q: 'What is the Retail/End-Customer MOQ (Minimum Order Quantity) for Laxree roofing tiles?',
+    options: ['10-50 tiles', '100-150 tiles', '500-800 tiles', '1,000+ tiles'],
+    correct: 1,
+    explanation: 'Retail MOQ = 100-150 tiles, covering a typical 500-800 sq ft residential roof (small villa patio or extension). Orders below 100 tiles incur a 10-15% small-order surcharge. Dealer MOQ is 1,000+ tiles.',
+  },
+  {
+    q: 'What is the Dealer/Distributor MOQ for Laxree roofing tiles?',
+    options: ['100 tiles', '500 tiles', '1,000+ tiles per order', '10,000 tiles per order'],
+    correct: 2,
+    explanation: 'Dealer/Distributor MOQ = 1,000+ tiles per order. Dealers commit to a ₹2,00,000 inventory and reorder in 1,000+ tile batches to unlock the ₹10/tile bulk discount. Project/bulk orders (3,000+ tiles) get custom pricing.',
+  },
+  {
+    q: 'What material are Laxree artificial thatch tiles made of?',
+    options: ['PVC', 'Natural palm leaves', 'Polyethylene (PE)', 'Asphalt'],
+    correct: 2,
+    explanation: 'Laxree thatch tiles use Polyethylene (PE) — a food-grade, UV-stabilized plastic. PE is superior to PVC (which becomes brittle and toxic when burned) and cheap plastic (which fades in 2-3 years). FR (Fire-Retardant) variants are available for living areas.',
+  },
+  {
+    q: 'What does "FR" mean in the context of thatch tiles?',
+    options: ['Fiber-Reinforced', 'Fire-Retardant', 'Fully-Recycled', 'Frost-Resistant'],
+    correct: 1,
+    explanation: 'FR = Fire-Retardant. FR thatch contains antimony trioxide + brominated flame retardants that self-extinguish within 5-10 seconds of removing the flame. Non-FR thatch engulfes in 90 seconds — FR gives 5-10 min escape time. Essential for living areas, resorts, and commercial projects.',
+  },
+  {
+    q: 'What is the minimum roof slope required for asphalt shingles?',
+    options: ['5 degrees (1:12)', '15 degrees (3:12)', '30 degrees (7:12)', '45 degrees (12:12)'],
+    correct: 1,
+    explanation: 'Asphalt shingles require a minimum 15-degree slope (3:12 pitch). Below this slope, water doesn\'t run off fast enough (capillary action pulls water upward under the shingle tabs), causing leaks. For flat or low-slope roofs, use bitumen membrane or stone-coated tiles on a sloped frame instead.',
+  },
+  {
+    q: 'What is the purpose of the self-adhesive bitumen strip on asphalt shingles?',
+    options: ['Decorative finish', 'Seals tabs together after sun exposure', 'Adds color', 'Prevents bird damage'],
+    correct: 1,
+    explanation: 'The self-adhesive bitumen strip activates from solar heat on the first hot day, bonding each shingle tab to the one below. This creates a wind-resistant, waterproof seal. In cool weather (< 25°C), hand-seal corners with asphalt cement because the strip may not activate.',
+  },
+  {
+    q: 'What is the most cost-effective insulation for a roofing project in a hot climate?',
+    options: ['Wool insulation 100mm (₹150/sq ft)', 'Spray PUF 25mm (₹100/sq ft)', 'Reflective sheet (₹25/sq ft)', 'Bitumen sheet (₹80/sq ft)'],
+    correct: 2,
+    explanation: 'Reflective sheet is the cheapest per degree of cooling (₹25/sq ft, reflects 96% of radiant heat). However, the best ROI is Spray PUF 25mm (₹100/sq ft) — reduces AC use by 55% with a 2.8-year payback. Always recommend at least reflective sheet; ideally Spray PUF.',
+  },
+  {
+    q: 'What does an EPDM washer do on a roofing screw?',
+    options: ['Decorative cap', 'Seals the screw hole against water', 'Prevents rust', 'Adds color'],
+    correct: 1,
+    explanation: 'EPDM (Ethylene Propylene Diene Monomer) rubber washer withstands UV, ozone, and temperature extremes (-50°C to +150°C) for 20+ years while remaining elastic — sealing the screw hole against water. A screw without EPDM would leak within 2 years. Cost: ₹2-3 per screw — never compromise.',
+  },
+  {
+    q: 'What are the two dealership entry models for Laxree Roofing?',
+    options: ['Free and Paid', 'Stand-based (₹25,000 refundable) and Stock-based (₹2,00,000 inventory)', 'Online and Offline', 'State and National'],
+    correct: 1,
+    explanation: 'Stand-based dealership: ₹25,000 refundable deposit, 2 display stands, NO compulsory stock — ideal for new resellers. Stock-based dealership: ₹2,00,000 inventory commitment, free stands, bulk discount — for resellers with existing client base. A stand-based dealer selling 1 roof/month earns ₹3.2 lakh/year (1,296% ROI).',
+  },
+  {
+    q: 'What is the purlin spacing required for stone-coated roof tiles?',
+    options: ['300 mm', '600 mm', '1000 mm', '1200 mm'],
+    correct: 1,
+    explanation: 'Purlin spacing for stone-coated tiles = 600 mm (tile length 1340 mm ÷ 2.2 = ~600 mm support interval). If spacing exceeds 700 mm, tiles sag and leak. If less than 500 mm, you waste steel on unnecessary purlins. Use 40x40x3 mm MS angles as purlins.',
+  },
+  {
+    q: 'Why should you NOT install stone-coated tiles on a flat RCC roof?',
+    options: ['Too heavy for RCC', 'Tiles need slope for water runoff — flat roofs cause leaks', 'Color fades on RCC', 'Warranty void on RCC'],
+    correct: 1,
+    explanation: 'Stone-coated tiles need at least 15° slope for water runoff. On a flat RCC roof, water pools and seeps under the tiles, causing leaks and corrosion. For flat roofs, recommend asphalt shingles on a sloped frame, or use the RCC itself with waterproofing + reflective sheet insulation.',
+  },
+  {
+    q: 'For a 1,500 sq ft villa roof, approximately how many stone-coated tiles are needed?',
+    options: ['100-150 tiles', '300-420 tiles', '1,000-1,200 tiles', '3,000+ tiles'],
+    correct: 1,
+    explanation: 'A 1,500 sq ft roof needs ~300-420 tiles (each tile covers ~3.5-5 sq ft including overlap). At MRP ₹440/tile, the tile cost = ₹1.32-1.85 lakh. With MS frame + installation, total ≈ ₹2.7 lakh. This meets the retail MOQ (100-150 tiles) comfortably.',
   },
 ]
 
@@ -1450,6 +1349,7 @@ function StudyMaterialsSection() {
   const STUDY_CHAPTERS = isRoofing ? ROOFING_STUDY_CHAPTERS : AMENITIES_STUDY_CHAPTERS
   const VIDEO_LESSONS = isRoofing ? ROOFING_VIDEO_LESSONS : AMENITIES_VIDEO_LESSONS
   const FAQ_ITEMS = isRoofing ? ROOFING_FAQ_ITEMS : AMENITIES_FAQ_ITEMS
+  const PRACTICE_QUESTIONS = isRoofing ? ROOFING_PRACTICE_QUESTIONS : AMENITIES_PRACTICE_QUESTIONS
 
   // Accent token map — keeps the rendering JSX clean
   const accentColor = isRoofing ? 'text-amber-600' : 'text-teal-600'
@@ -1941,10 +1841,14 @@ function StudyMaterialsSection() {
             <TabsContent value="practice-quiz" className="p-4 mt-0">
               <div className="mb-4">
                 <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                  <Brain className="w-4 h-4 text-teal-600" />
+                  <Brain className={`w-4 h-4 ${accentColor}`} />
                   Practice Quiz
                 </h3>
-                <p className="text-sm text-gray-500 mt-1">Test your knowledge — these questions are not graded</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  {isRoofing
+                    ? 'Test your roofing knowledge — stone-coated tiles, thatch, shingles, installation, insulation, MOQ, and dealership. These questions are not graded.'
+                    : 'Test your knowledge — these questions are not graded'}
+                </p>
               </div>
 
               {/* Progress Bar */}
@@ -1990,7 +1894,11 @@ function StudyMaterialsSection() {
                       {PRACTICE_QUESTIONS[practiceIdx].options.map((option, oIdx) => {
                         const isCorrect = oIdx === PRACTICE_QUESTIONS[practiceIdx].correct
                         const isSelected = oIdx === practiceAnswer
-                        let optionClass = 'border-gray-200 hover:border-teal-300 hover:bg-teal-50/50'
+                        // Segment-aware hover/selected colors: amber for roofing, teal for amenities
+                        const hoverBorder = isRoofing ? 'hover:border-amber-300' : 'hover:border-teal-300'
+                        const hoverBg = isRoofing ? 'hover:bg-amber-50/50' : 'hover:bg-teal-50/50'
+                        const selBorder = isRoofing ? 'border-amber-400 bg-amber-50 ring-1 ring-amber-200' : 'border-teal-400 bg-teal-50 ring-1 ring-teal-200'
+                        let optionClass = `border-gray-200 ${hoverBorder} ${hoverBg}`
                         if (practiceRevealed) {
                           if (isCorrect) {
                             optionClass = 'border-emerald-400 bg-emerald-50 ring-1 ring-emerald-200'
@@ -2000,7 +1908,7 @@ function StudyMaterialsSection() {
                             optionClass = 'border-gray-200 opacity-50'
                           }
                         } else if (isSelected) {
-                          optionClass = 'border-teal-400 bg-teal-50 ring-1 ring-teal-200'
+                          optionClass = selBorder
                         }
 
                         return (

@@ -1295,3 +1295,72 @@ Stage Summary:
 - Amenities segment behavior preserved unchanged (Videos tab in academies, Video Chapters tab in Study Materials)
 - Files modified: only src/components/employee/learning-center.tsx
 
+
+---
+Task ID: 14
+Agent: Main (roofing quiz + installation module videos)
+Task: User reported: "ROOFING K ANDR QUIZ SECTION WORK NAHI KR RHAINA AUR JESE INSTALLATION CHAPTER K ANDR JATA HU STONE COTED TILES INSTALLATION PR GYA WHA VIDEO SECTION ADD KRNE KO KHA WO BHI NAHI HAIN"
+
+Work Log:
+- Read worklog.md (Tasks 1-13) for context. Investigated two issues via Agent Browser:
+  * Issue 1: Practice Quiz tab in roofing Study Materials was showing AMENITIES questions (safe box, RFID, minibar, kettle) — irrelevant for roofing users
+  * Issue 2: The "Stone Coated Tile Installation" MODULE (inside Technical & Installation Learning academy > Modules tab) had only "View PDF" and "Read" tabs — NO "Watch Video" tab, despite the user asking for videos inside the installation chapter
+
+- Root cause analysis:
+  * Issue 1: PRACTICE_QUESTIONS array (line 1116, learning-center.tsx) contained only amenities questions. No segment-aware selection existed.
+  * Issue 2: lesson-viewer.tsx only showed "Watch Video" tab when module.contentType === 'video'. The roofing installation modules have contentType !== 'video' (they're "Read" type), so no Watch Video tab appeared. The roofing YouTube installation videos (ROOFING_VIDEO_LESSONS) were defined in learning-center.tsx but NOT accessible from lesson-viewer.tsx.
+
+- FIX 1: Segment-aware Practice Quiz
+  * Renamed existing PRACTICE_QUESTIONS → AMENITIES_PRACTICE_QUESTIONS (line 1116)
+  * Created new ROOFING_PRACTICE_QUESTIONS array with 16 roofing-specific questions covering:
+    - Stone-Coated tiles (lifespan, AZ coating, thickness, noise reduction, tile count estimation, purlin spacing, flat RCC slope issue)
+    - Thatch tiles (PE material, FR meaning)
+    - Asphalt shingles (min slope, self-adhesive bitumen strip)
+    - MOQ (Retail 100-150 tiles, Dealer 1,000+ tiles)
+    - Installation (EPDM washer purpose, insulation cost-effectiveness)
+    - Dealership (Stand-based vs Stock-based models)
+  * Added segment-aware selection inside StudyMaterialsSection component:
+    `const PRACTICE_QUESTIONS = isRoofing ? ROOFING_PRACTICE_QUESTIONS : AMENITIES_PRACTICE_QUESTIONS`
+  * Made quiz accent colors segment-aware: Brain icon uses accentColor (amber for roofing, teal for amenities); option hover/selected colors use amber for roofing, teal for amenities
+  * Updated quiz description: "Test your roofing knowledge — stone-coated tiles, thatch, shingles, installation, insulation, MOQ, and dealership."
+
+- FIX 2: Watch Video tab inside roofing installation modules
+  * Created shared data file: src/lib/roofing-videos.ts
+    - Exports VideoLesson interface, ROOFING_VIDEO_LESSONS array (9 videos), getRoofingVideosForModuleTitle() helper, VIDEO_CATEGORY_COLORS
+    - getRoofingVideosForModuleTitle() maps module titles to categories: "stone"+"coated" → Stone-Coated, "thatch" → Thatch, "shingle" → Shingles, generic "install" → all 9
+  * Updated learning-center.tsx to import ROOFING_VIDEO_LESSONS and VideoLesson type from the shared file (removed local definitions to avoid duplication)
+  * Updated lesson-viewer.tsx:
+    - Imported getRoofingVideosForModuleTitle and VideoLesson type from shared file
+    - Added isRoofing detection (user?.company === 'ROOFING')
+    - Added roofingVideos computation: getRoofingVideosForModuleTitle(module.title)
+    - Updated isVideo flag: `module.contentType === 'video' || hasRoofingVideos` — roofing installation modules now show the Watch Video tab
+    - Updated getDefaultTab(): defaults to 'watch' when isVideo is true (so roofing installation modules open on the Watch Video tab first)
+    - Added roofing video gallery in Watch Video tab content: amber gradient intro card + 3-column grid of video cards (thumbnail, play button, duration badge, category badge, title, description)
+    - Added roofing video dialog (Dialog/DialogContent) with YouTube iframe embed, description, scrollable transcript, and key points checklist
+    - Selected video state: selectedRoofingVideo / setSelectedRoofingVideo
+    - Imported Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription from @/components/ui/dialog
+
+- Verified via Agent Browser as Roofing user (Arjun Roofing):
+  * Practice Quiz tab: shows "Test your roofing knowledge — stone-coated tiles, thatch, shingles, installation, insulation, MOQ, and dealership." description
+    - Q1: "What is the lifespan of Laxree stone-coated metal roof tiles?" with options A 5-8 years, B 10-15 years, C 20-30 years, D 50+ years
+    - "Question 1 of 16" — 16 roofing questions total
+    - VLM confirmed: heading + description correct, Q1 about stone-coated lifespan, 4 options (A/B/C/D), "Question 1 of 16", amber/orange theme
+  * Answered Q1 (C 20-30 years) → correct → clicked Next → Q2: "What does 'AZ coating' on stone-coated tiles consist of?" — AZ coating question visible
+  * Navigated to Technical & Installation Learning > Modules > clicked "Stone Coated Tile Installation" module:
+    - Lesson viewer opened with 3 tabs: "Watch Video 🎬" (FIRST), "View PDF 📄", "Read 📖"
+    - Watch Video tab was active by default
+    - "Stone-Coated Installation Training Videos" heading with amber/orange intro card visible
+    - 3 video cards visible: Valley Detail (8:24), DECRA Villa (12:10), Stone-Coated Sheet (15:32)
+    - Each card had Stone-Coated category badge, duration badge, play button, thumbnail, title, description
+  * Clicked "Stone-Coated Tile Installation — Valley Detail" video → dialog opened with YouTube iframe (src=https://www.youtube.com/embed/NcoaiGbEeAI), title "Stone-Coated Tile Installation — Valley Detail"
+  * VLM confirmed all 4 points: Watch Video tab first, amber intro card, 3 video cards, durations + category badges
+
+- Lint: 21 pre-existing errors in .cjs/.js scripts only. ZERO errors in src/ TypeScript files (learning-center.tsx, lesson-viewer.tsx, roofing-videos.ts all clean).
+- Dev server: HTTP 200, compiled successfully.
+
+Stage Summary:
+- FIXED (Issue 1 — roofing quiz): Practice Quiz tab now shows 16 roofing-specific questions (stone-coated, thatch, shingles, installation, insulation, MOQ, dealership) with amber/orange theme. Amenities users still see the original amenities questions — segment-aware selection preserves both.
+- FIXED (Issue 2 — videos inside installation module): The "Stone Coated Tile Installation" module (and all other roofing installation modules) now has a "Watch Video 🎬" tab as the FIRST tab, showing 3 relevant YouTube installation tutorial videos. Clicking a video opens a dialog with the YouTube embed, full transcript, and key points. The Watch Video tab is the default tab when opening these modules.
+- Created shared data file src/lib/roofing-videos.ts to avoid circular imports between learning-center.tsx and lesson-viewer.tsx
+- Files modified: src/components/employee/learning-center.tsx, src/components/employee/lesson-viewer.tsx, src/lib/roofing-videos.ts (new)
+

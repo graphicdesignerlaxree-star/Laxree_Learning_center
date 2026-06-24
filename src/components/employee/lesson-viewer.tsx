@@ -7,8 +7,15 @@ import { Badge } from '@/components/ui/badge'
 import { Switch } from '@/components/ui/switch'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
+} from '@/components/ui/dialog'
 import { useAuthStore } from '@/stores/auth-store'
 import { SimulationDialog } from './simulation-dialog'
+import {
+  getRoofingVideosForModuleTitle,
+  type VideoLesson,
+} from '@/lib/roofing-videos'
 import {
   ArrowLeft, ArrowRight, CheckCircle2, Download, FileDown,
   BookOpen, Clock, ClipboardCheck, ChevronRight, Sparkles,
@@ -850,8 +857,20 @@ export function LessonViewer({
   const [contactsOpen, setContactsOpen] = useState(false)
   const user = useAuthStore((s) => s.user)
 
+  // Roofing installation modules: show a "Watch Video" tab with relevant YouTube
+  // installation tutorials even when the module's contentType is not 'video'.
+  // This ensures reps see real installation videos inside the Installation chapters.
+  const isRoofing = user?.company === 'ROOFING'
+  const roofingVideos: VideoLesson[] = isRoofing
+    ? getRoofingVideosForModuleTitle(module.title)
+    : []
+  const hasRoofingVideos = roofingVideos.length > 0
+  const [selectedRoofingVideo, setSelectedRoofingVideo] = useState<VideoLesson | null>(null)
+
   // Content tab state - smart default based on content type
-  const isVideo = module.contentType === 'video'
+  // For roofing installation modules with videos, default to 'watch' so the user
+  // sees the installation videos first (before View PDF / Read).
+  const isVideo = module.contentType === 'video' || hasRoofingVideos
   const hasPdf = !!module.pdfUrl
   const hasContent = !!module.content
   const getDefaultTab = (): 'watch' | 'pdf' | 'read' => {
@@ -1039,8 +1058,76 @@ export function LessonViewer({
                 transition={{ delay: 0.05 }}
                 className="space-y-6"
               >
-                {/* YouTube Video Embed ONLY - no extra text, no content below */}
-                {module.contentUrl ? (
+                {/* Roofing installation videos gallery — shown for roofing installation modules.
+                    Displays a grid of relevant YouTube installation tutorial videos.
+                    Clicking a video opens it in a dialog with transcript + key points. */}
+                {hasRoofingVideos && (
+                  <div className="space-y-4">
+                    <div className="p-4 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200">
+                      <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                        <Play className="w-4 h-4 text-amber-600" />
+                        {roofingVideos[0].category} Installation Training Videos
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-1 leading-relaxed">
+                        Watch these real installation tutorials to see exactly how {roofingVideos[0].category === 'Stone-Coated' ? 'stone-coated tiles' : roofingVideos[0].category === 'Thatch' ? 'artificial thatch tiles' : 'asphalt shingles'} are installed on-site. Click any video to play the full YouTube tutorial with transcript and key points.
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {roofingVideos.map((video, idx) => (
+                        <motion.button
+                          key={video.id}
+                          initial={{ opacity: 0, y: 12 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: idx * 0.04 }}
+                          whileHover={{ scale: 1.02, y: -2 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => setSelectedRoofingVideo(video)}
+                          className="text-left rounded-xl border border-amber-200 bg-white overflow-hidden shadow-sm hover:shadow-md hover:border-amber-400 transition-all group"
+                        >
+                          <div className="relative h-36 overflow-hidden">
+                            <img
+                              src={video.image}
+                              alt={video.title}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none'
+                                ;(e.target as HTMLImageElement).parentElement!.classList.add('bg-gradient-to-br', 'from-amber-800', 'to-orange-900')
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors" />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="w-12 h-12 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/50 transition-colors">
+                                <Play className="w-6 h-6 text-white ml-0.5" fill="currentColor" />
+                              </div>
+                            </div>
+                            <div className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-sm rounded-md px-2 py-0.5 flex items-center gap-1">
+                              <Clock className="w-3 h-3 text-white/80" />
+                              <span className="text-[11px] font-medium text-white">{video.duration}</span>
+                            </div>
+                            <div className="absolute top-2 left-2">
+                              <Badge className="text-[10px] bg-amber-100 text-amber-700 border-0">
+                                {video.category}
+                              </Badge>
+                            </div>
+                          </div>
+                          <div className="p-3">
+                            <h4 className="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-amber-700 transition-colors">
+                              {video.title}
+                            </h4>
+                            <p className="text-[11px] text-gray-500 mt-1 line-clamp-2">{video.description}</p>
+                            <div className="flex items-center gap-1.5 mt-2">
+                              <Volume2 className="w-3 h-3 text-amber-500" />
+                              <span className="text-[11px] text-amber-600 font-medium">Video Lesson</span>
+                            </div>
+                          </div>
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Single YouTube Video Embed (for modules with contentUrl set) */}
+                {!hasRoofingVideos && module.contentUrl && (
                   <div className="rounded-2xl overflow-hidden shadow-2xl border border-gray-200">
                     <div className="relative bg-black">
                       <div className="aspect-video">
@@ -1057,7 +1144,8 @@ export function LessonViewer({
                       </div>
                     </div>
                   </div>
-                ) : (
+                )}
+                {!hasRoofingVideos && !module.contentUrl && (
                   <div className="rounded-2xl overflow-hidden shadow-2xl border border-gray-200 bg-gray-900 aspect-video flex items-center justify-center">
                     <p className="text-white/70 text-sm">Video not available</p>
                   </div>
@@ -1898,6 +1986,86 @@ export function LessonViewer({
 
       {/* ==================== CONTACTS PANEL ==================== */}
       <ContactsPanel open={contactsOpen} onClose={() => setContactsOpen(false)} />
+
+      {/* ==================== ROOFING VIDEO DIALOG (YouTube embed + transcript + key points) ==================== */}
+      <Dialog open={!!selectedRoofingVideo} onOpenChange={(open) => { if (!open) setSelectedRoofingVideo(null) }}>
+        <DialogContent className="max-w-4xl max-h-[90vh] p-0 overflow-hidden">
+          <DialogHeader className="p-4 pb-2">
+            <DialogTitle className="flex items-center gap-2 text-base">
+              <Video className="w-4 h-4 text-amber-600" />
+              {selectedRoofingVideo?.title}
+            </DialogTitle>
+            <DialogDescription className="text-sm">
+              {selectedRoofingVideo?.category} • {selectedRoofingVideo?.duration} • Video Lesson
+            </DialogDescription>
+          </DialogHeader>
+          {selectedRoofingVideo && (
+            <div className="overflow-y-auto max-h-[calc(90vh-100px)]">
+              {selectedRoofingVideo.youtubeId ? (
+                <div className="px-4 pb-4">
+                  <div className="rounded-xl overflow-hidden border border-gray-200 shadow-md">
+                    <div className="relative bg-black">
+                      <div className="aspect-video">
+                        <iframe
+                          width="100%"
+                          height="100%"
+                          src={`https://www.youtube.com/embed/${selectedRoofingVideo.youtubeId}`}
+                          title={selectedRoofingVideo.title}
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          allowFullScreen
+                          className="w-full h-full"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-3 leading-relaxed">{selectedRoofingVideo.description}</p>
+
+                  {/* Transcript */}
+                  {selectedRoofingVideo.transcript.length > 0 && (
+                    <div className="mt-4">
+                      <h4 className="text-sm font-bold text-gray-900 mb-2 flex items-center gap-1.5">
+                        <BookOpen className="w-3.5 h-3.5 text-amber-600" />
+                        Lesson Transcript
+                      </h4>
+                      <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
+                        {selectedRoofingVideo.transcript.map((para, idx) => (
+                          <p key={idx} className="text-xs text-gray-600 leading-relaxed pl-3 border-l-2 border-amber-300">
+                            {para}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Key Points */}
+                  {selectedRoofingVideo.keyPoints.length > 0 && (
+                    <div className="mt-4">
+                      <h4 className="text-sm font-bold text-gray-900 mb-2 flex items-center gap-1.5">
+                        <Target className="w-3.5 h-3.5 text-amber-600" />
+                        Key Points
+                      </h4>
+                      <div className="space-y-1.5">
+                        {selectedRoofingVideo.keyPoints.map((point, idx) => (
+                          <div key={idx} className="flex items-start gap-2">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+                            <span className="text-xs text-gray-700">{point}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="p-8 text-center">
+                  <img src={selectedRoofingVideo.image} alt={selectedRoofingVideo.title} className="w-full max-w-md mx-auto rounded-xl" />
+                  <p className="text-sm text-gray-500 mt-4">Video coming soon</p>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* ==================== SIMULATION DIALOG (reserved for future use) ==================== */}
       <SimulationDialog
