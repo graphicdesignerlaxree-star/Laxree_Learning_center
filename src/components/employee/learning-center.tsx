@@ -1106,6 +1106,192 @@ const DOCUMENT_RESOURCES: DocumentResource[] = [
   },
 ]
 
+// ==================== ROOFING SEGMENT — CATALOGUES & RESOURCES ====================
+// Roofing users must NOT see Amenities catalogs (Mini Bar, Safe Box, Amenities SSP,
+// MiniBar Answer Sheet, SSP Final, Laxree Master Catalogue). Instead they see a
+// dedicated set of roofing-specific catalogues, spec sheets, installation guides,
+// dealership program documents, and an SSP/pricing sheet.
+// Two parallel arrays mirror the Amenities data shape:
+//   - ROOFING_CATALOG_DOCS       : CatalogDoc[]  (DB-style records pointing to uploaded files)
+//   - ROOFING_DOCUMENT_RESOURCES : DocumentResource[] (rich HTML in-app document viewer entries)
+
+const ROOFING_CATALOG_DOCS: CatalogDoc[] = [
+  {
+    id: 'roof-cat-1',
+    title: 'Laxree Roofing Master Catalogue',
+    type: 'catalog',
+    fileUrl: '/upload/Roofing Catalog.pdf',
+    fileName: 'Roofing Catalog.pdf',
+    fileSize: 4200000,
+    category: 'catalog',
+  },
+  {
+    id: 'roof-cat-2',
+    title: 'Laxree Roofing Solution Overview',
+    type: 'pdf',
+    fileUrl: '/upload/Laxree Roofing Solution.docx',
+    fileName: 'Laxree Roofing Solution.docx',
+    fileSize: 680000,
+    category: 'product',
+  },
+]
+
+const ROOFING_DOCUMENT_RESOURCES: DocumentResource[] = [
+  {
+    id: 'r-doc1',
+    title: 'Laxree Roofing Master Catalogue',
+    description: 'Complete roofing product catalogue — Stone-Coated tiles, Thatch tiles, Asphalt shingles, accessories, color chart, tile profiles, and dealer price list (DP).',
+    category: 'Catalog',
+    pages: 32,
+    icon: Package,
+    color: 'text-amber-600',
+    bgColor: 'bg-amber-50',
+    content: `<h2 style="color:#b45309;border-bottom:2px solid #d97706;padding-bottom:8px;">Laxree Roofing Master Catalogue</h2>
+<h3>Stone-Coated Metal Roof Tiles</h3>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;"><tr style="background:#fffbeb;"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left;">Profile</th><th style="padding:8px;border:1px solid #e5e7eb;">Cover Width</th><th style="padding:8px;border:1px solid #e5e7eb;">Steel Thickness</th><th style="padding:8px;border:1px solid #e5e7eb;">Coating</th><th style="padding:8px;border:1px solid #e5e7eb;">Tiles / Sqft</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Shake / Scalloped</td><td style="padding:8px;border:1px solid #e5e7eb;">1045 mm</td><td style="padding:8px;border:1px solid #e5e7eb;">0.4 mm</td><td style="padding:8px;border:1px solid #e5e7eb;">AZ 150</td><td style="padding:8px;border:1px solid #e5e7eb;">~0.45</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Shingle / Flat</td><td style="padding:8px;border:1px solid #e5e7eb;">1045 mm</td><td style="padding:8px;border:1px solid #e5e7eb;">0.4 mm</td><td style="padding:8px;border:1px solid #e5e7eb;">AZ 150</td><td style="padding:8px;border:1px solid #e5e7eb;">~0.45</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Tile / Classic</td><td style="padding:8px;border:1px solid #e5e7eb;">1045 mm</td><td style="padding:8px;border:1px solid #e5e7eb;">0.4 mm</td><td style="padding:8px;border:1px solid #e5e7eb;">AZ 150</td><td style="padding:8px;border:1px solid #e5e7eb;">~0.45</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Milano / Standing Seam</td><td style="padding:8px;border:1px solid #e5e7eb;">1045 mm</td><td style="padding:8px;border:1px solid #e5e7eb;">0.4 mm</td><td style="padding:8px;border:1px solid #e5e7eb;">AZ 150</td><td style="padding:8px;border:1px solid #e5e7eb;">~0.45</td></tr></table>
+<h3>Thatch Roof Tiles (Synthetic PE)</h3>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;"><tr style="background:#fffbeb;"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left;">Variant</th><th style="padding:8px;border:1px solid #e5e7eb;">Material</th><th style="padding:8px;border:1px solid #e5e7eb;">Fire Rating</th><th style="padding:8px;border:1px solid #e5e7eb;">Best For</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">LR-TH-PE</td><td style="padding:8px;border:1px solid #e5e7eb;">Synthetic PE (UV-stabilised)</td><td style="padding:8px;border:1px solid #e5e7eb;">FR (Fire Retardant)</td><td style="padding:8px;border:1px solid #e5e7eb;">Resorts, farmhouses, gazebos</td></tr></table>
+<h3>Asphalt Fibreglass Shingles</h3>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;"><tr style="background:#fffbeb;"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left;">Type</th><th style="padding:8px;border:1px solid #e5e7eb;">Min Slope</th><th style="padding:8px;border:1px solid #e5e7eb;">Self-Adhesive Strip</th><th style="padding:8px;border:1px solid #e5e7eb;">Best For</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">LR-SH-3Tab</td><td style="padding:8px;border:1px solid #e5e7eb;">15°</td><td style="padding:8px;border:1px solid #e5e7eb;">Bitumen</td><td style="padding:8px;border:1px solid #e5e7eb;">Budget slopes, sheds</td></tr></table>
+<h3>Color Chart (Stone-Coated)</h3>
+<p>Available: Charcoal, Brown, Forest Green, Slate Grey, Brick Red, Terracotta, Ocean Blue, Ivory, Black. Custom RAL shades on MOQ 1,000+ tiles.</p>
+<h3>Accessories</h3>
+<ul><li>Roofing screws with EPDM washer (4.5×35 mm, 4.5×50 mm)</li><li>Self-adhesive underlayment membrane (3 mm SBS modified bitumen)</li><li>Ridge caps, valley gutters, gable trims, fascia</li><li>Butyl tape, rivets, eave fillers</li></ul>
+<p style="color:#6b7280;font-size:12px;margin-top:20px;">Laxree Roofing Solutions | Master Catalogue | Generated: ${new Date().toLocaleDateString()}</p>`,
+  },
+  {
+    id: 'r-doc2',
+    title: 'Stone-Coated Tile Spec Sheet',
+    description: 'Detailed specifications for Laxree stone-coated metal roof tiles — AZ 150 coating, 0.4 mm steel thickness, profiles, coverage, and noise-reduction data.',
+    category: 'Spec Sheet',
+    pages: 6,
+    icon: Layers,
+    color: 'text-orange-600',
+    bgColor: 'bg-orange-50',
+    content: `<h2 style="color:#c2410c;border-bottom:2px solid #ea580c;padding-bottom:8px;">Stone-Coated Tile Technical Spec Sheet</h2>
+<h3>1. Substrate & Coating</h3>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;"><tr style="background:#fff7ed;"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left;">Property</th><th style="padding:8px;border:1px solid #e5e7eb;">Value</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Core steel thickness</td><td style="padding:8px;border:1px solid #e5e7eb;">0.40 mm (international standard)</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Metal coating</td><td style="padding:8px;border:1px solid #e5e7eb;">AZ 150 (55% Al, 43.5% Zn, 1.5% Si) — 150 GSM</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Primer</td><td style="padding:8px;border:1px solid #e5e7eb;">Epoxy base, 5–7 µm</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Stone chip coating</td><td style="padding:8px;border:1px solid #e5e7eb;">Natural basalt chips, acrylic emulsion binder</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Clear overglaze</td><td style="padding:8px;border:1px solid #e5e7eb;">Acrylic, 10–12 µm</td></tr></table>
+<h3>2. Profile & Coverage</h3>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;"><tr style="background:#fff7ed;"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left;">Profile</th><th style="padding:8px;border:1px solid #e5e7eb;">Cover Width</th><th style="padding:8px;border:1px solid #e5e7eb;">Tile Length</th><th style="padding:8px;border:1px solid #e5e7eb;">Coverage / Tile</th><th style="padding:8px;border:1px solid #e5e7eb;">Tiles / 100 sqft</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Shake / Scalloped</td><td style="padding:8px;border:1px solid #e5e7eb;">1045 mm</td><td style="padding:8px;border:1px solid #e5e7eb;">420 mm</td><td style="padding:8px;border:1px solid #e5e7eb;">~0.42 sqm</td><td style="padding:8px;border:1px solid #e5e7eb;">~22</td></tr></table>
+<h3>3. Performance</h3>
+<ul><li><strong>Lifespan:</strong> 20–30 years (AZ coating lasts 2–6× longer than pure zinc GI)</li><li><strong>Noise reduction:</strong> Rain noise reduced from ~80 dB (bare GSW) to ~35–40 dB</li><li><strong>Hail resistance:</strong> Class 4 (passes 25 mm steel-ball impact test)</li><li><strong>Wind uplift:</strong> 190 km/h when screwed at every corrugation with EPDM washers</li><li><strong>Weight:</strong> ~2.6 kg/sqm (vs 40 kg/sqm concrete tile — 94% lighter)</li><li><strong>Fire rating:</strong> Class A (non-combustible steel core)</li></ul>
+<h3>4. Why 0.4 mm thickness?</h3>
+<p>0.4 mm is the international standard used by DECRA, Gerard, and Boral. The strength comes from the corrugated profile + AZ coating, not thickness. Tiles thinner than 0.4 mm (e.g., 0.38 mm) are non-standard and inferior.</p>
+<p style="color:#6b7280;font-size:12px;margin-top:20px;">Laxree Roofing Solutions | Spec Sheet v1.3</p>`,
+  },
+  {
+    id: 'r-doc3',
+    title: 'Roofing Installation Guide',
+    description: 'Step-by-step installation guide for Laxree stone-coated roof tiles — purlin spacing, underlayment, overlap, screw fixing with EPDM washers, and valley/ridge detailing.',
+    category: 'Manual',
+    pages: 14,
+    icon: Wrench,
+    color: 'text-stone-600',
+    bgColor: 'bg-stone-100',
+    content: `<h2 style="color:#57534e;border-bottom:2px solid #78716c;padding-bottom:8px;">Roofing Installation Guide (Stone-Coated)</h2>
+<h3>1. Pre-Installation Checklist</h3>
+<ul><li>Roof slope: minimum 15° (1:4). Below 15° use asphalt shingles or membrane.</li><li>Structural support: purlins at 600 mm (max) centres for stone-coated; 400 mm for shingles.</li><li>Tools: diamond-blade cutter, roofing screw gun, tape measure, chalk line, EPDM-washer screws (4.5×35 mm), underlayment.</li><li>Underlayment: self-adhesive SBS-modified bitumen membrane (min 3 mm) — NOT plain felt.</li></ul>
+<h3>2. Underlayment</h3>
+<ol><li>Roll self-adhesive membrane from eave to ridge, overlapping 75 mm (3 inches) horizontally.</li><li>Press firmly from centre outward to expel air. Use a roller.</li><li>At valleys, lay a 600 mm wide strip of membrane first, centred on the valley line.</li></ol>
+<h3>3. Purlin Spacing</h3>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;"><tr style="background:#f5f5f4;"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left;">Tile Type</th><th style="padding:8px;border:1px solid #e5e7eb;">Max Purlin Spacing</th><th style="padding:8px;border:1px solid #e5e7eb;">Purlin Section</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Stone-Coated (0.4 mm)</td><td style="padding:8px;border:1px solid #e5e7eb;">600 mm</td><td style="padding:8px;border:1px solid #e5e7eb;">50×50 mm or 40×60 mm</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Thatch (PE)</td><td style="padding:8px;border:1px solid #e5e7eb;">400 mm</td><td style="padding:8px;border:1px solid #e5e7eb;">38×50 mm</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Asphalt Shingles</td><td style="padding:8px;border:1px solid #e5e7eb;">Solid deck (plywood/OSB)</td><td style="padding:8px;border:1px solid #e5e7eb;">12 mm plywood</td></tr></table>
+<h3>4. Tile Fixing</h3>
+<ol><li>Lay first course at eave, aligning the leading edge with the chalk line.</li><li>Overlap minimum 75 mm (about 3 inches) on the side lap; 150 mm on the end lap.</li><li>Fix each tile with 4–6 roofing screws (4.5×35 mm) with EPDM washers — at every corrugation on the bottom edge, plus 2 at the top.</li><li>EPDM washer must compress visibly to ~1 mm — under-tightened = leak; over-tightened = tile distortion.</li><li>Cut tiles with a diamond blade (NOT tin snips — stone chips shatter).</li></ol>
+<h3>5. Valley & Ridge</h3>
+<ul><li><strong>Valley:</strong> Install pre-formed valley gutter; tiles cut to valley line with 25 mm gap each side; seal with butyl tape under the cut edge.</li><li><strong>Ridge:</strong> Ridge cap tiles overlap 100 mm; screw through the ridge into the top purlin; seal ridge joints with butyl tape.</li></ul>
+<h3>6. Common Mistakes to Avoid</h3>
+<ul><li>❌ Plain felt underlayment (always use self-adhesive membrane)</li><li>❌ Plain zinc screws without EPDM washer (always EPDM)</li><li>❌ Overlap less than 75 mm (causes capillary leaks)</li><li>❌ Cutting with tin snips (use diamond blade)</li><li>❌ Installing on flat RCC roof without slope (water ponds — always 15° min)</li></ul>
+<p style="color:#6b7280;font-size:12px;margin-top:20px;">Laxree Roofing Solutions | Installation Guide v2.0</p>`,
+  },
+  {
+    id: 'r-doc4',
+    title: 'Roofing Dealership Program',
+    description: 'Complete dealership program details — Stand-based (₹25,000 refundable deposit) vs Stock-based (₹2,00,000 inventory), margins, ROI calculations, and territory support.',
+    category: 'Program',
+    pages: 8,
+    icon: Handshake,
+    color: 'text-amber-700',
+    bgColor: 'bg-amber-50',
+    content: `<h2 style="color:#b45309;border-bottom:2px solid #d97706;padding-bottom:8px;">Laxree Roofing Dealership Program</h2>
+<h3>1. Two Dealership Models</h3>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;"><tr style="background:#fffbeb;"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left;">Model</th><th style="padding:8px;border:1px solid #e5e7eb;">Deposit</th><th style="padding:8px;border:1px solid #e5e7eb;">Stock Holding</th><th style="padding:8px;border:1px solid #e5e7eb;">Best For</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Stand-based (Basic)</td><td style="padding:8px;border:1px solid #e5e7eb;">₹25,000 (refundable)</td><td style="padding:8px;border:1px solid #e5e7eb;">None</td><td style="padding:8px;border:1px solid #e5e7eb;">New resellers testing market</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Stock-based</td><td style="padding:8px;border:1px solid #e5e7eb;">₹2,00,000 (inventory)</td><td style="padding:8px;border:1px solid #e5e7eb;">Yes — bulk discount</td><td style="padding:8px;border:1px solid #e5e7eb;">Experienced dealers</td></tr></table>
+<h3>2. What's Included</h3>
+<ul><li>2 big display stands with sample tile profiles (Shake, Shingle, Tile, Milano)</li><li>Color chip set (9 standard colors + RAL custom chart)</li><li>Master Catalogue, Spec Sheet, Installation Guide</li><li>Pan-India delivery from Ajmer warehouse</li><li>Lead routing — Laxree forwards enquiries from your territory</li><li>Co-branded marketing collateral</li></ul>
+<h3>3. Margins & ROI (Illustrative)</h3>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;"><tr style="background:#fffbeb;"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left;">Dealer Type</th><th style="padding:8px;border:1px solid #e5e7eb;">Volume</th><th style="padding:8px;border:1px solid #e5e7eb;">Margin / Tile</th><th style="padding:8px;border:1px solid #e5e7eb;">Annual Profit</th><th style="padding:8px;border:1px solid #e5e7eb;">ROI</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Stand-based (Pune)</td><td style="padding:8px;border:1px solid #e5e7eb;">12 roofs/yr × 300 tiles</td><td style="padding:8px;border:1px solid #e5e7eb;">₹90</td><td style="padding:8px;border:1px solid #e5e7eb;">₹3,24,000</td><td style="padding:8px;border:1px solid #e5e7eb;">1,296%</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Stock-based (Bangalore)</td><td style="padding:8px;border:1px solid #e5e7eb;">48 roofs/yr × 300 tiles</td><td style="padding:8px;border:1px solid #e5e7eb;">₹110</td><td style="padding:8px;border:1px solid #e5e7eb;">₹15,84,000</td><td style="padding:8px;border:1px solid #e5e7eb;">792%</td></tr></table>
+<h3>4. Refund Policy (Stand-based)</h3>
+<p>If a stand-based dealer fails to sell any roofing in 6 months, they can return the stands in good condition and get their ₹25,000 deposit refunded in full. No questions asked.</p>
+<h3>5. How to Apply</h3>
+<ol><li>Submit dealership enquiry via Laxree website or sales contact.</li><li>Laxree territory manager calls within 48 hours to verify your coverage area.</li><li>Sign dealership agreement; pay deposit / stock commitment.</li><li>Stands + sample kit dispatched within 7 working days.</li><li>First lead routed within 14 days of onboarding.</li></ol>
+<p style="color:#6b7280;font-size:12px;margin-top:20px;">Laxree Roofing Solutions | Dealership Program | v1.0</p>`,
+  },
+  {
+    id: 'r-doc5',
+    title: 'Roofing MOQ & SSP Price List',
+    description: 'Minimum Order Quantities (MOQ) and Suggested Selling Prices (SSP) for retail customers and dealers — tile-level pricing, bundle sizes, and dealer discount structure.',
+    category: 'Price List',
+    pages: 5,
+    icon: TrendingUp,
+    color: 'text-orange-700',
+    bgColor: 'bg-orange-50',
+    content: `<h2 style="color:#9a3412;border-bottom:2px solid #ea580c;padding-bottom:8px;">Roofing MOQ & SSP Price List</h2>
+<h3>1. Retail Customer MOQ</h3>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;"><tr style="background:#fff7ed;"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left;">Customer Type</th><th style="padding:8px;border:1px solid #e5e7eb;">MOQ</th><th style="padding:8px;border:1px solid #e5e7eb;">Coverage</th><th style="padding:8px;border:1px solid #e5e7eb;">Bundles</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Retail (villa/bungalow owner)</td><td style="padding:8px;border:1px solid #e5e7eb;">100–150 tiles</td><td style="padding:8px;border:1px solid #e5e7eb;">500–800 sqft roof</td><td style="padding:8px;border:1px solid #e5e7eb;">2–3 bundles</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Dealer (per order)</td><td style="padding:8px;border:1px solid #e5e7eb;">1,000+ tiles</td><td style="padding:8px;border:1px solid #e5e7eb;">5,000+ sqft</td><td style="padding:8px;border:1px solid #e5e7eb;">20+ bundles</td></tr></table>
+<h3>2. Suggested Selling Price (SSP) — Indicative</h3>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;"><tr style="background:#fff7ed;"><th style="padding:8px;border:1px solid #e5e7eb;text-align:left;">Product</th><th style="padding:8px;border:1px solid #e5e7eb;">Retail SSP / Tile</th><th style="padding:8px;border:1px solid #e5e7eb;">Dealer DP / Tile</th><th style="padding:8px;border:1px solid #e5e7eb;">Dealer Margin</th></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Stone-Coated (Shake)</td><td style="padding:8px;border:1px solid #e5e7eb;">₹290</td><td style="padding:8px;border:1px solid #e5e7eb;">₹200</td><td style="padding:8px;border:1px solid #e5e7eb;">₹90 (45%)</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Stone-Coated (Milano)</td><td style="padding:8px;border:1px solid #e5e7eb;">₹340</td><td style="padding:8px;border:1px solid #e5e7eb;">₹230</td><td style="padding:8px;border:1px solid #e5e7eb;">₹110 (48%)</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Thatch (PE, FR)</td><td style="padding:8px;border:1px solid #e5e7eb;">₹220</td><td style="padding:8px;border:1px solid #e5e7eb;">₹150</td><td style="padding:8px;border:1px solid #e5e7eb;">₹70 (47%)</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Asphalt Shingle (3-tab)</td><td style="padding:8px;border:1px solid #e5e7eb;">₹120</td><td style="padding:8px;border:1px solid #e5e7eb;">₹80</td><td style="padding:8px;border:1px solid #e5e7eb;">₹40 (50%)</td></tr>
+<tr><td style="padding:8px;border:1px solid #e5e7eb;">Accessories (screws, ridge, valley)</td><td style="padding:8px;border:1px solid #e5e7eb;">As per catalogue</td><td style="padding:8px;border:1px solid #e5e7eb;">35% off SSP</td><td style="padding:8px;border:1px solid #e5e7eb;">35%</td></tr></table>
+<p style="color:#6b7280;font-size:11px;margin-top:8px;">* Prices indicative only — confirm latest DP/SSP with Laxree sales desk before quoting. Stone chip colors, custom RAL shades, and bulk 5,000+ tile orders may attract additional discounts.</p>
+<h3>3. Insulation Add-on (Optional)</h3>
+<p>Cross-sell insulation foil (radiant barrier) under the tiles. Adds ₹12–15/sqft to the quote; cuts attic temperature by 6–8°C; almost always cost-effective for the customer (payback via AC savings in 2 years).</p>
+<p style="color:#6b7280;font-size:12px;margin-top:20px;">Laxree Roofing Solutions | MOQ & SSP | Effective: Q2 2025</p>`,
+  },
+  {
+    id: 'r-doc6',
+    title: 'Roofing Quick Reference Card',
+    description: 'One-page quick reference for sales calls — tile specs, lifespan, MOQ, key pitches, and common customer objections with rebuttals.',
+    category: 'Reference',
+    pages: 2,
+    icon: BookOpen,
+    color: 'text-rose-600',
+    bgColor: 'bg-rose-50',
+    content: `<h2 style="color:#e11d48;border-bottom:2px solid #e11d48;padding-bottom:8px;">Roofing Quick Reference Card</h2>
+<h3>Key Specs at a Glance</h3>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;"><tr style="background:#fff1f2;"><th style="padding:6px;border:1px solid #e5e7eb;">Tile Type</th><th style="padding:6px;border:1px solid #e5e7eb;">Lifespan</th><th style="padding:6px;border:1px solid #e5e7eb;">Slope</th><th style="padding:6px;border:1px solid #e5e7eb;">Weight</th><th style="padding:6px;border:1px solid #e5e7eb;">Noise</th></tr>
+<tr><td style="padding:6px;border:1px solid #e5e7eb;">Stone-Coated (0.4mm AZ150)</td><td style="padding:6px;border:1px solid #e5e7eb;">20–30 yr</td><td style="padding:6px;border:1px solid #e5e7eb;">15°+</td><td style="padding:6px;border:1px solid #e5e7eb;">2.6 kg/sqm</td><td style="padding:6px;border:1px solid #e5e7eb;">35–40 dB</td></tr>
+<tr><td style="padding:6px;border:1px solid #e5e7eb;">Thatch (PE, FR)</td><td style="padding:6px;border:1px solid #e5e7eb;">15–20 yr</td><td style="padding:6px;border:1px solid #e5e7eb;">25°+</td><td style="padding:6px;border:1px solid #e5e7eb;">3.0 kg/sqm</td><td style="padding:6px;border:1px solid #e5e7eb;">35 dB</td></tr>
+<tr><td style="padding:6px;border:1px solid #e5e7eb;">Asphalt Shingle</td><td style="padding:6px;border:1px solid #e5e7eb;">12–18 yr</td><td style="padding:6px;border:1px solid #e5e7eb;">15°+</td><td style="padding:6px;border:1px solid #e5e7eb;">9 kg/sqm</td><td style="padding:6px;border:1px solid #e5e7eb;">40 dB</td></tr></table>
+<h3>Key Pitches</h3>
+<ul><li><strong>AZ 150 coating:</strong> 2–6× longer life than pure-zinc GI; survives Mumbai coastal air 25+ years.</li><li><strong>Noise:</strong> Rain noise reduced from 80 dB → 35–40 dB (whisper-quiet, unlike bare GSW).</li><li><strong>Lightweight:</strong> 2.6 kg/sqm vs 40 kg/sqm concrete — 94% lighter; no structural reinforcement needed.</li><li><strong>MOQ retail:</strong> Just 100–150 tiles covers a 500–800 sqft villa roof.</li><li><strong>Insulation add-on:</strong> ₹12–15/sqft cuts attic temp 6–8°C; AC-bill payback in 2 years.</li></ul>
+<h3>Common Objections & Rebuttals</h3>
+<ul><li><em>"Too expensive vs GI sheet"</em> → "GI rusts in 5 years in coastal air; AZ-coated stone tiles last 25+. Cost per year is lower."</li><li><em>"Steel roof is noisy in rain"</em> → "Bare GSW is 80 dB. Our stone-chip coating + underlayment = 35–40 dB — quieter than concrete."</li><li><em>"Concrete tile is stronger"</em> → "Concrete is 40 kg/sqm — needs structural support. Ours is 2.6 kg/sqm, Class-4 hail, 190 km/h wind."</li></ul>`,
+  },
+]
+
 interface PracticeQuestion {
   q: string
   options: string[]
@@ -2170,6 +2356,16 @@ export function LearningCenter() {
   const isRoofing = user?.company === 'ROOFING'
   const ACADEMIES = isRoofing ? ROOFING_ACADEMIES : AMENITIES_ACADEMIES
 
+  // Segment-aware catalogues & resources:
+  //  - Roofing users: see ONLY ROOFING_CATALOG_DOCS + ROOFING_DOCUMENT_RESOURCES
+  //    (never the amenities DB-fetched catalogs like Mini Bar / Safe Box /
+  //     Amenities SSP / MiniBar Answer Sheet / SSP Final / Laxree Master Catalogue).
+  //  - Amenities users: keep original DB-fetched `catalogs` + `DOCUMENT_RESOURCES`.
+  const displayCatalogs: CatalogDoc[] = isRoofing ? ROOFING_CATALOG_DOCS : catalogs
+  const displayDocumentResources: DocumentResource[] = isRoofing
+    ? ROOFING_DOCUMENT_RESOURCES
+    : DOCUMENT_RESOURCES
+
   // Fetch courses
   useEffect(() => {
     const fetchCourses = async () => {
@@ -2638,19 +2834,19 @@ export function LearningCenter() {
                 </div>
 
                 {/* Catalogues Quick Access */}
-                {catalogs.length > 0 && (
+                {displayCatalogs.length > 0 && (
                   <div className="mt-8">
                     <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                       <FolderOpen className={`w-5 h-5 ${isRoofing ? 'text-amber-600' : 'text-emerald-600'}`} /> Catalogues & Resources
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                      {catalogs.map((doc) => (
+                      {displayCatalogs.map((doc) => (
                         <Card key={doc.id} className="hover:shadow-md transition-shadow border-0">
                           <CardContent className="p-4">
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center shrink-0">
+                              <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${isRoofing ? 'bg-amber-100' : 'bg-emerald-100'}`}>
                                 {doc.type === 'catalog' ? (
-                                  <BookMarked className="w-5 h-5 text-emerald-600" />
+                                  <BookMarked className={`w-5 h-5 ${isRoofing ? 'text-amber-600' : 'text-emerald-600'}`} />
                                 ) : doc.type === 'sop' ? (
                                   <ClipboardCheck className="w-5 h-5 text-teal-600" />
                                 ) : (
@@ -3166,7 +3362,37 @@ export function LearningCenter() {
                     )}
 
                     <TabsContent value="catalogues" className="mt-4">
-                      {catalogs.length === 0 && DOCUMENT_RESOURCES.length > 0 ? (
+                      {isRoofing ? (
+                        /* Roofing segment — show roofing-specific document resources
+                           (rich HTML in-app viewer). Never the amenities DB catalogs. */
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {ROOFING_DOCUMENT_RESOURCES.map((doc) => {
+                            const IconComp = doc.icon
+                            return (
+                              <Card key={doc.id} className="hover:shadow-md transition-shadow cursor-pointer group border-amber-100" onClick={() => { setSelectedDoc(doc); setDocViewerOpen(true) }}>
+                                <CardContent className="p-4">
+                                  <div className="flex items-center gap-3 mb-3">
+                                    <div className={`w-12 h-12 ${doc.bgColor} rounded-lg flex items-center justify-center shrink-0`}>
+                                      <IconComp className={`w-6 h-6 ${doc.color}`} />
+                                    </div>
+                                    <div>
+                                      <p className="font-medium text-gray-700 text-sm group-hover:text-amber-700 transition-colors">{doc.title}</p>
+                                      <div className="flex items-center gap-2 mt-1">
+                                        <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-amber-200 text-amber-700">{doc.category}</Badge>
+                                        <span className="text-[10px] text-gray-400">{doc.pages} pages</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <p className="text-xs text-gray-500 line-clamp-2 mb-3">{doc.description}</p>
+                                  <Button size="sm" variant="outline" className="w-full h-8 text-xs border-amber-200 text-amber-700 hover:bg-amber-50">
+                                    <BookOpen className="w-3 h-3 mr-1" /> View Document
+                                  </Button>
+                                </CardContent>
+                              </Card>
+                            )
+                          })}
+                        </div>
+                      ) : catalogs.length === 0 && DOCUMENT_RESOURCES.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                           {DOCUMENT_RESOURCES.map((doc) => {
                             const IconComp = doc.icon
