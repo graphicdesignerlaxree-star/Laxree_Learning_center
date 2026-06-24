@@ -899,3 +899,51 @@ Stage Summary:
 - GitHub: FULLY UP TO DATE. origin/main at e33435a contains ALL work — roofing chapters (lengthy + professional), 9 YouTube installation videos, 11 catalog product images, segment-aware filtering (Amenities users see amenities content, Roofing users see roofing content), Neon cold-start retry, AI chat/dialog/mock-sim roofing scenarios. Nothing left to push.
 - Local: aligned with origin/main. Backup branch preserved. Dev server running clean (HTTP 200, auth works, roofing chapters + YouTube videos render correctly for roofing users).
 - Vercel: Vercel CLI installed but requires authentication token. If the user's Vercel project is connected to the GitHub repo (graphicdesignerlaxree-star/Laxree_Learning_center), the latest push auto-triggers a production deployment. The build will run `prisma generate && next build` ensuring the Prisma Client is correctly generated on Vercel's side.
+
+---
+Task ID: 6
+Agent: Main (segment-awareness fix)
+Task: Fix Roofing dashboard showing amenities keywords (Minibar/Kettle/Safe Locker) on academy cards + verify video section updates
+
+Work Log:
+- User uploaded screenshot showing the "LAXREE Product Academy" card on the Roofing dashboard with amenities text: "Master our product portfolio — Minibar, Kettle, Safe Locker & more". User asked to fix this with roofing keywords and also check the video section.
+- Analyzed the screenshot via VLM (z-ai vision) — confirmed the card was showing amenities content on a roofing user's dashboard.
+- Located the hardcoded `ACADEMIES` array in src/components/employee/learning-center.tsx (line 116) — a single array with amenities descriptions used for ALL users regardless of segment.
+- Split the single ACADEMIES array into two segment-specific arrays:
+  * AMENITIES_ACADEMIES — original hospitality cards (Minibar, Kettle, Safe Locker, etc.) with emerald/teal gradients
+  * ROOFING_ACADEMIES — new roofing cards with roofing keywords:
+    - "Company Introduction — Laxree Roofing"
+    - "Roofing Product Academy" (desc: "Master our roofing portfolio — Stone-Coated Tiles, Thatch, Asphalt Shingles & more")
+    - "Technical & Installation Learning"
+    - "Roofing Sales Academy"
+    - "Roofing Industry Academy"
+    - "Customer Discovery Academy" (roofing buyer personas)
+    - "Negotiation Academy" (roofing projects, bulk orders, dealership)
+    - "Competitive Intelligence Academy" (DECRA, Gerard, CertainTeed vs Laxree)
+    - "Field Sales Academy" (villa visits, site surveys, dealer meetings)
+    - "Inbound Sales Academy" (roofing inquiries, WhatsApp, walk-in dealer leads)
+    - "Certification Center"
+    - "Mock Sales Simulator"
+    - "AI Sales Coach"
+    - "Cross Selling Academy" (upsell insulation, ridge accessories, thatch for gazebos)
+- Added segment selection in the main LearningCenter component: `const ACADEMIES = isRoofing ? ROOFING_ACADEMIES : AMENITIES_ACADEMIES`
+- Made the "Study Materials" card segment-aware: roofing gets amber/orange/stone gradient + "Roofing Study Materials" title + roofing content counts (5 chapters, 9 videos, 6 FAQs)
+- Made the Academies/Study Materials tab toggle segment-aware (amber/orange for roofing vs emerald/teal for amenities)
+- Made the academy card "Start" button segment-aware (amber-600 for roofing vs emerald-600 for amenities)
+- Made the "Catalogues & Resources" header icon segment-aware (amber for roofing vs emerald for amenities)
+- Restarted dev server cleanly (killed stale processes, fresh start). Confirmed HTTP 200, no compile errors.
+- Verified via Agent Browser as Roofing user (Arjun Roofing, company=ROOFING):
+  * Academy grid now shows ALL roofing titles: "Company Introduction — Laxree Roofing", "Roofing Product Academy", "Technical & Installation Learning", "Roofing Sales Academy", etc.
+  * Confirmed NO amenities keywords (Minibar/Kettle/Safe Locker) appear in any academy card descriptions
+  * Study Materials card shows "Roofing Study Materials" with amber gradient
+  * Video Chapters tab shows 9 roofing installation videos (Stone-Coated Valley, DECRA Villa Tile, Stone-Coated Sheet, Synthetic Thatch 4-sided, Thatch tiles, VIVA Palm, Roof Shingles x3)
+  * Clicked "Stone-Coated Tile Installation — Valley Detail" video — YouTube iframe loaded successfully showing "TECHNONICOL Guide: Installing Stone-Coated Metal Roof Tiles in a Valley" with transcript and key points
+- Verified all 9 roofing YouTube video IDs are valid via YouTube oEmbed API — all return real titles and authors
+- Ran lint: 21 pre-existing errors in .cjs/.js scripts only. ZERO errors in learning-center.tsx or any src/ TypeScript file.
+
+Stage Summary:
+- FIXED: Roofing dashboard academy cards no longer show amenities keywords. All 14 academy cards now use roofing-specific titles and descriptions (stone-coated tiles, thatch, asphalt shingles, installation, dealership, homeowners, architects, builders, dealers).
+- VERIFIED: Video section is working correctly for roofing users — 9 YouTube installation videos load and play. All video IDs are valid (confirmed via YouTube oEmbed API).
+- VERIFIED: Study Materials section shows roofing chapters (5 lengthy professional chapters), roofing videos (9), and roofing FAQs (6) — all with amber/orange roofing theme.
+- No data corruption: Amenities content is 100% preserved in AMENITIES_ACADEMIES. Only the selection logic changed (isRoofing ? ROOFING_ACADEMIES : AMENITIES_ACADEMIES).
+- Files modified: only src/components/employee/learning-center.tsx

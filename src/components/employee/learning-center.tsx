@@ -112,8 +112,11 @@ interface QuizResult {
 }
 
 // ==================== ACADEMY CONFIG ====================
+// Two segment-specific academy configs — Amenities (hospitality) and Roofing.
+// Each segment gets its own titles, descriptions, and gradient palette so the
+// dashboard never shows the wrong product keywords to the wrong user.
 
-const ACADEMIES = [
+const AMENITIES_ACADEMIES = [
   { type: 'ORIENTATION', title: 'Company Introduction', emoji: '🏢', icon: Building2,
     description: 'Learn about LAXREE\'s mission, values, and company culture',
     gradient: 'from-emerald-500 to-emerald-700', bgLight: 'bg-emerald-50', color: 'emerald' },
@@ -156,6 +159,55 @@ const ACADEMIES = [
   { type: 'CROSS_SELLING', title: 'Cross Selling Academy', emoji: '🔄', icon: RefreshCw,
     description: 'Learn to pitch complementary products — when a client wants a Mini Bar, how to sell Safe Box, Kettle & more',
     gradient: 'from-emerald-600 to-teal-700', bgLight: 'bg-emerald-50', color: 'emerald' },
+]
+
+// Roofing-segment academy cards — every title/description uses roofing keywords
+// (stone-coated tiles, thatch, asphalt shingles, installation, dealership) so
+// roofing users never see amenities product names (Minibar/Kettle/Safe Locker).
+// Gradient palette is amber/orange/stone to match the roofing theme.
+const ROOFING_ACADEMIES = [
+  { type: 'ORIENTATION', title: 'Company Introduction — Laxree Roofing', emoji: '🏢', icon: Building2,
+    description: 'Learn about Laxree Roofing\'s mission, premium roofing products, and Indian market vision',
+    gradient: 'from-amber-500 to-amber-700', bgLight: 'bg-amber-50', color: 'amber' },
+  { type: 'PRODUCT_ACADEMY', title: 'Roofing Product Academy', emoji: '📦', icon: Package,
+    description: 'Master our roofing portfolio — Stone-Coated Tiles, Thatch, Asphalt Shingles & more',
+    gradient: 'from-orange-500 to-orange-700', bgLight: 'bg-orange-50', color: 'orange' },
+  { type: 'TECHNICAL', title: 'Technical & Installation Learning', emoji: '🔧', icon: Wrench,
+    description: 'Installation methods, insulation, roof frames, and waterproofing techniques',
+    gradient: 'from-stone-500 to-stone-700', bgLight: 'bg-stone-50', color: 'stone' },
+  { type: 'SALES_ACADEMY', title: 'Roofing Sales Academy', emoji: '📈', icon: TrendingUp,
+    description: 'Sales methodologies for homeowners, builders, architects & dealers',
+    gradient: 'from-amber-500 to-orange-700', bgLight: 'bg-amber-50', color: 'amber' },
+  { type: 'HOSPITALITY', title: 'Roofing Industry Academy', emoji: '🏗️', icon: Hotel,
+    description: 'Indian roofing market, climate zones, and competitor analysis',
+    gradient: 'from-rose-500 to-rose-700', bgLight: 'bg-rose-50', color: 'rose' },
+  { type: 'CUSTOMER_DISCOVERY', title: 'Customer Discovery Academy', emoji: '🔍', icon: Search,
+    description: 'Understanding roofing buyer personas — homeowners, architects, builders, dealers',
+    gradient: 'from-violet-500 to-violet-700', bgLight: 'bg-violet-50', color: 'violet' },
+  { type: 'NEGOTIATION', title: 'Negotiation Academy', emoji: '🤝', icon: Handshake,
+    description: 'Negotiation for roofing projects, bulk orders & dealership deals',
+    gradient: 'from-orange-500 to-amber-700', bgLight: 'bg-orange-50', color: 'orange' },
+  { type: 'COMPETITIVE_INTELLIGENCE', title: 'Competitive Intelligence Academy', emoji: '👁️', icon: Eye,
+    description: 'DECRA, Gerard, CertainTeed vs Laxree Roofing positioning',
+    gradient: 'from-sky-500 to-sky-700', bgLight: 'bg-sky-50', color: 'sky' },
+  { type: 'FIELD_SALES', title: 'Field Sales Academy', emoji: '🗺️', icon: MapPin,
+    description: 'On-site roofing sales — villa visits, site surveys, dealer meetings',
+    gradient: 'from-lime-600 to-green-700', bgLight: 'bg-lime-50', color: 'lime' },
+  { type: 'INBOUND_SALES', title: 'Inbound Sales Academy', emoji: '📞', icon: PhoneIncoming,
+    description: 'Handling roofing inquiries — phone, WhatsApp, walk-in dealer leads',
+    gradient: 'from-fuchsia-500 to-fuchsia-700', bgLight: 'bg-fuchsia-50', color: 'fuchsia' },
+  { type: 'CERTIFICATION_PREP', title: 'Certification Center', emoji: '🏆', icon: Award,
+    description: 'Prepare for roofing certifications and assessments',
+    gradient: 'from-yellow-500 to-amber-600', bgLight: 'bg-yellow-50', color: 'yellow' },
+  { type: 'MOCK_SIMULATOR', title: 'Mock Sales Simulator', emoji: '🎭', icon: MonitorPlay,
+    description: 'Practice roofing sales scenarios with AI-powered simulations',
+    gradient: 'from-red-500 to-red-700', bgLight: 'bg-red-50', color: 'red' },
+  { type: 'AI_COACH', title: 'AI Sales Coach', emoji: '🤖', icon: Brain,
+    description: 'AI-powered coaching and personalized guidance for roofing sales',
+    gradient: 'from-purple-500 to-purple-700', bgLight: 'bg-purple-50', color: 'purple' },
+  { type: 'CROSS_SELLING', title: 'Cross Selling Academy', emoji: '🔄', icon: RefreshCw,
+    description: 'When a client wants stone-coated tiles, upsell insulation, ridge accessories & thatch for gazebos',
+    gradient: 'from-amber-600 to-orange-700', bgLight: 'bg-amber-50', color: 'amber' },
 ]
 
 // ==================== STUDY MATERIALS DATA ====================
@@ -2080,6 +2132,10 @@ export function LearningCenter() {
   const [selectedDoc, setSelectedDoc] = useState<DocumentResource | null>(null)
   const [docViewerOpen, setDocViewerOpen] = useState(false)
   const user = useAuthStore((s) => s.user)
+  // Segment-aware academy cards — roofing users see roofing keywords/titles,
+  // amenities users see the original hospitality cards.
+  const isRoofing = user?.company === 'ROOFING'
+  const ACADEMIES = isRoofing ? ROOFING_ACADEMIES : AMENITIES_ACADEMIES
 
   // Fetch courses
   useEffect(() => {
@@ -2366,7 +2422,9 @@ export function LearningCenter() {
                   onClick={() => setMainView('academies')}
                   className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
                     mainView === 'academies'
-                      ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/25'
+                      ? isRoofing
+                        ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/25'
+                        : 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/25'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
@@ -2377,7 +2435,9 @@ export function LearningCenter() {
                   onClick={() => setMainView('study-materials')}
                   className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
                     mainView === 'study-materials'
-                      ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/25'
+                      ? isRoofing
+                        ? 'bg-orange-600 text-white shadow-lg shadow-orange-600/25'
+                        : 'bg-teal-600 text-white shadow-lg shadow-teal-600/25'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
@@ -2444,7 +2504,9 @@ export function LearningCenter() {
                               className={`w-full ${
                                 isStarted
                                   ? 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
-                                  : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                                  : isRoofing
+                                    ? 'bg-amber-600 hover:bg-amber-700 text-white'
+                                    : 'bg-emerald-600 hover:bg-emerald-700 text-white'
                               }`}
                             >
                               {isStarted ? (
@@ -2469,7 +2531,7 @@ export function LearningCenter() {
                       className="cursor-pointer hover:shadow-xl transition-all duration-300 overflow-hidden group border-0"
                       onClick={() => setMainView('study-materials')}
                     >
-                      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 p-4 text-white relative overflow-hidden">
+                      <div className={`bg-gradient-to-r ${isRoofing ? 'from-amber-600 via-orange-600 to-stone-700' : 'from-emerald-600 via-teal-600 to-cyan-600'} p-4 text-white relative overflow-hidden`}>
                         <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-8 translate-x-8" />
                         <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full translate-y-6 -translate-x-4" />
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(255,255,255,0.15),transparent_60%)]" />
@@ -2478,7 +2540,7 @@ export function LearningCenter() {
                             <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mb-2">
                               <BookMarked className="w-5 h-5 text-white" />
                             </div>
-                            <h3 className="font-bold text-base">Study Materials</h3>
+                            <h3 className="font-bold text-base">{isRoofing ? 'Roofing Study Materials' : 'Study Materials'}</h3>
                           </div>
                           <div className="flex items-center gap-1 bg-white/20 backdrop-blur-sm rounded-full px-2 py-1">
                             <Sparkles className="w-3 h-3" />
@@ -2489,20 +2551,22 @@ export function LearningCenter() {
 
                       <CardContent className="p-4">
                         <p className="text-sm text-gray-500 mb-3 line-clamp-2">
-                          Study guides, video tutorials, FAQ, and practice quizzes
+                          {isRoofing
+                            ? 'Roofing chapters, installation videos, FAQ, and practice quizzes'
+                            : 'Study guides, video tutorials, FAQ, and practice quizzes'}
                         </p>
                         <div className="grid grid-cols-2 gap-2 mb-3">
                           <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                            <BookOpen className="w-3 h-3 text-emerald-500" />
-                            <span>7 Chapters</span>
+                            <BookOpen className={`w-3 h-3 ${isRoofing ? 'text-amber-500' : 'text-emerald-500'}`} />
+                            <span>{isRoofing ? '5 Chapters' : '7 Chapters'}</span>
                           </div>
                           <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                            <Video className="w-3 h-3 text-teal-500" />
-                            <span>13 Videos</span>
+                            <Video className={`w-3 h-3 ${isRoofing ? 'text-orange-500' : 'text-teal-500'}`} />
+                            <span>{isRoofing ? '9 Videos' : '13 Videos'}</span>
                           </div>
                           <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                            <HelpCircle className="w-3 h-3 text-cyan-500" />
-                            <span>8 FAQs</span>
+                            <HelpCircle className={`w-3 h-3 ${isRoofing ? 'text-stone-500' : 'text-cyan-500'}`} />
+                            <span>{isRoofing ? '6 FAQs' : '8 FAQs'}</span>
                           </div>
                           <div className="flex items-center gap-1.5 text-xs text-gray-500">
                             <Brain className="w-3 h-3 text-purple-500" />
@@ -2511,7 +2575,7 @@ export function LearningCenter() {
                         </div>
                         <Button
                           size="sm"
-                          className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
+                          className={`w-full bg-gradient-to-r ${isRoofing ? 'from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700' : 'from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700'} text-white`}
                         >
                           <BookMarked className="w-3 h-3 mr-1" /> Explore Materials
                         </Button>
@@ -2524,7 +2588,7 @@ export function LearningCenter() {
                 {catalogs.length > 0 && (
                   <div className="mt-8">
                     <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                      <FolderOpen className="w-5 h-5 text-emerald-600" /> Catalogues & Resources
+                      <FolderOpen className={`w-5 h-5 ${isRoofing ? 'text-amber-600' : 'text-emerald-600'}`} /> Catalogues & Resources
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                       {catalogs.map((doc) => (
