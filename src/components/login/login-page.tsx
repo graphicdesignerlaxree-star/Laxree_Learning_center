@@ -195,57 +195,79 @@ export function LoginPage() {
             </a>
           </header>
 
-          {/* Hero */}
-          <div className="flex-1 flex flex-col items-center justify-center px-6 py-8">
+          {/* Hero + Welcome Video (compact, fits one screen) */}
+          <div className="flex-1 flex flex-col items-center justify-center px-6 py-4 sm:py-6">
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center max-w-2xl mb-10"
+              transition={{ duration: 0.5 }}
+              className="text-center max-w-2xl mb-4 sm:mb-5"
             >
-              <h1 className="text-3xl sm:text-4xl font-bold text-stone-800 tracking-tight mb-3">
+              <h1 className="text-2xl sm:text-3xl font-bold text-stone-800 tracking-tight mb-1.5">
                 Choose Your Training Segment
               </h1>
-              <p className="text-stone-500 text-base sm:text-lg leading-relaxed">
+              <p className="text-stone-500 text-sm sm:text-base leading-relaxed">
                 Laxree Solutions LLP operates two business segments. Select the one you belong to so we can show the right training, exams, and content for you.
               </p>
             </motion.div>
 
-            {/* Welcome Training Video */}
+            {/* Welcome Training Video — autoplay banner */}
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="w-full max-w-3xl mb-10"
+              initial={{ opacity: 0, y: 14, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
+              className="w-full max-w-3xl mb-5 sm:mb-6"
             >
-              <div className="rounded-2xl overflow-hidden shadow-xl shadow-stone-900/10 border border-stone-200 bg-stone-900">
-                <div className="flex items-center gap-2 px-5 py-3 bg-stone-800">
-                  <PlayCircle className="w-5 h-5 text-amber-400" />
-                  <span className="text-white font-semibold text-sm">Welcome to Laxree Solutions LLP — Training Introduction</span>
-                  <span className="ml-auto text-xs text-stone-400">Official Training Video</span>
+              <div className="relative rounded-2xl overflow-hidden shadow-xl shadow-stone-900/15 border border-stone-200 bg-stone-900 group">
+                {/* Autoplaying video — muted + loop + playsInline so it plays instantly on load */}
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                  className="w-full h-[180px] sm:h-[210px] object-cover"
+                >
+                  <source src="/laxree-training-welcome.mp4" type="video/mp4" />
+                </video>
+
+                {/* Subtle gradient overlay for legibility */}
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/75 via-stone-950/15 to-stone-950/30 pointer-events-none" />
+
+                {/* Top-left badge: title */}
+                <div className="absolute top-3 left-3 flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 bg-black/55 backdrop-blur-md rounded-full pl-1.5 pr-3 py-1 border border-white/10">
+                    <PlayCircle className="w-3.5 h-3.5 text-amber-400" />
+                    <span className="text-white text-[11px] font-semibold tracking-wide">Welcome to Laxree</span>
+                  </div>
+                  <div className="flex items-center gap-1 bg-amber-500/95 rounded-full px-2 py-1 shadow-sm">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                    <span className="text-white text-[9px] font-bold tracking-widest uppercase">Now Playing</span>
+                  </div>
                 </div>
-                <div className="relative aspect-video bg-black">
-                  <video
-                    controls
-                    preload="metadata"
-                    className="w-full h-full"
-                    poster="/laxree-logo.png"
-                  >
-                    <source src="/laxree-training-welcome.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
+
+                {/* Top-right badge: official */}
+                <div className="absolute top-3 right-3">
+                  <span className="text-[10px] text-stone-200 bg-black/45 backdrop-blur-md rounded-full px-2 py-1 border border-white/10">
+                    Official Training Intro
+                  </span>
                 </div>
-                <div className="px-5 py-3 bg-stone-50 border-t border-stone-200">
-                  <p className="text-xs text-stone-600 leading-relaxed">
-                    <span className="font-semibold text-stone-800">Watch this first:</span> A brief introduction to Laxree Solutions LLP, our two business segments (Amenities & Roofing), and what to expect from your training journey. After watching, select your segment below to continue to login.
+
+                {/* Bottom caption */}
+                <div className="absolute bottom-3 left-3 right-3">
+                  <p className="text-white text-xs sm:text-sm font-medium leading-snug drop-shadow-md">
+                    A brief introduction to Laxree Solutions LLP — our two business segments and what to expect from your training journey.
                   </p>
                 </div>
+
+                {/* Decorative animated ring — feels alive */}
+                <div className="absolute -bottom-12 -right-12 w-32 h-32 rounded-full bg-amber-500/15 blur-2xl pointer-events-none" />
               </div>
             </motion.div>
 
 
             {/* Segment cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full max-w-3xl">
               {/* Amenities card */}
               <motion.button
                 type="button"
@@ -259,17 +281,17 @@ export function LoginPage() {
               >
                 <div className="absolute inset-0 gradient-shift" style={{ background: 'linear-gradient(135deg, #064e3b 0%, #047857 50%, #0d9488 100%)' }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/40 to-transparent" />
-                <div className="relative z-10 p-7 sm:p-8 text-white min-h-[260px] flex flex-col">
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className="w-12 h-12 bg-white/15 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/20">
-                      <Building2 className="w-6 h-6 text-white" />
+                <div className="relative z-10 p-5 sm:p-6 text-white min-h-[200px] flex flex-col">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-11 h-11 bg-white/15 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/20">
+                      <Building2 className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <div className="text-xs font-semibold uppercase tracking-widest text-emerald-200/80">Segment 1</div>
-                      <div className="text-xl font-bold">Laxree Amenities</div>
+                      <div className="text-[10px] font-semibold uppercase tracking-widest text-emerald-200/80">Segment 1</div>
+                      <div className="text-lg font-bold leading-tight">Laxree Amenities</div>
                     </div>
                   </div>
-                  <p className="text-emerald-100/85 text-sm leading-relaxed mb-5">
+                  <p className="text-emerald-100/85 text-[13px] leading-relaxed mb-4">
                     Hotel amenity sales training — safe boxes, RFID door locks, minibars, electric kettles, hair dryers, mirrors, digital signage, dispensers, and housekeeping trolleys.
                   </p>
                   <div className="mt-auto flex items-center justify-between">
@@ -294,17 +316,17 @@ export function LoginPage() {
               >
                 <div className="absolute inset-0 gradient-shift" style={{ background: 'linear-gradient(135deg, #451a03 0%, #92400e 50%, #b45309 100%)' }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-stone-950/40 to-transparent" />
-                <div className="relative z-10 p-7 sm:p-8 text-white min-h-[260px] flex flex-col">
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className="w-12 h-12 bg-white/15 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/20">
-                      <Home className="w-6 h-6 text-white" />
+                <div className="relative z-10 p-5 sm:p-6 text-white min-h-[200px] flex flex-col">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-11 h-11 bg-white/15 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/20">
+                      <Home className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <div className="text-xs font-semibold uppercase tracking-widest text-amber-200/80">Segment 2</div>
-                      <div className="text-xl font-bold">Laxree Roofing</div>
+                      <div className="text-[10px] font-semibold uppercase tracking-widest text-amber-200/80">Segment 2</div>
+                      <div className="text-lg font-bold leading-tight">Laxree Roofing</div>
                     </div>
                   </div>
-                  <p className="text-amber-100/85 text-sm leading-relaxed mb-5">
+                  <p className="text-amber-100/85 text-[13px] leading-relaxed mb-4">
                     Premium roofing solutions training — stone-coated tiles, artificial thatch tiles, and asphalt shingle tiles. Sales, technical, and installation expertise.
                   </p>
                   <div className="mt-auto flex items-center justify-between">
@@ -320,14 +342,14 @@ export function LoginPage() {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="mt-8 text-xs text-stone-400 text-center max-w-md"
+              transition={{ delay: 0.4 }}
+              className="mt-5 text-[11px] text-stone-400 text-center max-w-md"
             >
               Employees can only access the segment they belong to. If you don&apos;t know which segment you&apos;re in, contact your administrator.
             </motion.p>
           </div>
 
-          <footer className="px-6 py-5 text-center">
+          <footer className="px-6 py-3 text-center">
             <p className="text-[11px] text-stone-300 tracking-wide">
               &copy; {new Date().getFullYear()} Laxree Solutions LLP. All rights reserved.
             </p>
