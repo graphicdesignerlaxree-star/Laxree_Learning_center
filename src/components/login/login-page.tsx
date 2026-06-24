@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Eye, EyeOff, Loader2, ChevronRight, Shield, User,
-  Building2, BookOpen, Target, Award, LogIn, Home, ArrowLeft, Check
+  Building2, BookOpen, Target, Award, LogIn, Home, ArrowLeft, Check, PlayCircle
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -210,6 +210,39 @@ export function LoginPage() {
                 Laxree Solutions LLP operates two business segments. Select the one you belong to so we can show the right training, exams, and content for you.
               </p>
             </motion.div>
+
+            {/* Welcome Training Video */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="w-full max-w-3xl mb-10"
+            >
+              <div className="rounded-2xl overflow-hidden shadow-xl shadow-stone-900/10 border border-stone-200 bg-stone-900">
+                <div className="flex items-center gap-2 px-5 py-3 bg-stone-800">
+                  <PlayCircle className="w-5 h-5 text-amber-400" />
+                  <span className="text-white font-semibold text-sm">Welcome to Laxree Solutions LLP — Training Introduction</span>
+                  <span className="ml-auto text-xs text-stone-400">Official Training Video</span>
+                </div>
+                <div className="relative aspect-video bg-black">
+                  <video
+                    controls
+                    preload="metadata"
+                    className="w-full h-full"
+                    poster="/laxree-logo.png"
+                  >
+                    <source src="/laxree-training-welcome.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+                <div className="px-5 py-3 bg-stone-50 border-t border-stone-200">
+                  <p className="text-xs text-stone-600 leading-relaxed">
+                    <span className="font-semibold text-stone-800">Watch this first:</span> A brief introduction to Laxree Solutions LLP, our two business segments (Amenities & Roofing), and what to expect from your training journey. After watching, select your segment below to continue to login.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
 
             {/* Segment cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">

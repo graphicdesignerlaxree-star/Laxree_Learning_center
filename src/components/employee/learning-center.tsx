@@ -1669,6 +1669,84 @@ function StudyMaterialsSection() {
                               <p className="text-sm text-gray-700 leading-relaxed">{paragraph}</p>
                             </motion.div>
                           ))}
+
+                          {/* Related Installation Videos — shown inside the chapter content for roofing chapters */}
+                          {isRoofing && (() => {
+                            const chapterVideos: VideoLesson[] = (() => {
+                              if (chapter.id === 'r-ch2') return ROOFING_VIDEO_LESSONS.filter(v => v.category === 'Stone-Coated')
+                              if (chapter.id === 'r-ch3') return ROOFING_VIDEO_LESSONS.filter(v => v.category === 'Thatch')
+                              if (chapter.id === 'r-ch4') return ROOFING_VIDEO_LESSONS.filter(v => v.category === 'Shingles')
+                              if (chapter.id === 'r-ch5') return ROOFING_VIDEO_LESSONS
+                              return []
+                            })()
+                            if (chapterVideos.length === 0) return null
+                            return (
+                              <motion.div
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 }}
+                                className="mt-4 pt-4 border-t border-dashed border-amber-200"
+                              >
+                                <div className="flex items-center gap-2 mb-3">
+                                  <CirclePlay className="w-4 h-4 text-amber-600" />
+                                  <span className="text-sm font-bold text-amber-700">
+                                    {chapter.id === 'r-ch5' ? 'All Installation Training Videos' : `${chapterVideos[0].category} Installation Training Videos`}
+                                  </span>
+                                  <Badge className="text-[10px] bg-amber-100 text-amber-700 border-0 ml-auto">
+                                    {chapterVideos.length} video{chapterVideos.length > 1 ? 's' : ''}
+                                  </Badge>
+                                </div>
+                                <p className="text-xs text-gray-500 mb-3 leading-relaxed">
+                                  Watch these real installation tutorials to see exactly how {chapterVideos[0].category === 'Stone-Coated' ? 'stone-coated tiles' : chapterVideos[0].category === 'Thatch' ? 'artificial thatch tiles' : chapterVideos[0].category === 'Shingles' ? 'asphalt shingles' : 'roofing tiles'} are installed on-site. Click any video to play the full YouTube tutorial with transcript and key points.
+                                </p>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                  {chapterVideos.map((video) => {
+                                    const catColor = VIDEO_CATEGORY_COLORS[video.category] || { bg: 'bg-gray-100', text: 'text-gray-700' }
+                                    return (
+                                      <button
+                                        key={video.id}
+                                        onClick={() => { setSelectedVideo(video); setVideoDialogOpen(true) }}
+                                        className="text-left rounded-lg border border-amber-200 bg-white overflow-hidden shadow-sm hover:shadow-md hover:border-amber-400 transition-all group"
+                                      >
+                                        <div className="relative h-28 overflow-hidden">
+                                          <img
+                                            src={video.image}
+                                            alt={video.title}
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                            onError={(e) => {
+                                              (e.target as HTMLImageElement).style.display = 'none'
+                                              ;(e.target as HTMLImageElement).parentElement!.classList.add('bg-gradient-to-br', 'from-amber-800', 'to-orange-900')
+                                            }}
+                                          />
+                                          <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors" />
+                                          <div className="absolute inset-0 flex items-center justify-center">
+                                            <div className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/50 transition-colors">
+                                              <CirclePlay className="w-5 h-5 text-white" />
+                                            </div>
+                                          </div>
+                                          <div className="absolute bottom-1.5 right-1.5 bg-black/60 backdrop-blur-sm rounded px-1.5 py-0.5 flex items-center gap-1">
+                                            <Clock className="w-3 h-3 text-white/80" />
+                                            <span className="text-[10px] font-medium text-white">{video.duration}</span>
+                                          </div>
+                                          <div className="absolute top-1.5 left-1.5">
+                                            <Badge className={`text-[9px] ${catColor.bg} ${catColor.text} border-0`}>
+                                              {video.category}
+                                            </Badge>
+                                          </div>
+                                        </div>
+                                        <div className="p-2.5">
+                                          <h4 className="text-xs font-bold text-gray-900 line-clamp-2 group-hover:text-amber-700 transition-colors">
+                                            {video.title}
+                                          </h4>
+                                          <p className="text-[11px] text-gray-500 mt-1 line-clamp-2">{video.description}</p>
+                                        </div>
+                                      </button>
+                                    )
+                                  })}
+                                </div>
+                              </motion.div>
+                            )
+                          })()}
                         </div>
                       </AccordionContent>
                     </AccordionItem>
@@ -2394,13 +2472,23 @@ export function LearningCenter() {
   const getAcademyInfo = (type: string) => ACADEMIES.find(a => a.type === type)
 
   // Videos to show inside an academy's "Videos" tab.
-  // Roofing segment → roofing YouTube installation videos.
-  // Amenities segment → amenities video lessons.
-  // All roofing academies get the full roofing video set because installation
-  // knowledge is relevant across product, technical, and sales academies.
+  // Each academy shows ONLY the videos relevant to that academy's topic:
+  //  - ORIENTATION (Company Introduction): welcome/intro video only
+  //  - PRODUCT_ACADEMY (Roofing Product Academy): none (installation videos belong to Technical)
+  //  - TECHNICAL (Technical & Installation Learning): ALL installation videos (this is the training section)
+  //  - Other academies: none (training videos live in the Technical academy)
+  // Amenities segment → amenities video lessons (existing behavior preserved).
   const getVideosForAcademy = (type: string): VideoLesson[] => {
-    const all = isRoofing ? ROOFING_VIDEO_LESSONS : AMENITIES_VIDEO_LESSONS
-    return all
+    if (!isRoofing) {
+      // Amenities: show all amenities video lessons in all academies (existing behavior)
+      return AMENITIES_VIDEO_LESSONS
+    }
+    // Roofing: only the Technical & Installation Learning academy shows installation videos
+    if (type === 'TECHNICAL') {
+      return ROOFING_VIDEO_LESSONS
+    }
+    // All other roofing academies: no videos (they belong in the Technical academy)
+    return []
   }
 
   const getProgressForAcademy = (type: string) => {
@@ -2892,9 +2980,15 @@ export function LearningCenter() {
                           return (
                             <Card className="border-dashed">
                               <CardContent className="py-12 text-center">
-                                <Video className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                                <h3 className="text-lg font-semibold text-gray-600">No Videos Available Yet</h3>
-                                <p className="text-gray-400 mt-1">Videos for this academy will be added soon.</p>
+                                <Video className={`w-12 h-12 mx-auto mb-3 ${isRoofing ? 'text-amber-300' : 'text-gray-300'}`} />
+                                <h3 className="text-lg font-semibold text-gray-600">
+                                  {isRoofing ? 'Training Videos in Technical & Installation Learning' : 'No Videos Available Yet'}
+                                </h3>
+                                <p className="text-gray-400 mt-1 max-w-md mx-auto">
+                                  {isRoofing
+                                    ? 'Installation training videos (stone-coated, thatch, asphalt shingles) are available in the "Technical & Installation Learning" academy. Please open that academy to access the video training library.'
+                                    : 'Videos for this academy will be added soon.'}
+                                </p>
                               </CardContent>
                             </Card>
                           )
@@ -2904,11 +2998,15 @@ export function LearningCenter() {
                             <div className="mb-4">
                               <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
                                 <CirclePlay className={`w-4 h-4 ${isRoofing ? 'text-amber-600' : 'text-teal-600'}`} />
-                                {isRoofing ? 'Roofing Installation Videos' : 'Product Video Lessons'}
+                                {isRoofing
+                                  ? (selectedAcademy === 'TECHNICAL' ? 'Roofing Installation Training Videos' : 'Roofing Installation Videos')
+                                  : 'Product Video Lessons'}
                               </h3>
                               <p className="text-sm text-gray-500 mt-1">
                                 {isRoofing
-                                  ? 'Watch real installation tutorials for stone-coated, thatch, and asphalt shingle roofs. Click any video to play the YouTube embed with full transcript and key points.'
+                                  ? (selectedAcademy === 'TECHNICAL'
+                                    ? 'Watch real installation tutorials for stone-coated, thatch, and asphalt shingle roofs. Click any video to play the YouTube embed with full transcript and key points.'
+                                    : 'Installation training videos are available in the "Technical & Installation Learning" academy.')
                                   : 'Watch product demonstrations and installation tutorials. Click any video to play with full transcript and key points.'}
                               </p>
                             </div>
