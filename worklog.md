@@ -947,3 +947,37 @@ Stage Summary:
 - VERIFIED: Study Materials section shows roofing chapters (5 lengthy professional chapters), roofing videos (9), and roofing FAQs (6) — all with amber/orange roofing theme.
 - No data corruption: Amenities content is 100% preserved in AMENITIES_ACADEMIES. Only the selection logic changed (isRoofing ? ROOFING_ACADEMIES : AMENITIES_ACADEMIES).
 - Files modified: only src/components/employee/learning-center.tsx
+
+---
+Task ID: 7
+Agent: Main (academy videos tab)
+Task: Add Videos tab inside academy detail views (Roofing Product Academy, Technical & Installation Learning) — user reported no videos inside the academies, only in Study Materials
+
+Work Log:
+- User reported that "Roofing Product Academy" and "Technical & Installation Learning" academies had no videos — videos were only in the separate Study Materials section.
+- Investigated the academy detail view in src/components/employee/learning-center.tsx: the ACADEMY DETAIL VIEW (rendered when clicking an academy card) had only 2 tabs: "Modules" and "Catalogues". There was NO "Videos" tab. The 9 roofing YouTube installation videos were only accessible via the separate "Study Materials" section (StudyMaterialsSection component).
+- Added a "Videos" tab to the academy detail view:
+  1. Added `selectedAcademyVideo` state to the main LearningCenter component
+  2. Added `getVideosForAcademy()` helper — returns ROOFING_VIDEO_LESSONS for roofing users, AMENITIES_VIDEO_LESSONS for amenities users
+  3. Added a third TabsTrigger "Videos" with a Video icon to the TabsList
+  4. Added a TabsContent for "videos" with a full video card grid (product image thumbnails, duration badges, category badges, play buttons, hover effects)
+  5. Added a YouTube video dialog (Dialog/DialogContent) with:
+     - YouTube iframe embed (https://www.youtube.com/embed/{youtubeId})
+     - Lesson Transcript (scrollable, with accent-colored bullets)
+     - Key Points (checklist with accent-colored checkmarks)
+     - Segment-aware coloring (amber/orange for roofing, teal/emerald for amenities)
+- Restarted dev server cleanly. Confirmed HTTP 200, no compile errors.
+- Verified via Agent Browser as Roofing user (Arjun Roofing):
+  * Clicked "Roofing Product Academy" card → detail view opened with 3 tabs: Modules, Videos, Catalogues
+  * Clicked "Videos" tab → saw "Roofing Installation Videos" heading + all 9 roofing YouTube installation videos (Stone-Coated Valley, DECRA Villa Tile, Stone-Coated Sheet, Synthetic Thatch, Thatch tiles, VIVA Palm, Roof Shingles x3)
+  * Clicked "Stone-Coated Tile Installation — Valley Detail" video → YouTube iframe dialog opened showing "TECHNONICOL Guide: Installing Stone-Coated Metal Roof Tiles in a Valley" with full transcript and key points
+  * Navigated to "Technical & Installation Learning" academy → also has 3 tabs (Modules, Videos, Catalogues)
+  * Clicked Videos tab → same 9 roofing installation videos available
+- Ran lint: 21 pre-existing errors in .cjs/.js scripts only. ZERO errors in learning-center.tsx.
+
+Stage Summary:
+- FIXED: Both "Roofing Product Academy" and "Technical & Installation Learning" academies now have a "Videos" tab with all 9 roofing YouTube installation videos.
+- The Videos tab is available in ALL academies for both segments (roofing and amenities), so every academy has access to its segment's video lessons.
+- Clicking any video opens a dialog with the YouTube embed, full transcript, and key points — same rich experience as the Study Materials video section.
+- No data corruption: the existing Modules and Catalogues tabs are unchanged. Only a new Videos tab was added between them.
+- Files modified: only src/components/employee/learning-center.tsx

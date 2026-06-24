@@ -2131,6 +2131,7 @@ export function LearningCenter() {
   const [pdfViewerTitle, setPdfViewerTitle] = useState('')
   const [selectedDoc, setSelectedDoc] = useState<DocumentResource | null>(null)
   const [docViewerOpen, setDocViewerOpen] = useState(false)
+  const [selectedAcademyVideo, setSelectedAcademyVideo] = useState<VideoLesson | null>(null)
   const user = useAuthStore((s) => s.user)
   // Segment-aware academy cards — roofing users see roofing keywords/titles,
   // amenities users see the original hospitality cards.
@@ -2356,6 +2357,16 @@ export function LearningCenter() {
     : []
 
   const getAcademyInfo = (type: string) => ACADEMIES.find(a => a.type === type)
+
+  // Videos to show inside an academy's "Videos" tab.
+  // Roofing segment → roofing YouTube installation videos.
+  // Amenities segment → amenities video lessons.
+  // All roofing academies get the full roofing video set because installation
+  // knowledge is relevant across product, technical, and sales academies.
+  const getVideosForAcademy = (type: string): VideoLesson[] => {
+    const all = isRoofing ? ROOFING_VIDEO_LESSONS : AMENITIES_VIDEO_LESSONS
+    return all
+  }
 
   const getProgressForAcademy = (type: string) => {
     const list = courses.filter(c => c.moduleType === type)
@@ -2674,11 +2685,14 @@ export function LearningCenter() {
                     </div>
                   </div>
 
-                  {/* Tabs: Modules & Catalogues */}
+                  {/* Tabs: Modules, Videos & Catalogues */}
                   <Tabs value={activeTab} onValueChange={setActiveTab}>
                     <TabsList className="w-full">
                       <TabsTrigger value="modules" className="flex-1">
                         <BookOpen className="w-4 h-4 mr-1" /> Modules
+                      </TabsTrigger>
+                      <TabsTrigger value="videos" className="flex-1">
+                        <Video className="w-4 h-4 mr-1" /> Videos
                       </TabsTrigger>
                       <TabsTrigger value="catalogues" className="flex-1">
                         <FolderOpen className="w-4 h-4 mr-1" /> Catalogues
@@ -2835,6 +2849,100 @@ export function LearningCenter() {
                       )}
                     </TabsContent>
 
+                    {/* Videos Tab — segment-aware YouTube installation videos */}
+                    <TabsContent value="videos" className="mt-4">
+                      {(() => {
+                        const academyVideos = getVideosForAcademy(selectedAcademy)
+                        if (academyVideos.length === 0) {
+                          return (
+                            <Card className="border-dashed">
+                              <CardContent className="py-12 text-center">
+                                <Video className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                <h3 className="text-lg font-semibold text-gray-600">No Videos Available Yet</h3>
+                                <p className="text-gray-400 mt-1">Videos for this academy will be added soon.</p>
+                              </CardContent>
+                            </Card>
+                          )
+                        }
+                        return (
+                          <div>
+                            <div className="mb-4">
+                              <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
+                                <CirclePlay className={`w-4 h-4 ${isRoofing ? 'text-amber-600' : 'text-teal-600'}`} />
+                                {isRoofing ? 'Roofing Installation Videos' : 'Product Video Lessons'}
+                              </h3>
+                              <p className="text-sm text-gray-500 mt-1">
+                                {isRoofing
+                                  ? 'Watch real installation tutorials for stone-coated, thatch, and asphalt shingle roofs. Click any video to play the YouTube embed with full transcript and key points.'
+                                  : 'Watch product demonstrations and installation tutorials. Click any video to play with full transcript and key points.'}
+                              </p>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                              {academyVideos.map((video, idx) => {
+                                const catColor = VIDEO_CATEGORY_COLORS[video.category] || { bg: 'bg-gray-100', text: 'text-gray-700' }
+                                return (
+                                  <motion.button
+                                    key={video.id}
+                                    initial={{ opacity: 0, y: 12 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: idx * 0.04 }}
+                                    whileHover={{ scale: 1.02, y: -2 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={() => setSelectedAcademyVideo(video)}
+                                    className="text-left rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow group"
+                                  >
+                                    {/* Video Thumbnail with product image */}
+                                    <div className="relative h-32 overflow-hidden">
+                                      <img
+                                        src={video.image}
+                                        alt={video.title}
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                        onError={(e) => {
+                                          (e.target as HTMLImageElement).style.display = 'none'
+                                          if (isRoofing) {
+                                            ;(e.target as HTMLImageElement).parentElement!.classList.add('bg-gradient-to-br', 'from-amber-800', 'to-orange-900')
+                                          } else {
+                                            ;(e.target as HTMLImageElement).parentElement!.classList.add('bg-gradient-to-br', 'from-teal-800', 'to-emerald-900')
+                                          }
+                                        }}
+                                      />
+                                      <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors" />
+                                      <div className="absolute inset-0 flex items-center justify-center">
+                                        <div className="w-12 h-12 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/50 transition-colors">
+                                          <CirclePlay className="w-6 h-6 text-white" />
+                                        </div>
+                                      </div>
+                                      {/* Duration Badge */}
+                                      <div className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-sm rounded-md px-2 py-0.5 flex items-center gap-1">
+                                        <Clock className="w-3 h-3 text-white/80" />
+                                        <span className="text-[11px] font-medium text-white">{video.duration}</span>
+                                      </div>
+                                      {/* Category Badge */}
+                                      <div className="absolute top-2 left-2">
+                                        <Badge className={`text-[10px] ${catColor.bg} ${catColor.text} border-0`}>
+                                          {video.category}
+                                        </Badge>
+                                      </div>
+                                    </div>
+                                    <div className="p-3">
+                                      <h4 className={`text-sm font-semibold text-gray-900 line-clamp-2 ${isRoofing ? 'group-hover:text-amber-700' : 'group-hover:text-emerald-700'} transition-colors`}>
+                                        {video.title}
+                                      </h4>
+                                      <p className="text-[11px] text-gray-500 mt-1 line-clamp-2">{video.description}</p>
+                                      <div className="flex items-center gap-1.5 mt-1.5">
+                                        <Volume2 className="w-3 h-3 text-gray-400" />
+                                        <span className="text-[11px] text-gray-400">Video Lesson</span>
+                                      </div>
+                                    </div>
+                                  </motion.button>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        )
+                      })()}
+                    </TabsContent>
+
                     <TabsContent value="catalogues" className="mt-4">
                       {catalogs.length === 0 && DOCUMENT_RESOURCES.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -2919,6 +3027,91 @@ export function LearningCenter() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* ==================== ACADEMY VIDEO DIALOG (YouTube embed) ==================== */}
+      <Dialog open={!!selectedAcademyVideo} onOpenChange={(open) => { if (!open) setSelectedAcademyVideo(null) }}>
+        <DialogContent className="max-w-4xl max-h-[90vh] p-0 overflow-hidden">
+          <DialogHeader className="p-4 pb-2">
+            <DialogTitle className="flex items-center gap-2 text-base">
+              <Video className={`w-4 h-4 ${isRoofing ? 'text-amber-600' : 'text-teal-600'}`} />
+              {selectedAcademyVideo?.title}
+            </DialogTitle>
+            <DialogDescription className="text-sm">
+              {selectedAcademyVideo?.category} • {selectedAcademyVideo?.duration} • Video Lesson
+            </DialogDescription>
+          </DialogHeader>
+          <div className="px-4 pb-4 overflow-y-auto max-h-[calc(90vh-80px)]">
+            {selectedAcademyVideo && (
+              <>
+                {/* YouTube Embed */}
+                {selectedAcademyVideo.youtubeId ? (
+                  <div className="rounded-xl overflow-hidden aspect-video mb-4">
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      src={`https://www.youtube.com/embed/${selectedAcademyVideo.youtubeId}`}
+                      title={selectedAcademyVideo.title}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="w-full h-full"
+                    />
+                  </div>
+                ) : (
+                  <div className="rounded-xl overflow-hidden mb-4 relative">
+                    <img
+                      src={selectedAcademyVideo.image}
+                      alt={selectedAcademyVideo.title}
+                      className="w-full h-48 sm:h-64 object-cover"
+                    />
+                  </div>
+                )}
+
+                {/* Description */}
+                <p className="text-sm text-gray-600 mb-4 leading-relaxed">{selectedAcademyVideo.description}</p>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                  {/* Transcript */}
+                  <div className="lg:col-span-2">
+                    <div className="rounded-xl border border-gray-200 p-4">
+                      <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-3">
+                        <BookOpen className={`w-4 h-4 ${isRoofing ? 'text-amber-600' : 'text-teal-600'}`} />
+                        Lesson Transcript
+                      </h3>
+                      <div className="space-y-3 max-h-64 overflow-y-auto pr-2">
+                        {selectedAcademyVideo.transcript.map((para, idx) => (
+                          <div key={idx} className="flex items-start gap-2">
+                            <div className={`w-1.5 h-1.5 rounded-full mt-2 shrink-0 ${isRoofing ? 'bg-amber-400' : 'bg-teal-400'}`} />
+                            <p className="text-sm text-gray-700 leading-relaxed">{para}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Key Points */}
+                  <div>
+                    <div className={`rounded-xl border p-4 ${isRoofing ? 'border-amber-200 bg-amber-50/50' : 'border-teal-200 bg-teal-50/50'}`}>
+                      <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-3">
+                        <Target className={`w-4 h-4 ${isRoofing ? 'text-amber-600' : 'text-teal-600'}`} />
+                        Key Points
+                      </h3>
+                      <ul className="space-y-2">
+                        {selectedAcademyVideo.keyPoints.map((point, idx) => (
+                          <li key={idx} className="flex items-start gap-2">
+                            <CheckCircle2 className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isRoofing ? 'text-amber-500' : 'text-teal-500'}`} />
+                            <span className="text-xs text-gray-700 leading-relaxed">{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* ==================== QUIZ DIALOG ==================== */}
       {quizData && quizModule && (
