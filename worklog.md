@@ -868,3 +868,34 @@ Stage Summary:
 - Lint: clean for src/ (only pre-existing require() warnings in .cjs/.js helper scripts)
 - TypeScript: zero new errors introduced
 - No new dependencies added — used only existing shadcn/ui components and lucide-react icons (Layers, Home, Leaf newly imported but already in the lucide-react package)
+
+---
+Task ID: 5
+Agent: Main (deployment coordinator)
+Task: Push all updates to GitHub + deploy to Vercel so user can see the roofing content updates
+
+Work Log:
+- Inspected git state: local main had diverged from origin/main. Local HEAD (42e048d, June 24) was based on an OLD base (512bf28) and LACKED the two-segment switching logic (isRoofing/company filter). Origin/main (e33435a, June 23) already contained the complete, correct work: two-segment support, Neon cold-start retry, roofing scenarios for AI chat/dialog/mock-sims, AND the roofing Learning Center chapters (5 chapters + 9 YouTube installation videos + 11 catalog images).
+- Created backup branch `backup-local-42e048d` to preserve the local commit (no data loss).
+- Reset local main to origin/main (e33435a) — the correct, segment-aware version. This avoids regressing the Amenities/Roofing separation (Problem 1 fix).
+- Discovered Prisma Client was out of sync locally: `db.user.findUnique()` returned `company: undefined` even though the DB column had `company: "ROOFING"`. Ran `bun run prisma generate` to regenerate the client. Verified via raw SQL query that DB has correct values.
+- Restarted dev server (killed stale processes on port 3000, started fresh). Confirmed HTTP 200 on / and successful auth API response for roofing.emp001@laxree.com.
+- Verified via Agent Browser (end-to-end):
+  * Segment selection page renders correctly with both Laxree Amenities and Laxree Roofing options
+  * Logged in as Roofing Employee (Arjun Roofing, company=ROOFING) — auth succeeds
+  * Learning Center > Study Materials tab shows "Roofing Learning Center" header with 5 roofing chapters:
+    01 Company Introduction — Laxree Roofing (3 min, 6 sections, 515 words)
+    02 Stone-Coated Metal Roof Tiles (3 min, 6 sections, 574 words)
+    03 Artificial Thatch Tiles (3 min, 6 sections, 477 words)
+    04 Asphalt Shingles (3 min, 6 sections, 438 words)
+    05 Installation, Insulation & Dealership (3 min, 6 sections, 559 words)
+  * Expanded chapter 02 — confirmed lengthy, professional content (AZ coating specs, sizing, overlap calculations, color options, quantity estimation)
+  * Video Chapters tab has 9 YouTube installation videos with real YouTube IDs (NcoaiGbEeAI, qaHsC-COyTg, dPznayY99ec, ZHPn8ScNz68, etc.) and detailed transcripts/key points
+- Confirmed GitHub is fully up to date: local HEAD == origin/main == e33435a, working tree clean, nothing unpushed.
+- Confirmed package.json has `build: prisma generate && next build` and `postinstall: prisma generate` — Vercel will auto-generate the Prisma Client during build, so the sync issue is local-only and won't affect Vercel.
+- Vercel CLI installed (v54.15.1) but no stored credentials/token available in the environment. Deployment to Vercel requires either (a) the user's Vercel project connected to the GitHub repo for auto-deploy on push, or (b) a VERCEL_TOKEN.
+
+Stage Summary:
+- GitHub: FULLY UP TO DATE. origin/main at e33435a contains ALL work — roofing chapters (lengthy + professional), 9 YouTube installation videos, 11 catalog product images, segment-aware filtering (Amenities users see amenities content, Roofing users see roofing content), Neon cold-start retry, AI chat/dialog/mock-sim roofing scenarios. Nothing left to push.
+- Local: aligned with origin/main. Backup branch preserved. Dev server running clean (HTTP 200, auth works, roofing chapters + YouTube videos render correctly for roofing users).
+- Vercel: Vercel CLI installed but requires authentication token. If the user's Vercel project is connected to the GitHub repo (graphicdesignerlaxree-star/Laxree_Learning_center), the latest push auto-triggers a production deployment. The build will run `prisma generate && next build` ensuring the Prisma Client is correctly generated on Vercel's side.
