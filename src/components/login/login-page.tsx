@@ -211,57 +211,54 @@ export function LoginPage() {
               </p>
             </motion.div>
 
-            {/* Welcome Training Video — autoplay banner */}
+            {/* Welcome Training Video — autoplay, full video visible (no cropping) */}
             <motion.div
               initial={{ opacity: 0, y: 14, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
-              className="w-full max-w-3xl mb-5 sm:mb-6"
+              className="w-full max-w-2xl mb-4 sm:mb-5"
             >
               <div className="relative rounded-2xl overflow-hidden shadow-xl shadow-stone-900/15 border border-stone-200 bg-stone-900 group">
-                {/* Autoplaying video — muted + loop + playsInline so it plays instantly on load */}
-                <video
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="auto"
-                  className="w-full h-[180px] sm:h-[210px] object-cover"
-                >
-                  <source src="/laxree-training-welcome.mp4" type="video/mp4" />
-                </video>
+                {/* 16:9 aspect-ratio container matches the video's native 1280x720 so NO cropping occurs */}
+                <div className="relative aspect-video bg-black">
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="auto"
+                    className="w-full h-full object-contain"
+                  >
+                    <source src="/laxree-training-welcome.mp4" type="video/mp4" />
+                  </video>
 
-                {/* Subtle gradient overlay for legibility */}
-                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/75 via-stone-950/15 to-stone-950/30 pointer-events-none" />
-
-                {/* Top-left badge: title */}
-                <div className="absolute top-3 left-3 flex items-center gap-2">
-                  <div className="flex items-center gap-1.5 bg-black/55 backdrop-blur-md rounded-full pl-1.5 pr-3 py-1 border border-white/10">
-                    <PlayCircle className="w-3.5 h-3.5 text-amber-400" />
-                    <span className="text-white text-[11px] font-semibold tracking-wide">Welcome to Laxree</span>
+                  {/* Top-left badges — compact, don't cover video center */}
+                  <div className="absolute top-2 left-2 flex items-center gap-1.5 z-10">
+                    <div className="flex items-center gap-1 bg-black/55 backdrop-blur-md rounded-full pl-1.5 pr-2.5 py-0.5 border border-white/10">
+                      <PlayCircle className="w-3 h-3 text-amber-400" />
+                      <span className="text-white text-[10px] font-semibold tracking-wide">Welcome to Laxree</span>
+                    </div>
+                    <div className="flex items-center gap-1 bg-amber-500/95 rounded-full px-1.5 py-0.5 shadow-sm">
+                      <span className="w-1 h-1 rounded-full bg-white animate-pulse" />
+                      <span className="text-white text-[8px] font-bold tracking-widest uppercase">Live</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1 bg-amber-500/95 rounded-full px-2 py-1 shadow-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                    <span className="text-white text-[9px] font-bold tracking-widest uppercase">Now Playing</span>
+
+                  {/* Top-right badge */}
+                  <div className="absolute top-2 right-2 z-10">
+                    <span className="text-[9px] text-stone-200 bg-black/45 backdrop-blur-md rounded-full px-2 py-0.5 border border-white/10">
+                      Official Training Intro
+                    </span>
+                  </div>
+
+                  {/* Bottom gradient + caption — only covers bottom 25% so video stays visible */}
+                  <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" />
+                  <div className="absolute bottom-2 left-2 right-2 z-10">
+                    <p className="text-white text-[10px] sm:text-[11px] font-medium leading-tight drop-shadow-md">
+                      A brief introduction to Laxree Solutions LLP — our two business segments and your training journey.
+                    </p>
                   </div>
                 </div>
-
-                {/* Top-right badge: official */}
-                <div className="absolute top-3 right-3">
-                  <span className="text-[10px] text-stone-200 bg-black/45 backdrop-blur-md rounded-full px-2 py-1 border border-white/10">
-                    Official Training Intro
-                  </span>
-                </div>
-
-                {/* Bottom caption */}
-                <div className="absolute bottom-3 left-3 right-3">
-                  <p className="text-white text-xs sm:text-sm font-medium leading-snug drop-shadow-md">
-                    A brief introduction to Laxree Solutions LLP — our two business segments and what to expect from your training journey.
-                  </p>
-                </div>
-
-                {/* Decorative animated ring — feels alive */}
-                <div className="absolute -bottom-12 -right-12 w-32 h-32 rounded-full bg-amber-500/15 blur-2xl pointer-events-none" />
               </div>
             </motion.div>
 

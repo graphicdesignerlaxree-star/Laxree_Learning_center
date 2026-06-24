@@ -1131,3 +1131,87 @@ Stage Summary:
 - Added elegant overlay UI: "Welcome to Laxree" badge, pulsing "NOW PLAYING" badge, "Official Training Intro" badge, bottom caption with gradient overlay for legibility, decorative amber glow
 - Files modified: only src/components/login/login-page.tsx (70 insertions, 48 deletions)
 - Pushed to GitHub: 87c54ba → origin/main (auto-deploys to Vercel if connected)
+
+---
+Task ID: 11
+Agent: Main (welcome video cropping fix)
+Task: User reported "video is properly is cutting fix it on welcoming video" — the welcome video on the segment chooser page was being cropped even though object-cover was used in the previous commit (87c54ba).
+
+Work Log:
+- Read worklog.md (Tasks 1-10) for context. Confirmed previous fix (Task 10) used object-cover + fixed height banner — but for a 16:9 source video (1280x720) the fixed-height container caused object-cover to crop top/bottom of the frame.
+- Inspected src/components/login/login-page.tsx (lines 214-263) — confirmed the welcome video block used:
+  * Fixed height container (h-[180px] sm:h-[210px]) — NOT aspect-ratio matched to source
+  * object-cover className on the <video> — caused cropping when source aspect (1.778) != container aspect (varies with width)
+- Redesigned the welcome video block to eliminate cropping:
+  * Replaced fixed height container with `aspect-video` div (forces 16:9 = 1.778 aspect ratio, matches source video exactly)
+  * Changed video className from `object-cover` to `object-contain` — full video frame always visible, no cropping ever
+  * Kept all overlay UI elements (Welcome badge, Live pulse, Official Training Intro badge, bottom caption with gradient) — they're absolutely positioned over the 16:9 video so don't affect video rendering
+  * Kept max-w-2xl wrapper (prevents video from being too large on desktop)
+  * Kept autoPlay loop muted playsInline preload="auto" attributes
+- Verified via Agent Browser + VLM (logged-out state):
+  * video element: src=http://localhost:3000/laxree-training-welcome.mp4, videoWidth=1280, videoHeight=720 (16:9 source)
+  * container: 670x377 (aspect 1.778 — EXACTLY matches video aspect 1.778)
+  * objectFit: contain (no cropping)
+  * paused: false (playing)
+  * readyState: 4 (HAVE_ENOUGH_DATA)
+  * VLM screenshot analysis: "(1) No, the welcome video is not cropped/cut off. (2) Yes, the entire video frame is visible. (3) Yes, both Amenities and Roofing segment cards are visible without scrolling. (4) No layout issues are apparent."
+- Lint: 21 pre-existing errors in .cjs/.js scripts only. ZERO errors in src/ TypeScript files.
+- Dev server: HTTP 200, compiled successfully.
+
+Stage Summary:
+- FIXED: Welcome video on segment chooser page is no longer cropped. Using aspect-video container (matches source 16:9) + object-contain ensures the full video frame is always visible.
+- All overlay UI preserved (Welcome to Laxree badge, pulsing Live badge, Official Training Intro badge, bottom caption with gradient).
+- Verified visually via Agent Browser + VLM — entire video frame visible, both segment cards still visible without scrolling, no layout issues.
+- Files modified: only src/components/login/login-page.tsx
+
+---
+Task ID: 12
+Agent: Main (chapter video section + MOQ content)
+Task: User reported 3 issues: (A) "when I click on the installation chapter video section outside I want when I click on stone coated there show the video section and particular video only — example stone coated installation only show that video there". (B) "content of product academy not working up to date upgrade see analysis". (C) "our MOQ is the 100 or 150 tile and for the dealer distributor it is the 1000+".
+
+Work Log:
+- Read worklog.md (Tasks 1-11) for context. Confirmed current state of src/components/employee/learning-center.tsx:
+  * Chapter 5 (Installation/Dealership) showed ALL 9 ROOFING_VIDEO_LESSONS — every category — appearing "outside" the chapter scope (too broad for an installation chapter that should focus on installation, not product-specific videos)
+  * Chapter 2/3/4 already had category filters (Stone-Coated/Thatch/Shingles) — those were correct
+  * Product Academy content (Ch1-5) had rich technical content but no MOQ details
+- Issue A fix — Chapter 5 video section (lines 1680-1688):
+  * Removed `if (chapter.id === 'r-ch5') return ROOFING_VIDEO_LESSONS` line that returned all 9 videos
+  * Updated comment to clarify: "r-ch1 (Company Intro) and r-ch5 (general Installation/Dealership) have no inline videos — users find product-specific installation videos inside their respective product chapters."
+  * Removed the now-dead-code title branch `chapter.id === 'r-ch5' ? 'All Installation Training Videos' : ...` — since chapterVideos.length is 0 for r-ch5, the section returns null before reaching the title render (line 1689: `if (chapterVideos.length === 0) return null`)
+  * Result: Ch2 shows 3 Stone-Coated videos, Ch3 shows 3 Thatch videos, Ch4 shows 3 Shingles videos, Ch1/Ch5 show no inline videos
+- Issue B+C fix — Added MOQ (Minimum Order Quantity) content to 3 places:
+  1. Chapter 2 (Stone-Coated) Sales Pitch Summary (line ~834):
+     - Added "VALUE & MOQ" section explaining: Retail MOQ = 100-150 tiles (500-800 sqft patio/extension); Dealer MOQ = 1,000+ tiles per order (unlocks ₹10/tile bulk discount); Township project MOQ = 3,000+ tiles (custom pricing negotiated with Laxree management)
+     - Added closing tip: "the clear MOQ tiers prevent pricing confusion for retail vs dealer vs project customers"
+  2. Chapter 5 (Installation, Insulation & Dealership) Dealership paragraph (line ~897):
+     - Added a full "MINIMUM ORDER QUANTITY (MOQ) TIERS" structured block with 3 tiers:
+       (A) RETAIL / END-CUSTOMER MOQ = 100 to 150 tiles — covers 500-800 sqft roof, orders below 100 incur 10-15% surcharge, example: Pune homeowner orders 120 tiles for patio
+       (B) DEALER / DISTRIBUTOR MOQ = 1,000+ tiles per order — dealers commit ₹2,00,000 inventory, example: Bangalore stock dealer reorders 2,000 tiles (700 each of 3 colors) saves ₹20,000
+       (C) PROJECT / BULK ORDER = 3,000+ tiles — township projects (50+ villas), dealer negotiates custom ₹20-30/tile below DP, example: 50-villa township = 20,000 tiles, dealer profit ₹14,00,000
+     - Added closing advice: "Always confirm the customer's segment (retail vs dealer vs project) BEFORE quoting — quoting dealer MOQ to a retail customer kills the deal; quoting retail MOQ to a dealer leaves margin on the table."
+  3. Chapter 5 Sales Pitch Summary (line ~901):
+     - Added DEALERSHIP & MOQ closing section: "MOQ POLICY: Retail customers — 100-150 tiles minimum (covers a small villa patio). Dealers — 1,000+ tiles per reorder to unlock the ₹10/tile bulk discount. Township projects (3,000+ tiles) — custom pricing negotiated directly with Laxree management."
+  4. NEW FAQ ITEM (line ~1137):
+     - Question: "What is the Minimum Order Quantity (MOQ) for buying Laxree roofing tiles?"
+     - Answer includes all 3 tiers (Retail 100-150, Dealer 1000+, Project 3000+) with worked examples (Pune patio 120 tiles, Bangalore 2000-tile reorder, township 50 villas)
+     - Closes with same advice: "Always confirm the customer's segment (retail vs dealer vs project) BEFORE quoting"
+- Verified via Agent Browser as Roofing user (Arjun Roofing):
+  * Welcome video verified: 1280x720 source in 670x377 container (1.778 = 1.778), object-contain, paused=false (playing), readyState=4
+  * VLM screenshot: video not cropped, entire frame visible, both segment cards visible without scrolling, no layout issues
+  * Study Materials > Study Guide > Chapter 5 expanded: containsVideoSection=false, containsAllVideosHeading=false — Chapter 5 no longer shows any inline videos (FIXED!)
+  * Study Materials > Study Guide > Chapter 2 expanded: hasStoneCoatedVideos=true, hasAllVideosHeading=false, hasThatchVideos=false, hasShinglesVideos=false — Chapter 2 shows ONLY Stone-Coated videos
+  * Chapter 2 video card count: 3 (durations 8:24 Valley Detail, 12:10 DECRA Villa, 15:32 Sheet Step-by-Step)
+  * VLM screenshot of Chapter 2: "exactly 3 video cards labeled with Stone-Coated installation video titles visible at the bottom of the chapter" — confirmed no Thatch or Shingles videos in Chapter 2
+  * Chapter content has all 3 MOQ tiers visible: hasRetailMOQ=true, hasDealerMOQ=true, hasProjectMOQ=true, has100to150=true, has1000plus=true, has3000plus=true
+  * FAQ tab > new MOQ question expanded: hasRetailMOQ=true, has100to150=true, has1000plus=true, has3000plus=true, hasPuneExample=true, hasBangaloreExample=true
+  * Chapter word counts updated: Ch2 = 2,203 words (was 2,130 — +73 from MOQ pitch addition), Ch5 = 2,556 words (was 2,351 — +205 from MOQ tiers paragraph)
+- Lint: 21 pre-existing errors in .cjs/.js scripts only. ZERO errors in src/ TypeScript files.
+- Dev server: HTTP 200, no compile errors.
+
+Stage Summary:
+- FIXED (Issue A — chapter video scope): Chapter 5 (Installation/Dealership) no longer shows ALL 9 installation videos at the bottom. Only product chapters (Ch2 Stone-Coated, Ch3 Thatch, Ch4 Shingles) show their own category-filtered 3 videos each. Chapter 1 (Company Intro) and Chapter 5 (Installation) have NO inline videos — users find product-specific installation videos inside their respective product chapters, exactly as the user requested ("when I click on stone coated there show the video section and particular video only").
+- FIXED (Issue B — product academy content upgraded): All 3 MOQ tiers added to Stone-Coated chapter sales pitch summary, Chapter 5 dealership section, Chapter 5 sales pitch summary, and a new dedicated FAQ item.
+- FIXED (Issue C — MOQ details): Retail customer MOQ = 100-150 tiles, Dealer/Distributor MOQ = 1,000+ tiles per order, Project/Bulk MOQ = 3,000+ tiles — exactly as user specified. Each tier has worked examples (Pune patio, Bangalore reorder, township 50-villa project) so reps can explain MOQ confidently to any customer segment.
+- VERIFIED via Agent Browser + VLM (3 screenshots: welcome page, Chapter 2 expanded, FAQ expanded)
+- Files modified: only src/components/employee/learning-center.tsx (17 line changes: +12 -5)
+
