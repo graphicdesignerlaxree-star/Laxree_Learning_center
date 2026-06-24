@@ -1561,11 +1561,14 @@ function StudyMaterialsSection() {
                   <span className="hidden sm:inline">Study Guide</span>
                   <span className="sm:hidden">Guide</span>
                 </TabsTrigger>
-                <TabsTrigger value="video-chapters" className="gap-1.5 text-xs sm:text-sm">
-                  <Video className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Video Chapters</span>
-                  <span className="sm:hidden">Videos</span>
-                </TabsTrigger>
+                {/* Video Chapters tab — amenities only. For roofing, installation videos live INSIDE each product chapter in Study Guide. */}
+                {!isRoofing && (
+                  <TabsTrigger value="video-chapters" className="gap-1.5 text-xs sm:text-sm">
+                    <Video className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Video Chapters</span>
+                    <span className="sm:hidden">Videos</span>
+                  </TabsTrigger>
+                )}
                 <TabsTrigger value="faq" className="gap-1.5 text-xs sm:text-sm">
                   <HelpCircle className="w-3.5 h-3.5" />
                   FAQ
@@ -1659,52 +1662,37 @@ function StudyMaterialsSection() {
                       </AccordionTrigger>
                       <AccordionContent className="pb-4 pt-1">
                         <div className={`ml-2 mt-2 border-l-2 ${g.accentBorder} pl-4 space-y-3`}>
-                          {chapter.content.map((paragraph, pIdx) => (
-                            <motion.div
-                              key={pIdx}
-                              initial={{ opacity: 0, x: -8 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: pIdx * 0.08 }}
-                              className="flex items-start gap-3"
-                            >
-                              <div className={`w-5 h-5 rounded-full ${g.numBg} ${g.numText} text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5`}>
-                                {pIdx + 1}
-                              </div>
-                              <p className="text-sm text-gray-700 leading-relaxed">{paragraph}</p>
-                            </motion.div>
-                          ))}
-
-                          {/* Related Installation Videos — shown INSIDE the chapter content for roofing product chapters only.
-                              Each product chapter shows ONLY its own category videos (not all categories).
-                              Chapter 1 (Company Intro) and Chapter 5 (Installation/Dealership general) show no inline videos. */}
+                          {/* Installation Videos — shown at the TOP of the chapter content (BEFORE the reading content)
+                              so users see the videos first when they open a product chapter.
+                              Only product chapters (r-ch2 Stone-Coated, r-ch3 Thatch, r-ch4 Shingles) show inline videos,
+                              filtered to their own category. r-ch1 (Company Intro) and r-ch5 (Installation/Dealership) have none. */}
                           {isRoofing && (() => {
                             const chapterVideos: VideoLesson[] = (() => {
                               if (chapter.id === 'r-ch2') return ROOFING_VIDEO_LESSONS.filter(v => v.category === 'Stone-Coated')
                               if (chapter.id === 'r-ch3') return ROOFING_VIDEO_LESSONS.filter(v => v.category === 'Thatch')
                               if (chapter.id === 'r-ch4') return ROOFING_VIDEO_LESSONS.filter(v => v.category === 'Shingles')
-                              // r-ch1 (Company Intro) and r-ch5 (general Installation/Dealership) have no inline videos —
-                              // users find product-specific installation videos inside their respective product chapters.
                               return []
                             })()
                             if (chapterVideos.length === 0) return null
+                            const productLabel = chapterVideos[0].category === 'Stone-Coated' ? 'stone-coated tiles' : chapterVideos[0].category === 'Thatch' ? 'artificial thatch tiles' : 'asphalt shingles'
                             return (
                               <motion.div
                                 initial={{ opacity: 0, y: 8 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2 }}
-                                className="mt-4 pt-4 border-t border-dashed border-amber-200"
+                                transition={{ delay: 0.05 }}
+                                className="mb-2 p-3 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200"
                               >
-                                <div className="flex items-center gap-2 mb-3">
+                                <div className="flex items-center gap-2 mb-2">
                                   <CirclePlay className="w-4 h-4 text-amber-600" />
                                   <span className="text-sm font-bold text-amber-700">
-                                    {chapter.id === 'r-ch5' ? 'All Installation Training Videos' : `${chapterVideos[0].category} Installation Training Videos`}
+                                    {chapterVideos[0].category} Installation Training Videos
                                   </span>
                                   <Badge className="text-[10px] bg-amber-100 text-amber-700 border-0 ml-auto">
                                     {chapterVideos.length} video{chapterVideos.length > 1 ? 's' : ''}
                                   </Badge>
                                 </div>
-                                <p className="text-xs text-gray-500 mb-3 leading-relaxed">
-                                  Watch these real installation tutorials to see exactly how {chapterVideos[0].category === 'Stone-Coated' ? 'stone-coated tiles' : chapterVideos[0].category === 'Thatch' ? 'artificial thatch tiles' : chapterVideos[0].category === 'Shingles' ? 'asphalt shingles' : 'roofing tiles'} are installed on-site. Click any video to play the full YouTube tutorial with transcript and key points.
+                                <p className="text-xs text-gray-600 mb-3 leading-relaxed">
+                                  Watch these real installation tutorials to see exactly how {productLabel} are installed on-site. Click any video to play the full YouTube tutorial with transcript and key points.
                                 </p>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                   {chapterVideos.map((video) => {
@@ -1754,6 +1742,22 @@ function StudyMaterialsSection() {
                               </motion.div>
                             )
                           })()}
+
+                          {/* Chapter content paragraphs — with examples and doubt-clearing explanations */}
+                          {chapter.content.map((paragraph, pIdx) => (
+                            <motion.div
+                              key={pIdx}
+                              initial={{ opacity: 0, x: -8 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: pIdx * 0.08 }}
+                              className="flex items-start gap-3"
+                            >
+                              <div className={`w-5 h-5 rounded-full ${g.numBg} ${g.numText} text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5`}>
+                                {pIdx + 1}
+                              </div>
+                              <p className="text-sm text-gray-700 leading-relaxed">{paragraph}</p>
+                            </motion.div>
+                          ))}
                         </div>
                       </AccordionContent>
                     </AccordionItem>
@@ -2815,15 +2819,24 @@ export function LearningCenter() {
                     </div>
                   </div>
 
-                  {/* Tabs: Modules, Videos & Catalogues */}
+                  {/* Tabs: Modules, [Videos — amenities only], Catalogues, [Chapters — Roofing Product Academy only] */}
                   <Tabs value={activeTab} onValueChange={setActiveTab}>
                     <TabsList className="w-full">
                       <TabsTrigger value="modules" className="flex-1">
                         <BookOpen className="w-4 h-4 mr-1" /> Modules
                       </TabsTrigger>
-                      <TabsTrigger value="videos" className="flex-1">
-                        <Video className="w-4 h-4 mr-1" /> Videos
-                      </TabsTrigger>
+                      {/* Videos tab — amenities only. For roofing, installation videos live INSIDE each product chapter. */}
+                      {!isRoofing && (
+                        <TabsTrigger value="videos" className="flex-1">
+                          <Video className="w-4 h-4 mr-1" /> Videos
+                        </TabsTrigger>
+                      )}
+                      {/* Chapters tab — Roofing Product Academy only. Shows product chapters (Stone-Coated, Thatch, Shingles) with installation videos inside. */}
+                      {isRoofing && selectedAcademy === 'PRODUCT_ACADEMY' && (
+                        <TabsTrigger value="chapters" className="flex-1">
+                          <BookOpen className="w-4 h-4 mr-1" /> Chapters
+                        </TabsTrigger>
+                      )}
                       <TabsTrigger value="catalogues" className="flex-1">
                         <FolderOpen className="w-4 h-4 mr-1" /> Catalogues
                       </TabsTrigger>
@@ -3082,6 +3095,167 @@ export function LearningCenter() {
                         )
                       })()}
                     </TabsContent>
+
+                    {/* Chapters Tab — Roofing Product Academy ONLY.
+                        Shows product chapters (Stone-Coated, Thatch, Shingles) as accordions.
+                        Each chapter opens with installation videos at the TOP (before reading content),
+                        followed by detailed technical content with real-world examples and doubt-clearing explanations. */}
+                    {isRoofing && selectedAcademy === 'PRODUCT_ACADEMY' && (
+                      <TabsContent value="chapters" className="mt-4 space-y-4">
+                        <div className="mb-4 p-4 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200">
+                          <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
+                            <BookOpen className="w-4 h-4 text-amber-600" />
+                            Product Chapters — Videos + In-Depth Examples & Doubt Clearing
+                          </h3>
+                          <p className="text-sm text-gray-600 mt-1 leading-relaxed">
+                            Each chapter opens with the relevant installation videos at the top, followed by detailed technical content. Every technical term is explained with a real-world example (e.g., Tata GSW sheet, AZ coating, MS frame) and a dedicated <strong>Common Doubts &amp; Misconceptions</strong> section clears every customer objection a sales rep will face.
+                          </p>
+                        </div>
+                        <Accordion type="multiple" className="space-y-2.5">
+                          {ROOFING_STUDY_CHAPTERS.filter(ch => ch.id === 'r-ch2' || ch.id === 'r-ch3' || ch.id === 'r-ch4').map((chapter, idx) => {
+                            const Icon = chapter.icon
+                            const g = CHAPTER_GRADIENTS[chapter.id] ?? CHAPTER_GRADIENTS.ch1
+                            const wordCount = chapter.content.join(' ').split(/\s+/).filter(Boolean).length
+                            const readMin = Math.max(1, Math.ceil(wordCount / 200))
+                            const chapterVideos: VideoLesson[] = ROOFING_VIDEO_LESSONS.filter(v =>
+                              chapter.id === 'r-ch2' ? v.category === 'Stone-Coated' :
+                              chapter.id === 'r-ch3' ? v.category === 'Thatch' :
+                              v.category === 'Shingles'
+                            )
+                            return (
+                              <AccordionItem
+                                key={chapter.id}
+                                value={chapter.id}
+                                className={`group border rounded-xl ${chapter.borderColor} ${g.hoverBorder} bg-white hover:shadow-md hover:-translate-y-0.5 data-[state=open]:shadow-sm transition-all duration-200 overflow-hidden`}
+                              >
+                                <AccordionTrigger className="py-3 px-4 hover:no-underline">
+                                  <div className="flex items-center gap-3.5 text-left">
+                                    <div className={`relative w-12 h-12 rounded-xl bg-gradient-to-br ${g.gradient} flex items-center justify-center shrink-0 shadow-sm group-data-[state=open]:shadow-md group-data-[state=open]:brightness-110 transition-all duration-200`}>
+                                      <Icon className="w-5 h-5 text-white" />
+                                      <span className={`absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-white text-[10px] font-bold shadow-sm flex items-center justify-center border border-gray-100 ${g.numText}`}>
+                                        {String(idx + 1).padStart(2, '0')}
+                                      </span>
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <span className="font-bold text-base text-gray-900 block">
+                                        {chapter.title}
+                                      </span>
+                                      <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{chapter.description}</p>
+                                      <div className="mt-1.5 flex items-center gap-2 text-[11px] text-gray-400 group-data-[state=open]:hidden">
+                                        <Clock className="w-3 h-3" />
+                                        <span>{readMin} min read</span>
+                                        <span className="text-gray-300">•</span>
+                                        <BookOpen className="w-3 h-3" />
+                                        <span>{chapter.content.length} sections</span>
+                                        <span className="text-gray-300">•</span>
+                                        <span>{wordCount.toLocaleString()} words</span>
+                                        {chapterVideos.length > 0 && (
+                                          <>
+                                            <span className="text-gray-300">•</span>
+                                            <CirclePlay className="w-3 h-3 text-amber-500" />
+                                            <span className="text-amber-600 font-medium">{chapterVideos.length} videos</span>
+                                          </>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </AccordionTrigger>
+                                <AccordionContent className="pb-4 pt-1">
+                                  <div className={`ml-2 mt-2 border-l-2 ${g.accentBorder} pl-4 space-y-3`}>
+                                    {/* Installation Videos at the TOP of the chapter content */}
+                                    {chapterVideos.length > 0 && (() => {
+                                      const productLabel = chapterVideos[0].category === 'Stone-Coated' ? 'stone-coated tiles' : chapterVideos[0].category === 'Thatch' ? 'artificial thatch tiles' : 'asphalt shingles'
+                                      return (
+                                        <motion.div
+                                          initial={{ opacity: 0, y: 8 }}
+                                          animate={{ opacity: 1, y: 0 }}
+                                          transition={{ delay: 0.05 }}
+                                          className="mb-2 p-3 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200"
+                                        >
+                                          <div className="flex items-center gap-2 mb-2">
+                                            <CirclePlay className="w-4 h-4 text-amber-600" />
+                                            <span className="text-sm font-bold text-amber-700">
+                                              {chapterVideos[0].category} Installation Training Videos
+                                            </span>
+                                            <Badge className="text-[10px] bg-amber-100 text-amber-700 border-0 ml-auto">
+                                              {chapterVideos.length} video{chapterVideos.length > 1 ? 's' : ''}
+                                            </Badge>
+                                          </div>
+                                          <p className="text-xs text-gray-600 mb-3 leading-relaxed">
+                                            Watch these real installation tutorials to see exactly how {productLabel} are installed on-site. Click any video to play the full YouTube tutorial with transcript and key points.
+                                          </p>
+                                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                            {chapterVideos.map((video) => {
+                                              const catColor = VIDEO_CATEGORY_COLORS[video.category] || { bg: 'bg-gray-100', text: 'text-gray-700' }
+                                              return (
+                                                <button
+                                                  key={video.id}
+                                                  onClick={() => { setSelectedAcademyVideo(video) }}
+                                                  className="text-left rounded-lg border border-amber-200 bg-white overflow-hidden shadow-sm hover:shadow-md hover:border-amber-400 transition-all group"
+                                                >
+                                                  <div className="relative h-28 overflow-hidden">
+                                                    <img
+                                                      src={video.image}
+                                                      alt={video.title}
+                                                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                      onError={(e) => {
+                                                        (e.target as HTMLImageElement).style.display = 'none'
+                                                        ;(e.target as HTMLImageElement).parentElement!.classList.add('bg-gradient-to-br', 'from-amber-800', 'to-orange-900')
+                                                      }}
+                                                    />
+                                                    <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors" />
+                                                    <div className="absolute inset-0 flex items-center justify-center">
+                                                      <div className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/50 transition-colors">
+                                                        <CirclePlay className="w-5 h-5 text-white" />
+                                                      </div>
+                                                    </div>
+                                                    <div className="absolute bottom-1.5 right-1.5 bg-black/60 backdrop-blur-sm rounded px-1.5 py-0.5 flex items-center gap-1">
+                                                      <Clock className="w-3 h-3 text-white/80" />
+                                                      <span className="text-[10px] font-medium text-white">{video.duration}</span>
+                                                    </div>
+                                                    <div className="absolute top-1.5 left-1.5">
+                                                      <Badge className={`text-[9px] ${catColor.bg} ${catColor.text} border-0`}>
+                                                        {video.category}
+                                                      </Badge>
+                                                    </div>
+                                                  </div>
+                                                  <div className="p-2.5">
+                                                    <h4 className="text-xs font-bold text-gray-900 line-clamp-2 group-hover:text-amber-700 transition-colors">
+                                                      {video.title}
+                                                    </h4>
+                                                    <p className="text-[11px] text-gray-500 mt-1 line-clamp-2">{video.description}</p>
+                                                  </div>
+                                                </button>
+                                              )
+                                            })}
+                                          </div>
+                                        </motion.div>
+                                      )
+                                    })()}
+
+                                    {/* Chapter content paragraphs — technical terms with examples + doubt-clearing */}
+                                    {chapter.content.map((paragraph, pIdx) => (
+                                      <motion.div
+                                        key={pIdx}
+                                        initial={{ opacity: 0, x: -8 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: pIdx * 0.08 }}
+                                        className="flex items-start gap-3"
+                                      >
+                                        <div className={`w-5 h-5 rounded-full ${g.numBg} ${g.numText} text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5`}>
+                                          {pIdx + 1}
+                                        </div>
+                                        <p className="text-sm text-gray-700 leading-relaxed">{paragraph}</p>
+                                      </motion.div>
+                                    ))}
+                                  </div>
+                                </AccordionContent>
+                              </AccordionItem>
+                            )
+                          })}
+                        </Accordion>
+                      </TabsContent>
+                    )}
 
                     <TabsContent value="catalogues" className="mt-4">
                       {catalogs.length === 0 && DOCUMENT_RESOURCES.length > 0 ? (

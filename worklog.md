@@ -1215,3 +1215,83 @@ Stage Summary:
 - VERIFIED via Agent Browser + VLM (3 screenshots: welcome page, Chapter 2 expanded, FAQ expanded)
 - Files modified: only src/components/employee/learning-center.tsx (17 line changes: +12 -5)
 
+
+---
+Task ID: 13
+Agent: Main (chapter videos inside chapters only + Roofing Product Academy chapters tab)
+Task: User reported: "JAB MEIN STONE COTED TILE INSTALLATION KA CHAPTER KHOLU USKE ANDR VIDEO SECTION HO VIEW PDF SE PHLE. TUMNE TOH Technical & Installation Learning WHA VIDEO KA SECTION DE DIYA JO KI GLT HAIN. ES EBHAR NAHIO DENA HAIN VIDEO KA SECTION SB JGH SE FIX KRO. ESKO AB SEPRATE KRO NA PRODUCT WALE MEIN DALO AUR CHAPTER KO DESCRIBE KRO AUR EXAMPLE K SATH SMJAO AUR DOUTS KO CLEAR KRO."
+
+Work Log:
+- Read worklog.md (Tasks 1-12) for context. Confirmed previous state:
+  * Roofing academies (Technical & Installation Learning, Roofing Product Academy, etc.) all had a "Videos" tab showing installation videos — user said this is WRONG, remove from everywhere outside chapters
+  * Study Materials tab had a "Video Chapters" tab showing all 9 videos as a separate grid — also "outside" chapters
+  * Chapter accordion in Study Materials had video section at BOTTOM (after content paragraphs) — user wanted videos BEFORE content
+  * User wanted product chapters (Stone-Coated, Thatch, Shingles) separated and put INSIDE Roofing Product Academy
+- Investigated code structure:
+  * Academy detail view TabsList at line 2824 (3 tabs: Modules, Videos, Catalogues)
+  * Study Materials TabsList at line 1564 (5 tabs: Study Guide, Video Chapters, FAQ, Documents, Practice Quiz)
+  * Chapter accordion content at lines 1661-1757 (paragraphs FIRST, then video section at BOTTOM)
+  * Roofing Product Academy only had Modules + Videos + Catalogues tabs — no Chapters tab
+
+- FIX 1: Removed Videos tab from ALL roofing academies
+  * Wrapped `<TabsTrigger value="videos">` in `{!isRoofing && (...)}` — only amenities segment sees the Videos tab now
+  * Roofing academies (Technical & Installation Learning, Roofing Product Academy, etc.) now have NO Videos tab
+  * The Videos TabsContent at line 2996 still exists but is unreachable for roofing (no tab to click) — harmless and preserves amenities behavior
+
+- FIX 2: Removed Video Chapters tab from roofing Study Materials
+  * Wrapped `<TabsTrigger value="video-chapters">` in `{!isRoofing && (...)}` — only amenities sees this tab
+  * Roofing Study Materials now has 4 tabs: Study Guide, FAQ, Documents, Practice Quiz
+  * Videos are now ONLY accessible inside chapter accordions in Study Guide
+
+- FIX 3: Moved video section to TOP of chapter content (BEFORE the reading paragraphs)
+  * Reordered in StudyMaterialsSection: video section now renders BEFORE chapter.content.map()
+  * Wrapped video section in amber gradient card (bg-gradient-to-br from-amber-50 to-orange-50) so it visually stands out as the first thing user sees
+  * Updated delay from 0.2 to 0.05 (faster animation since it's now the primary content)
+  * Removed dead code: `{chapter.id === 'r-ch5' ? 'All Installation Training Videos' : ...}` — since r-ch5 has no videos now
+  * Added productLabel helper for cleaner conditional text
+  * Added comment clarifying video placement: "Installation Videos — shown at the TOP of the chapter content (BEFORE the reading content) so users see the videos first when they open a product chapter."
+
+- FIX 4: Added a new "Chapters" tab to Roofing Product Academy
+  * Added new TabsTrigger "Chapters" with BookOpen icon — only visible when isRoofing && selectedAcademy === 'PRODUCT_ACADEMY'
+  * Added new TabsContent "chapters" with:
+    - Intro card: "Product Chapters — Videos + In-Depth Examples & Doubt Clearing" explaining what's inside
+    - Accordion with 3 product chapters (r-ch2 Stone-Coated, r-ch3 Thatch, r-ch4 Shingles) filtered from ROOFING_STUDY_CHAPTERS
+    - Each chapter accordion shows: gradient icon tile, chapter number badge, title, description, meta row (min read, sections, words, + video count badge)
+    - Each chapter content has the SAME structure: video section at TOP (in amber gradient card) + content paragraphs (with Tata GSW examples, TECHNICAL TERMS EXPLAINED, COMMON DOUBTS, SALES PITCH, MOQ)
+    - Videos in academy Chapters tab use setSelectedAcademyVideo (parent component state) which opens the academy video dialog with YouTube iframe
+  * Result: User can now access product chapters directly inside Roofing Product Academy — each chapter describes with examples and clears doubts
+
+- Verified via Agent Browser as Roofing user (Arjun Roofing):
+  * Roofing Product Academy > tabs: "Modules | Chapters | Catalogues" (NO Videos tab — FIXED!)
+  * Clicked Chapters tab > saw "Product Chapters — Videos + In-Depth Examples & Doubt Clearing" heading + 3 chapters listed with "3 videos" badge each
+  * Expanded "01 Stone-Coated Metal Roof Tiles" chapter:
+    - hasStoneCoatedVideos=true, hasProductChaptersHeading=true, hasTataGSW=true, hasCommonDoubts=true, hasTechnicalTerms=true, hasMOQ=true
+    - videoIdx=1250, tataIdx=10904 → video section is at TOP (before content) — FIXED!
+  * VLM screenshot analysis of academy Chapters tab:
+    "(1) Yes, the 'Product Chapters — Videos + In-Depth Examples & Doubt Clearing' heading is visible.
+     (2) Yes, the Stone-Coated Metal Roof Tiles chapter is expanded.
+     (3) Yes, the 'Stone-Coated Installation Training Videos' section is visible at the top of the chapter content (before reading paragraphs).
+     (4) Yes, 3 video cards with stone-coated installation tutorials are visible.
+     (5) Yes, the technical content paragraphs (with Tata GSW, AZ coating examples) are visible below the videos."
+  * Navigated to Technical & Installation Learning academy > tabs: "Modules | Catalogues" only (NO Videos tab, NO Chapters tab — FIXED!)
+  * Navigated to Study Materials > tabs: "Study Guide | FAQ | Documents | Practice Quiz" (NO Video Chapters tab — FIXED!)
+  * Expanded Stone-Coated chapter in Study Materials:
+    - videoIdx=1517, tataIdx=11171 → video section is at TOP (before content) — FIXED!
+  * VLM screenshot analysis of Study Materials chapter:
+    "(1) Yes, the 'Stone-Coated Metal Roof Tiles' chapter is expanded.
+     (2) Yes, the 'Stone-Coated Installation Training Videos' section is visible at the top of the chapter content (before numbered paragraphs).
+     (3) Yes, 3 video cards with stone-coated installation tutorials are visible inside the chapter.
+     (4) Yes, below the videos, numbered content paragraphs with technical terms like 'Tata GSW' are visible."
+  * Clicked a video card inside the chapter → YouTube dialog opened with iframe src=https://www.youtube.com/embed/NcoaiGbEeAI (Stone-Coated Valley Detail) — works correctly
+
+- Lint: 21 pre-existing errors in .cjs/.js scripts only. ZERO errors in src/ TypeScript files.
+- Dev server: HTTP 200, no compile errors, no runtime errors in dev.log.
+
+Stage Summary:
+- FIXED (Issue 1 — video section inside chapter, before content): Video section is now at the TOP of the chapter content (in an amber gradient card), BEFORE the numbered reading paragraphs. User sees videos first when they open any product chapter (Stone-Coated, Thatch, Shingles).
+- FIXED (Issue 2 — videos removed from outside chapters): Videos tab removed from ALL roofing academies (Technical & Installation Learning, Roofing Product Academy, Sales Academy, etc.). Video Chapters tab removed from roofing Study Materials. Videos are now ONLY accessible inside chapter accordions.
+- FIXED (Issue 3 — product chapters separated into Roofing Product Academy): A new "Chapters" tab added to Roofing Product Academy shows the 3 product chapters (Stone-Coated, Thatch, Shingles) with full content — videos at top + Tata GSW examples + TECHNICAL TERMS EXPLAINED + COMMON DOUBTS + SALES PITCH + MOQ details. Each chapter describes with examples and clears doubts.
+- VERIFIED via Agent Browser + VLM (2 screenshots: academy Chapters tab, Study Materials chapter)
+- Amenities segment behavior preserved unchanged (Videos tab in academies, Video Chapters tab in Study Materials)
+- Files modified: only src/components/employee/learning-center.tsx
+
