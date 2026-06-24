@@ -1084,3 +1084,50 @@ Stage Summary:
 - Content from Task 8 (lengthier chapters with Tata GSW examples) is confirmed visible and rendering correctly
 - Files modified: src/components/login/login-page.tsx, src/components/employee/learning-center.tsx, public/laxree-training-welcome.mp4 (new)
 - Pushed to GitHub: 0eff03a → origin/main (auto-deploys to Vercel if connected)
+
+---
+Task ID: 10
+Agent: Main (welcome video autoplay + compact layout)
+Task: User reported: "Video should be autoplay not look it like it feel the animation like i want it looking like we upload the video size reduce i want that when user comes it will show on welcoming page all content no need to scroll understood go and fix it also second issue still inside of the no video image attached it is showing out of the content fix it"
+
+Work Log:
+- Read worklog.md (Tasks 1-9) for context. Confirmed current state: welcoming video on segment chooser page was a static <video controls> with poster="/laxree-logo.png" — no autoplay, showed letterboxed logo on black bg.
+- Used Agent Browser + z-ai vision to confirm both issues:
+  * Issue 1: Welcome video shows ONLY the static Laxree "R" logo poster on a black background (NOT playing). Video had controls but no autoPlay attribute.
+  * Issue 2: Page requires scrolling to see the segment cards (Amenities + Roofing). Video container used aspect-video (~432px tall) + header bar (~40px) + caption section (~60px) = ~530px just for the video block.
+  * The "no video image attached showing out of the content" = the poster logo was being letterboxed inside the 16:9 container (object-fit: contain default), so the small "R" logo appeared "outside" the actual video content area.
+- Redesigned the welcoming video block in src/components/login/login-page.tsx:
+  * Added autoPlay loop muted playsInline attributes (browser autoplay policy compliant)
+  * Added object-cover so video fills the container properly (no more letterboxing)
+  * Removed the poster="/laxree-logo.png" attribute (no more static logo placeholder)
+  * Reduced video height from aspect-video (~432px) to fixed h-[180px] sm:h-[210px] (banner style)
+  * Removed the bulky top header bar ("Welcome to Laxree Solutions LLP — Training Introduction")
+  * Removed the bottom caption section ("Watch this first: ...")
+  * Added elegant overlay UI directly on the video:
+    - Top-left: "Welcome to Laxree" badge + pulsing amber "NOW PLAYING" badge with animated dot
+    - Top-right: "Official Training Intro" badge
+    - Bottom: caption overlay on gradient (from-stone-950/75) for legibility
+    - Decorative amber glow ring (absolute -bottom-12 -right-12)
+- Compacted surrounding layout so everything fits in one desktop viewport:
+  * Hero text: text-3xl/4xl → text-2xl/3xl, mb-3 → mb-1.5, mb-10 → mb-4/5
+  * Hero py-8 → py-4/6
+  * Segment cards: p-7/8 → p-5/6, min-h-[260px] → min-h-[200px], text-xl → text-lg, body text-sm → text-[13px], mb-5 → mb-4
+  * Bottom motion.p: mt-8 → mt-5, text-xs → text-[11px], delay 0.6 → 0.4
+  * Footer: py-5 → py-3
+- Verified via Agent Browser (logged out, fresh localStorage):
+  * VLM confirmed: video shows ACTUAL video content (animated characters: woman in blazer + man in suit, Laxree logo with gold "R", surrounding icons "Growth, Team Success, Performance", text overlays) — NOT a static logo
+  * VLM confirmed: BOTH segment cards (Amenities + Roofing) visible side-by-side below the video, no scrolling required
+  * VLM confirmed: "NOW PLAYING" badge (orange) and "Welcome to Laxree" badge (black) overlays visible on the video
+  * VLM confirmed: Layout is balanced and contained within one viewport (~600-700px total visible height), no overflow or out-of-place content
+- Lint: 21 pre-existing errors in .cjs/.js scripts only. ZERO errors in login-page.tsx or any src/ TypeScript file.
+- Dev server: HTTP 200, compiled successfully (242ms).
+- Git: committed as 87c54ba, pushed to origin/main successfully.
+
+Stage Summary:
+- FIXED: Welcome video now autoplays (muted, loop, playsInline) — feels like a real uploaded video, not a static image
+- FIXED: Video size reduced from ~530px (aspect-video + header + caption) to ~210px banner
+- FIXED: All content (header, hero text, video, both segment cards, footer) fits in one desktop viewport — no scrolling needed
+- FIXED: No more "no video image attached showing out of the content" — the static poster logo (which was letterboxed inside the 16:9 container) has been replaced by the actual autoplaying video that fills the container with object-cover
+- Added elegant overlay UI: "Welcome to Laxree" badge, pulsing "NOW PLAYING" badge, "Official Training Intro" badge, bottom caption with gradient overlay for legibility, decorative amber glow
+- Files modified: only src/components/login/login-page.tsx (70 insertions, 48 deletions)
+- Pushed to GitHub: 87c54ba → origin/main (auto-deploys to Vercel if connected)
