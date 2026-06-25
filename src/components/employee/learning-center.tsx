@@ -1536,6 +1536,11 @@ function StudyMaterialsSection() {
   const VIDEO_LESSONS = isRoofing ? ROOFING_VIDEO_LESSONS : AMENITIES_VIDEO_LESSONS
   const FAQ_ITEMS = isRoofing ? ROOFING_FAQ_ITEMS : AMENITIES_FAQ_ITEMS
   const PRACTICE_QUESTIONS = isRoofing ? ROOFING_PRACTICE_QUESTIONS : AMENITIES_PRACTICE_QUESTIONS
+  // Segment-aware document resources — roofing users see ROOFING_DOCUMENT_RESOURCES
+  // (roofing catalogues, spec sheets, installation guides, dealership program, MOQ & SSP,
+  // quick reference). Amenities users see the original DOCUMENT_RESOURCES (Mini Bar, Safe Box,
+  // RFID, etc.). This prevents amenities PDFs/items from leaking into the roofing segment.
+  const DISPLAY_DOCUMENT_RESOURCES = isRoofing ? ROOFING_DOCUMENT_RESOURCES : DOCUMENT_RESOURCES
 
   // Accent token map — keeps the rendering JSX clean
   const accentColor = isRoofing ? 'text-amber-600' : 'text-teal-600'
@@ -1661,8 +1666,8 @@ function StudyMaterialsSection() {
                 </TabsTrigger>
                 <TabsTrigger value="documents" className="gap-1.5 text-xs sm:text-sm">
                   <FileText className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Documents</span>
-                  <span className="sm:hidden">Docs</span>
+                  <span className="hidden sm:inline">{isRoofing ? 'Catalogues' : 'Documents'}</span>
+                  <span className="sm:hidden">{isRoofing ? 'Catalogs' : 'Docs'}</span>
                 </TabsTrigger>
                 <TabsTrigger value="practice-quiz" className="gap-1.5 text-xs sm:text-sm">
                   <Brain className="w-3.5 h-3.5" />
@@ -1964,13 +1969,17 @@ function StudyMaterialsSection() {
             <TabsContent value="documents" className="p-4 mt-0">
               <div className="mb-4">
                 <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-teal-600" />
-                  Documents & Resources
+                  <FileText className={`w-4 h-4 ${accentColor}`} />
+                  {isRoofing ? 'Catalogues & Resources' : 'Documents & Resources'}
                 </h3>
-                <p className="text-sm text-gray-500 mt-1">Download product manuals, guides, and reference documents</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  {isRoofing
+                    ? 'Download roofing catalogues, spec sheets, installation guides, and dealership documents'
+                    : 'Download product manuals, guides, and reference documents'}
+                </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {DOCUMENT_RESOURCES.map((doc, idx) => {
+                {DISPLAY_DOCUMENT_RESOURCES.map((doc, idx) => {
                   const Icon = doc.icon
                   return (
                     <motion.div
@@ -1985,12 +1994,12 @@ function StudyMaterialsSection() {
                           <Icon className={`w-5 h-5 ${doc.color}`} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-sm font-semibold text-gray-900 group-hover:text-teal-700 transition-colors">
+                          <h4 className={`text-sm font-semibold text-gray-900 ${accentHoverText} transition-colors`}>
                             {doc.title}
                           </h4>
                           <p className="text-xs text-gray-500 mt-1 line-clamp-2">{doc.description}</p>
                           <div className="flex items-center gap-2 mt-2">
-                            <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                            <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${accentBadgeBorder}`}>
                               {doc.category}
                             </Badge>
                             <span className="text-[10px] text-gray-400">{doc.pages} pages</span>
@@ -2001,7 +2010,7 @@ function StudyMaterialsSection() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="flex-1 h-8 text-xs border-teal-200 text-teal-700 hover:bg-teal-50"
+                          className={`flex-1 h-8 text-xs ${accentBadgeBorder} ${accentBadgeText}`}
                           onClick={() => openDoc(doc)}
                         >
                           <Eye className="w-3 h-3 mr-1" />
