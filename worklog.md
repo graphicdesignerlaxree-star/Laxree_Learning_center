@@ -1364,3 +1364,77 @@ Stage Summary:
 - Created shared data file src/lib/roofing-videos.ts to avoid circular imports between learning-center.tsx and lesson-viewer.tsx
 - Files modified: src/components/employee/learning-center.tsx, src/components/employee/lesson-viewer.tsx, src/lib/roofing-videos.ts (new)
 
+
+---
+Task ID: 17
+Agent: Main (StudyMaterialsSection Documents tab — verify + refresh Vercel PR)
+Task: User reported: "Fix StudyMaterialsSection 'Documents & Resources' tab to use ROOFING_DOCUMENT_RESOURCES for roofing. Verify via Agent Browser as roofing user. Commit + push to update Vercel PR preview."
+
+Work Log:
+- Read worklog.md (Tasks 1-16) for context. Confirmed the StudyMaterialsSection 'Documents & Resources' tab segment-aware fix was already in place from commit 76282d5 (main) / 557b464 (deploy/vercel-pr-roofing-fixes):
+  * Line 1543: `const DISPLAY_DOCUMENT_RESOURCES = isRoofing ? ROOFING_DOCUMENT_RESOURCES : DOCUMENT_RESOURCES`
+  * Line 1982: `{DISPLAY_DOCUMENT_RESOURCES.map((doc, idx) => {` (Documents tab uses segment-aware data)
+  * Line 1973: `{isRoofing ? 'Catalogues & Resources' : 'Documents & Resources'}` (segment-aware heading)
+  * Line 1669: `{isRoofing ? 'Catalogues' : 'Documents'}` (segment-aware tab label)
+  * Line 1976-1978: segment-aware description text
+  * Styling: amber accents for roofing, teal for amenities
+
+- Investigated ALL code paths that render catalogs/documents in learning-center.tsx:
+  1. StudyMaterialsSection's 'Documents & Resources' tab (line 1968-2030) → uses DISPLAY_DOCUMENT_RESOURCES ✓ segment-aware
+  2. Quick Access 'Catalogues & Resources' section (line 2845-2887) → uses displayCatalogs ✓ segment-aware
+  3. Academy detail view's 'Catalogues' tab (line 3373-3430) → branches on isRoofing directly, uses ROOFING_DOCUMENT_RESOURCES for roofing ✓ segment-aware
+
+- Confirmed ROOFING_DOCUMENT_RESOURCES array (line 1139) contains exactly 6 roofing-only docs:
+  1. Laxree Roofing Master Catalogue (Catalog, 32 pages)
+  2. Stone-Coated Tile Spec Sheet (Spec Sheet, 6 pages)
+  3. Roofing Installation Guide (Manual, 14 pages)
+  4. Roofing Dealership Program (Program, 8 pages)
+  5. Roofing MOQ & SSP Price List (Price List, 5 pages)
+  6. Roofing Quick Reference Card (Reference, 2 pages)
+  NONE of the amenities items (Mini Bar, Safe Box, RFID, Amenities SSP, MiniBar Answer Sheet, SSP Final, Laxree Master Catalogue) appear in this array.
+
+- Dev server environment was extremely unstable (sandbox kills processes within seconds). Used `setsid` + `nohup` + `disown` to start dev server via `./node_modules/.bin/next dev -p 3000`. The Caddy gateway on port 81 forwards to localhost:3000 and is accessible from Agent Browser (which cannot reach 127.0.0.1:3000 directly due to network namespace isolation).
+
+- VERIFIED via Agent Browser as Roofing user (Arjun Roofing, roofing.emp001@laxree.com):
+  * Opened http://127.0.0.1:81/ → segment chooser page
+  * Clicked "SEGMENT 2 Laxree Roofing → Continue" → roofing login page
+  * Clicked "Roofing Employee" quick access button → email/password auto-filled
+  * Clicked "Sign In" → navigated to roofing dashboard (body text: "LAXREERoofing\nMaster Roofing, Build Careers\n...Roofing Product Academy\nSales & Installation Training\nRoofing Certifications...")
+  * Clicked "Learning Center" in sidebar nav → academies list
+  * Clicked "Study Materials" tab → Study Materials view with tabs: "Study Guide | FAQ | Catalogues | Practice Quiz"
+    - NOTE: The tab is labeled "Catalogues" (not "Documents") for roofing users — segment-aware tab label working ✓
+  * Clicked "Catalogues" tab → Catalogues & Resources content visible:
+    - Heading: "Catalogues & Resources" (segment-aware heading working ✓)
+    - Description: "Download roofing catalogues, spec sheets, installation guides, and dealership documents" (segment-aware description working ✓)
+    - 6 document cards listed (extracted via document.body.innerText):
+      1. Laxree Roofing Master Catalogue (Catalog, 32 pages)
+      2. Stone-Coated Tile Spec Sheet (Spec Sheet, 6 pages)
+      3. Roofing Installation Guide (Manual, 14 pages)
+      4. Roofing Dealership Program (Program, 8 pages)
+      5. Roofing MOQ & SSP Price List (Price List, 5 pages)
+      6. Roofing Quick Reference Card (Reference, 2 pages)
+    - ZERO amenities items present (no Mini Bar, Safe Box, RFID, Amenities SSP, MiniBar Answer Sheet, SSP Final, or Laxree Master Catalogue)
+  * Took screenshot /tmp/roofing-catalogues-tab.png (183KB)
+  * VLM analysis of screenshot confirmed: "The document titles visible in the screenshot are: 1. Laxree Roofing Master Catalogue, 2. Stone-Coated Tile Spec Sheet. None of these titles match the amenities-related terms (Mini Bar, Safe Box, RFID, Amenities SSP, MiniBar Answer Sheet, SSP Final, Laxree Master Catalogue)."
+
+- CODE IMPROVEMENT (to trigger fresh Vercel PR preview rebuild):
+  * Expanded the inline comment in StudyMaterialsSection (lines 1539-1554) to explicitly list all 6 roofing documents and document that DISPLAY_DOCUMENT_RESOURCES is the SINGLE source of truth for the 'Documents & Resources' / 'Catalogues & Resources' tab.
+  * Removed the dead `displayDocumentResources` variable in the parent LearningCenter component (was declared at line 2374 but never used — the academy detail view uses ROOFING_DOCUMENT_RESOURCES directly via isRoofing branch, and StudyMaterialsSection has its own DISPLAY_DOCUMENT_RESOURCES).
+  * Updated the parent component's comment to clarify that EVERY UI surface that can show catalogs/documents is segment-aware (Quick Access uses displayCatalogs, StudyMaterialsSection uses DISPLAY_DOCUMENT_RESOURCES, academy detail view branches on isRoofing directly).
+  * Pure cleanup + documentation — NO behavior change. The segment-aware fix from commit 76282d5/557b464 was already correct and verified working.
+
+- Lint: 21 pre-existing errors in .cjs/.js scripts only (custom-server.js, scripts/*.cjs, server-wrapper.js, smart-proxy.js, update-videos.js — all `require()` import errors). ZERO errors in src/components/employee/learning-center.tsx.
+
+- Git operations:
+  * Committed on main: eeb8ec9 "docs(roofing): clarify segment-aware Documents tab + remove dead displayDocumentResources"
+  * Pushed main to origin: b812a9f..eeb8ec9 main -> main
+  * Switched to deploy/vercel-pr-roofing-fixes branch
+  * Cherry-picked eeb8ec9 onto deploy → 9d2ca7e (same commit message, new SHA)
+  * Pushed deploy branch to origin: 557b464..9d2ca7e deploy/vercel-pr-roofing-fixes -> deploy/vercel-pr-roofing-fixes
+  * This push triggers a fresh Vercel PR preview rebuild
+
+Stage Summary:
+- VERIFIED via Agent Browser as Roofing user (Arjun Roofing): The StudyMaterialsSection 'Documents & Resources' tab (labeled "Catalogues" for roofing) correctly shows ONLY the 6 roofing-specific documents from ROOFING_DOCUMENT_RESOURCES. ZERO amenities items leak through. The fix from commit 76282d5/557b464 is confirmed working end-to-end.
+- IMPROVED code clarity: Expanded inline comment listing all 6 roofing docs, removed dead `displayDocumentResources` variable (was never used), updated parent component comment to document that all 3 catalog/document rendering surfaces are segment-aware.
+- COMMITTED + PUSHED to both main (eeb8ec9) and deploy/vercel-pr-roofing-fixes (9d2ca7e) branches. The deploy branch push triggers a fresh Vercel PR preview rebuild with the latest segment-aware Documents tab fix.
+- Files modified: only src/components/employee/learning-center.tsx (+24 -10 = net +14 lines, all comments + dead-code removal)
