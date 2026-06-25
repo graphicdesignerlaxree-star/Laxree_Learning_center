@@ -1536,10 +1536,22 @@ function StudyMaterialsSection() {
   const VIDEO_LESSONS = isRoofing ? ROOFING_VIDEO_LESSONS : AMENITIES_VIDEO_LESSONS
   const FAQ_ITEMS = isRoofing ? ROOFING_FAQ_ITEMS : AMENITIES_FAQ_ITEMS
   const PRACTICE_QUESTIONS = isRoofing ? ROOFING_PRACTICE_QUESTIONS : AMENITIES_PRACTICE_QUESTIONS
-  // Segment-aware document resources — roofing users see ROOFING_DOCUMENT_RESOURCES
-  // (roofing catalogues, spec sheets, installation guides, dealership program, MOQ & SSP,
-  // quick reference). Amenities users see the original DOCUMENT_RESOURCES (Mini Bar, Safe Box,
-  // RFID, etc.). This prevents amenities PDFs/items from leaking into the roofing segment.
+  // ──────────────────────────────────────────────────────────────────────────
+  // SEGMENT-AWARE DOCUMENT RESOURCES (the "Documents & Resources" tab)
+  // ──────────────────────────────────────────────────────────────────────────
+  // Roofing users  → ROOFING_DOCUMENT_RESOURCES (6 roofing-only docs):
+  //    1. Laxree Roofing Master Catalogue
+  //    2. Stone-Coated Tile Spec Sheet
+  //    3. Roofing Installation Guide
+  //    4. Roofing Dealership Program
+  //    5. Roofing MOQ & SSP Price List
+  //    6. Roofing Quick Reference Card
+  // Amenities users → DOCUMENT_RESOURCES (original amenities docs: Mini Bar,
+  //    Safe Box, RFID, etc.).
+  // This is the SINGLE source of truth for the "Documents & Resources" /
+  // "Catalogues & Resources" tab inside StudyMaterialsSection. The tab label,
+  // heading, description, and styling are all segment-aware too (see below).
+  // Amenities PDFs/items must NEVER leak into the roofing segment.
   const DISPLAY_DOCUMENT_RESOURCES = isRoofing ? ROOFING_DOCUMENT_RESOURCES : DOCUMENT_RESOURCES
 
   // Accent token map — keeps the rendering JSX clean
@@ -2365,15 +2377,17 @@ export function LearningCenter() {
   const isRoofing = user?.company === 'ROOFING'
   const ACADEMIES = isRoofing ? ROOFING_ACADEMIES : AMENITIES_ACADEMIES
 
-  // Segment-aware catalogues & resources:
-  //  - Roofing users: see ONLY ROOFING_CATALOG_DOCS + ROOFING_DOCUMENT_RESOURCES
+  // Segment-aware catalogues & resources (Quick Access section + academy detail view):
+  //  - Roofing users: see ONLY ROOFING_CATALOG_DOCS in the Quick Access section
   //    (never the amenities DB-fetched catalogs like Mini Bar / Safe Box /
   //     Amenities SSP / MiniBar Answer Sheet / SSP Final / Laxree Master Catalogue).
-  //  - Amenities users: keep original DB-fetched `catalogs` + `DOCUMENT_RESOURCES`.
+  //  - Amenities users: keep original DB-fetched `catalogs`.
+  //  NOTE: The StudyMaterialsSection component has its own segment-aware
+  //  DISPLAY_DOCUMENT_RESOURCES (roofing → ROOFING_DOCUMENT_RESOURCES) for its
+  //  'Documents & Resources' / 'Catalogues & Resources' tab. The academy detail
+  //  view's 'Catalogues' tab also branches on `isRoofing` directly. This means
+  //  every UI surface that can show catalogs/documents is segment-aware.
   const displayCatalogs: CatalogDoc[] = isRoofing ? ROOFING_CATALOG_DOCS : catalogs
-  const displayDocumentResources: DocumentResource[] = isRoofing
-    ? ROOFING_DOCUMENT_RESOURCES
-    : DOCUMENT_RESOURCES
 
   // Fetch courses
   useEffect(() => {
